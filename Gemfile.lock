@@ -134,6 +134,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    simpacker (1.2.0)
+      railties (>= 4.2)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -160,6 +162,7 @@ DEPENDENCIES
   puma (~> 5.0)
   rails (~> 6.1.4)
   sass-rails (>= 6)
+  simpacker
 
 BUNDLED WITH
    2.2.15

@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "devDependencies": {
+    "webpack": "^5.40.0",
+    "webpack-assets-manifest": "^5.0.6",
+    "webpack-cli": "^4.7.2"
+  }
+}

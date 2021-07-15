@@ -20,7 +20,6 @@ class TitoWebhookController < ApplicationController
       last_name: params[:last_name],
       assigned: params[:assigned],
       registration_slug: params[:registration_slug],
-      discount_code_used: params[:discount_code_used],
       release_slug: params[:release_slug],
       discount_code_used: params[:discount_code_used],
       admin_url: params[:admin_url],

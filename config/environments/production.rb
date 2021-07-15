@@ -2,6 +2,9 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
+  unless ENV['STACK'] # not during heroku build
+    config.x.tito.webhook_secret = ENV.fetch('TITO_WEBHOOK_SECRET')
+  end
 
   # Code is not reloaded between requests.
   config.cache_classes = true

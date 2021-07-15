@@ -8,12 +8,15 @@ class CreateTickets < ActiveRecord::Migration[6.1]
       t.string :email
       t.string :first_name
       t.string :last_name
+      t.boolean :assigned
       t.string :registration_slug
+      t.string :registration_
       t.string :discount_code_used
       t.string :release_slug
       t.string :release_title
+      t.string :admin_url
 
-      t.datetime :registered_at
+      t.datetime :tito_updated_at
 
       t.timestamps
     end

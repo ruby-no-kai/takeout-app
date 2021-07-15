@@ -23,11 +23,14 @@ ActiveRecord::Schema.define(version: 2021_07_08_125729) do
     t.string "email"
     t.string "first_name"
     t.string "last_name"
+    t.boolean "assigned"
     t.string "registration_slug"
+    t.string "registration_"
     t.string "discount_code_used"
     t.string "release_slug"
     t.string "release_title"
-    t.datetime "registered_at"
+    t.string "admin_url"
+    t.datetime "tito_updated_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["discount_code_used"], name: "index_tickets_on_discount_code_used"

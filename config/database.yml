@@ -21,9 +21,17 @@ default: &default
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
+
 development:
   <<: *default
   database: takeout_app_development
+<% docker_port = ENV['DATABASE_URL'].nil? ? IO.popen([*%w(docker-compose port db 5432), err: File::NULL], 'r', &:read).chomp.split(?:)&.last : nil %>
+<% unless docker_port.empty? %>
+  host: 127.0.0.1
+  port: <%= docker_port %>
+  username: takeoutapp
+  password: takeoutapp
+<% end %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -41,7 +49,6 @@ development:
 
   # The TCP port the server listens on. Defaults to 5432.
   # If your server runs on a different port number, change accordingly.
-  #port: 5432
 
   # Schema search path. The server defaults to $user,public
   #schema_search_path: myapp,sharedapp,public
@@ -58,6 +65,12 @@ development:
 test:
   <<: *default
   database: takeout_app_test
+<% unless docker_port.empty? %>
+  host: 127.0.0.1
+  port: <%= docker_port %>
+  username: takeoutapp
+  password: takeoutapp
+<% end %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

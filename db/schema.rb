@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_08_125729) do
+ActiveRecord::Schema.define(version: 2021_08_26_083215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "attendees", force: :cascade do |t|
+    t.bigint "ticket_id", null: false
+    t.string "name"
+    t.string "gravatar_hash"
+    t.boolean "is_staff"
+    t.boolean "is_speaker"
+    t.boolean "is_committer"
+    t.boolean "is_sponsor"
+    t.datetime "voided_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["ticket_id"], name: "index_attendees_on_ticket_id"
+  end
 
   create_table "tickets", force: :cascade do |t|
     t.integer "tito_id", null: false
@@ -39,4 +53,5 @@ ActiveRecord::Schema.define(version: 2021_07_08_125729) do
     t.index ["tito_id"], name: "index_tickets_on_tito_id", unique: true
   end
 
+  add_foreign_key "attendees", "tickets"
 end

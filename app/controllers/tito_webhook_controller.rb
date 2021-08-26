@@ -3,10 +3,11 @@ class TitoWebhookController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    return render(status: 400, json: {status: :unknown_type}) unless request.headers['x-webhook-name']&.start_with?('ticket.')
+    event_name = request.headers['x-webhook-name']
+    return render(status: 400, json: {status: :unknown_type}) unless event_name&.start_with?('ticket.')
 
     updated_at = params[:updated_at]&.yield_self { |_| Time.parse(_) }
-    return render(status: 400, json: {status: :missing_updated_at}) unless request.headers['x-webhook-name']&.start_with?('ticket.')
+    return render(status: 400, json: {status: :missing_updated_at}) unless updated_at
 
     ticket = Ticket.find_or_initialize_by(tito_id: params[:id]&.to_i)
     return render(status: 200, json: {status: :skipped}) if ticket.updated_at && ticket.updated_at >= updated_at
@@ -26,10 +27,16 @@ class TitoWebhookController < ApplicationController
       tito_updated_at: updated_at,
     )
 
-    if ticket.save
-      render(status: 200, json: {status: :ok})
-    else
-      render(status: 400, json: {status: :invalid_record}) # TODO: Raven
+    ApplicationRecord.transaction do
+      if ticket.save
+        if %w(ticket.reassigned ticket.voided).include?(event_name) || ticket.state == 'void'
+          ticket.attendees.each(&:void!)
+        end
+
+        render(status: 200, json: {status: :ok})
+      else
+        render(status: 400, json: {status: :invalid_record}) # TODO: Raven
+      end
     end
   end
 

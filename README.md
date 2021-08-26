@@ -1,24 +1,15 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Todos
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- be: attendee ログイン
+- be: attendee 設定
+- be: 複数トラックの設定
+- be: タイムテーブル
+- fe: IVS embed
+- fe: チャット
+- be: チャットログ回収
+- 字幕考える
+- MediaLive スケジューリング
+- IVSメタデータ発出
+- トランジションのモーションどうするか

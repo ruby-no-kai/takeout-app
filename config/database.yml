@@ -25,7 +25,7 @@ default: &default
 development:
   <<: *default
   database: takeout_app_development
-<% docker_port = ENV['DATABASE_URL'].nil? ? IO.popen([*%w(docker-compose port db 5432), err: File::NULL], 'r', &:read).chomp.split(?:)&.last : nil %>
+<% docker_port = (ENV['DATABASE_URL'].nil? ? IO.popen([*%w(docker-compose port db 5432), err: File::NULL], 'r', &:read).chomp.split(?:)&.last : nil) || '' %>
 <% unless docker_port.empty? %>
   host: 127.0.0.1
   port: <%= docker_port %>

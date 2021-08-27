@@ -1,7 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 
-const main =  "#0B374D";
-const accent =  "#E14033";
+const main = "#0B374D";
+const accent = "#E14033";
 export const Colors = {
   base: "#EBE0CE",
   baseLight: "#F3EDE2",
@@ -19,8 +19,6 @@ export const Colors = {
   backgroundColor: "#F9F9F9",
 };
 
-
-
 export const theme = extendTheme({
   fonts: {
     heading: "Titillium Web",
@@ -31,7 +29,7 @@ export const theme = extendTheme({
       body: {
         color: Colors.textDefault,
         backgroundColor: Colors.backgroundColor,
-      }
-    }
-  }
+      },
+    },
+  },
 });

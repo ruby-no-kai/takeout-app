@@ -1,7 +1,12 @@
 {
   "private": true,
+  "scripts": {
+    "watch": "webpack --progress --watch",
+    "format": "prettier --write app/javascript/**/*.{ts,tsx,scss}"
+  },
   "devDependencies": {
     "glob": "^7.1.7",
+    "prettier": "^2.3.2",
     "webpack": "^5.51.1",
     "webpack-assets-manifest": "^5.0.6",
     "webpack-cli": "^4.8.0"

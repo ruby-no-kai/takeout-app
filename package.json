@@ -18,6 +18,8 @@
     "@chakra-ui/theme-tools": "^1.1.9",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
     "@rails/ujs": "^6.1.4-1",
     "@sentry/browser": "^6.11.0",
     "@types/rails__ujs": "^6.0.1",
@@ -26,6 +28,7 @@
     "@types/react-router-dom": "^5.1.8",
     "amazon-ivs-player": "^1.4.0",
     "css-loader": "^6.2.0",
+    "dayjs": "^1.10.6",
     "framer-motion": "^4.1.17",
     "mini-css-extract-plugin": "^2.2.0",
     "react": "^17.0.2",
@@ -36,8 +39,6 @@
     "sass-loader": "^12.1.0",
     "swr": "^0.5.6",
     "ts-loader": "^9.2.5",
-    "typescript": "^4.3.5",
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2"
+    "typescript": "^4.3.5"
   }
 }

@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { mutate } from "swr";
 import * as Rails from "@rails/ujs";
+import dayjs from "dayjs";
 
 import { useState } from "react";
 
@@ -131,6 +132,7 @@ export interface StreamInfo {
   slug: string;
   type: string;
   url: string;
+  expiry: number;
 }
 
 export interface GetSessionResponse {
@@ -227,6 +229,16 @@ export const Api = {
       {
         revalidateOnFocus: false,
         revalidateOnReconnect: true,
+        compare(knownData, newData) {
+          // Accept new data only if expired
+          if (!knownData || !newData) return false;
+          const now = dayjs().unix();
+
+          return !(
+            knownData.stream.expiry < newData.stream.expiry &&
+            knownData.stream.expiry <= now
+          );
+        },
       }
     );
   },

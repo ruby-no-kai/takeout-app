@@ -72,7 +72,7 @@ export const AttendeeEdit: React.FC<Props> = () => {
 
         <FormControl mt={4} id="login_email">
           <FormLabel>Gravatar Email</FormLabel>
-          <FormHelperText>We use avatar images registered on <Link to="https://www.gravatar.com" isExternal>Gravatar</Link>. If you desire to choose alternate email address for your Gravatar image, then fill the following field.</FormHelperText>
+          <FormHelperText>We use avatar images registered on <Link href="https://www.gravatar.com" isExternal>Gravatar</Link>. If you desire to choose alternate email address for your Gravatar image, then fill the following field.</FormHelperText>
           <Input {...register("gravatar_email")} type="email" placeholder="(leave empty to remain unchanged)"/>
         </FormControl>
         <Button mt={4} size="lg" type="submit" isLoading={isRequesting} >Save</Button>

@@ -18,7 +18,7 @@ export const Navbar: React.FC = () => {
       px="18px" py="15px"
       bgColor={Colors.base}
     >
-        <Heading as="h1" size="lg"><Link to="https://rubykaigi.org/2021-takeout/">RubyKaigi Takeout 2021</Link></Heading>
+        <Heading as="h1" size="lg"><Link href="https://rubykaigi.org/2021-takeout/">RubyKaigi Takeout 2021</Link></Heading>
         <p>{session?.attendee?.name ?? ''}</p>
     </Flex>
   </>;

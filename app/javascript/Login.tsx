@@ -51,7 +51,7 @@ export const Login: React.FC<Props> = () => {
         </FormControl>
         <FormControl mt={4} id="login_reference" isRequired>
           <FormLabel>Ticket ID (Reference Code)</FormLabel>
-            <FormHelperText>Code should be shown at <Link to="https://img.sorah.jp/x/20210827_112054_xnimUYcsKE.png" isExternal target="_blank">the upper right of a confirmation email</Link> you received.</FormHelperText>
+            <FormHelperText>Code should be shown at <Link href="https://img.sorah.jp/x/20210827_112054_xnimUYcsKE.png" isExternal target="_blank">the upper right of a confirmation email</Link> you received.</FormHelperText>
           <Input {...register("reference")} type="password" placeholder="ABCD-1..." />
         </FormControl>
         <Button mt={4} size="lg" type="submit" isLoading={isRequesting} >Log in</Button>

@@ -18,6 +18,7 @@ import { ErrorAlert } from "./ErrorAlert";
 import { TrackStreamOptionsSelector } from "./TrackStreamOptionsSelector";
 import { TrackTopic } from "./TrackTopic";
 import { TrackSpeaker } from "./TrackSpeaker";
+import { TrackVideo } from "./TrackVideo";
 
 export interface Props {
   track: Track;
@@ -33,6 +34,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
   );
   return (
     <>
+      <TrackVideo slug={track.slug} streamOptions={streamOptionsState[0]} />
       <Container maxW={["auto", "auto", "auto", "1400px"]}>
         {track.topic ? (
           <TrackTopic topic={track.topic} topicNav={trackOptionsSelector} />

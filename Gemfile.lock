@@ -72,6 +72,7 @@ GEM
       concurrent-ruby (~> 1.0)
     jsonnet (0.4.0)
       mini_portile2 (>= 2.2.0)
+    jwt (2.2.3)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -160,6 +161,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   jsonnet
+  jwt
   listen (~> 3.3)
   pg (~> 1.1)
   puma (~> 5.0)

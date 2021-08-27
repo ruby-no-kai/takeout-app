@@ -2,19 +2,19 @@ const path = require("path");
 const glob = require("glob");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 
 const { NODE_ENV } = process.env;
 const isProd = NODE_ENV === "production";
-const devTool = isProd ? {} : {devtool: "source-map"};
+const devTool = isProd ? {} : { devtool: "source-map" };
 
 const entries = {};
-glob.sync("app/javascript/packs/*.{ts,tsx}").forEach(filePath => {
+glob.sync("app/javascript/packs/*.{ts,tsx}").forEach((filePath) => {
   const name = path.basename(filePath, path.extname(filePath));
   entries[name] = path.resolve(__dirname, filePath);
 });
 
-module.exports =  [
+module.exports = [
   {
     ...devTool,
     mode: isProd ? "production" : "development",
@@ -27,23 +27,34 @@ module.exports =  [
     optimization: {
       splitChunks: {
         name: "vendor",
-        chunks: "initial"
+        chunks: "initial",
       },
       minimize: isProd,
-      minimizer: [new TerserPlugin({
-        terserOptions: {
-          keep_classnames: false,
-          compress: {
-            ecma: "2017",
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            keep_classnames: false,
+            compress: {
+              ecma: "2017",
+            },
           },
-        }
-      })],
+        }),
+      ],
     },
     resolve: {
-      extensions: [".js", ".ts", ".tsx"]
+      extensions: [".js", ".ts", ".tsx"],
     },
     module: {
       rules: [
+        {
+          // https://github.com/aws-samples/amazon-ivs-player-web-sample/blob/master/webpack.config.js
+          test: /[\/\\]amazon-ivs-player[\/\\].*dist[\/\\]assets[\/\\]/,
+          loader: "file-loader",
+          type: "javascript/auto",
+          options: {
+            name: "[name].[ext]",
+          },
+        },
         {
           test: /\.scss$/,
           use: [
@@ -51,29 +62,29 @@ module.exports =  [
             {
               loader: "css-loader",
               options: {
-                url: false
-              }
+                url: false,
+              },
             },
-            "sass-loader"
-          ]
+            "sass-loader",
+          ],
         },
         {
           test: /\.tsx?$/,
           exclude: /node_module/,
           use: {
-            loader: 'ts-loader',
+            loader: "ts-loader",
             options: {
-              instance: 'main',
-            }
-          }
+              instance: "main",
+            },
+          },
         },
-      ]
+      ],
     },
     plugins: [
       new WebpackAssetsManifest({ publicPath: true, output: "manifest.json" }),
       new MiniCssExtractPlugin({
-        filename: isProd ? "[name]-[contenthash].css" : "[name].css"
+        filename: isProd ? "[name]-[contenthash].css" : "[name].css",
       }),
-    ]
+    ],
   },
 ];

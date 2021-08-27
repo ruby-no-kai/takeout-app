@@ -7,6 +7,7 @@ gem 'puma', '~> 5.0'
 gem 'sass-rails', '>= 6'
 
 gem 'jsonnet'
+gem 'jwt'
 
 gem 'simpacker'
 

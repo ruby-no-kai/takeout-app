@@ -127,6 +127,12 @@ export type TrackStreamOptionsState = [
   (x: TrackStreamOptions) => void
 ];
 
+export interface StreamInfo {
+  slug: string;
+  type: string;
+  url: string;
+}
+
 export interface GetSessionResponse {
   attendee: Attendee | null;
 }
@@ -141,6 +147,10 @@ export interface CreateSessionResponse {
 
 export interface UpdateAttendeeResponse {
   attendee: Attendee;
+}
+
+export interface GetStreamResponse {
+  stream: StreamInfo;
 }
 
 export const Api = {
@@ -208,6 +218,17 @@ export const Api = {
     });
     mutate("/api/session");
     return resp.json();
+  },
+
+  useStream(slug: string, interpretation: boolean) {
+    return useSWR<GetStreamResponse, ApiError>(
+      `/api/streams/${slug}?interpretation=${interpretation ? "1" : "0"}`,
+      swrFetcher,
+      {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: true,
+      }
+    );
   },
 };
 

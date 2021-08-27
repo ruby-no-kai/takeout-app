@@ -5,6 +5,7 @@
     "format": "prettier --write app/javascript/**/*.{ts,tsx,scss}"
   },
   "devDependencies": {
+    "file-loader": "^6.2.0",
     "glob": "^7.1.7",
     "prettier": "^2.3.2",
     "webpack": "^5.51.1",

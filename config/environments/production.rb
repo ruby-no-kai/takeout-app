@@ -4,6 +4,7 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
   unless ENV['STACK'] # not during heroku build
     config.x.tito.webhook_secret = ENV.fetch('TITO_WEBHOOK_SECRET')
+    config.x.ivs.private_key = ENV.fetch('IVS_PRIVATE_KEY').yield_self { |der| OpenSSL::PKey::EC.new(der.unpack1('m*'), '') }
   end
 
   # Code is not reloaded between requests.

@@ -15,5 +15,7 @@ Rails.application.routes.draw do
     resource :attendee, only: %i(update)
 
     resource :conference, only: %i(show)
+
+    resources :streams, only: %i(show), param: :track_slug
   end
 end

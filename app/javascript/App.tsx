@@ -8,6 +8,7 @@ import { theme } from "./theme";
 import { Navbar } from "./Navbar";
 import { Login } from "./Login";
 import { AttendeeEdit } from "./AttendeeEdit";
+import { TrackPage } from "./TrackPage";
 
 export interface Props {
 }
@@ -18,7 +19,6 @@ export const App: React.FC<Props> = (_props) => {
     <ChakraProvider theme={theme}>
       <BrowserRouter>
           <Navbar />
-          <Container maxW={["auto", "auto", "auto", "1400px"]}>
             <Switch>
               <Route
                 exact
@@ -27,23 +27,10 @@ export const App: React.FC<Props> = (_props) => {
                   return <p>hi</p>;
                 }}
               />
-              <Route
-                exact
-                path="/attendee"
-                render={({ match }) => {
-                  return <AttendeeEdit />;
-                }}
-              />
-
-              <Route
-                exact
-                path="/session/new"
-                render={(_) => {
-                  return <Login />;
-                }}
-              />
+              <Route exact path="/attendee"><AttendeeEdit /></Route>
+              <Route exact path="/session/new"><Login /></Route>
+              <Route exact path="/tracks/:slug"><TrackPage /></Route>
             </Switch>
-          </Container>
       </BrowserRouter>
     </ChakraProvider>
   );

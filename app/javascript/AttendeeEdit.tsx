@@ -55,6 +55,8 @@ export const AttendeeEdit: React.FC<Props> = () => {
     </>;
   }
 
+  // TODO: ポリシーページへのリンク
+
   return <>
     {errorAlert}
     <Container mt="20px">

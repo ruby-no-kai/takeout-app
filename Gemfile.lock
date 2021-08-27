@@ -70,6 +70,8 @@ GEM
       activesupport (>= 4.2.0)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
+    jsonnet (0.4.0)
+      mini_portile2 (>= 2.2.0)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -157,6 +159,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  jsonnet
   listen (~> 3.3)
   pg (~> 1.1)
   puma (~> 5.0)
@@ -165,4 +168,4 @@ DEPENDENCIES
   simpacker
 
 BUNDLED WITH
-   2.2.15
+   2.2.24

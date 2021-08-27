@@ -86,8 +86,28 @@ export interface Attendee {
   is_sponsor: boolean;
 }
 
+export interface Conference {
+  default_track: string;
+  track_order: string[];
+  tracks: { [key: string]: Track };
+}
+
+export interface Track {
+  slug: string;
+  name: string;
+  topic: string | null;
+  topic_author: string | null;
+  description: string | null;
+  // TODO: speaker: Speaker | null;
+  // TODO: card: TrackCard | null;
+}
+
 export interface GetSessionResponse {
   attendee: Attendee | null;
+}
+
+export interface GetConferenceResponse {
+  conference: Conference;
 }
 
 export interface CreateSessionResponse {
@@ -101,6 +121,13 @@ export interface UpdateAttendeeResponse {
 export const Api = {
   useSession() {
     return useSWR<GetSessionResponse, ApiError>("/api/session", swrFetcher);
+  },
+
+  useConference() {
+    return useSWR<GetConferenceResponse, ApiError>(
+      "/api/conference",
+      swrFetcher
+    );
   },
 
   async createSession(

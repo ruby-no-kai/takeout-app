@@ -2,6 +2,7 @@
 
 ## Todos
 
+- [ ] navbar リンク・デザイン
 - [x] attendee ログイン
   - [ ] デザイン
 - [x] attendee 設定

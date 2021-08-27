@@ -8,4 +8,29 @@ class Conference
   def self.to_h
     data
   end
+
+  def self.as_json
+    {
+      default_track: data.fetch(:default_track),
+      track_order: data.fetch(:track_order),
+      tracks: data.fetch(:tracks).transform_values do |track|
+        track.except(:ivs).merge( # TODO:
+          topic: {
+            title: "Topic #{track.fetch(:name)}",
+            author: "Author #{track.fetch(:name)}",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          },
+          speaker: {
+            id: 'sorah',
+            name: 'Sorah Fukumori',
+            bio: 'Ruby committer and a Rubyist, currently working as a SWE on Developer Experiences and corporate IT. Interested in IP network, distributed systems, identity and authentication. Sometimes powering conference with Wi-Fi, organizes a Ruby conference, and operates non-commercial BGP AS.',
+            github_id: 'sorah',
+            twitter_id: 'sorah',
+            avatar_url: 'https://img.sorah.jp/x/icon2021.rect-h.480.png',
+          },
+        )
+
+      end,
+    }
+  end
 end

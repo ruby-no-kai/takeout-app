@@ -95,11 +95,23 @@ export interface Conference {
 export interface Track {
   slug: string;
   name: string;
-  topic: string | null;
-  topic_author: string | null;
-  description: string | null;
-  // TODO: speaker: Speaker | null;
+  topic: Topic | null;
+  speaker: Speaker | null;
   // TODO: card: TrackCard | null;
+}
+
+export interface Topic {
+  title: string | null;
+  author: string | null;
+  description: string | null;
+}
+
+export interface Speaker {
+  name: string;
+  bio: string;
+  github_id: string | null;
+  twitter_id: string | null;
+  avatar_url: string;
 }
 
 export interface GetSessionResponse {

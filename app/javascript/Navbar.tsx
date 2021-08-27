@@ -5,7 +5,7 @@ import { Flex, Heading, Text, Link } from "@chakra-ui/react";
 import Api from "./Api";
 
 export const Navbar: React.FC = () => {
-  const { session, error } = Api.useSession();
+  const { data: session } = Api.useSession();
   console.log(session);
 
   // TODO: session みてなんかアイコンとかだす

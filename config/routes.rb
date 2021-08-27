@@ -12,5 +12,6 @@ Rails.application.routes.draw do
 
   scope path: 'api', module: 'api' do
     resource :session, only: %i(show create destroy)
+    resource :attendee, only: %i(update)
   end
 end

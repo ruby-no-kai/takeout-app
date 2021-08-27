@@ -38,6 +38,7 @@ export const Login: React.FC<Props> = () => {
     setIsRequesting(false);
   });
 
+  // TODO: link to registration page and support email
   return <>
     {errorAlert}
     <Container mt="20px">

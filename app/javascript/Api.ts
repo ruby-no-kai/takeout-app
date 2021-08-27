@@ -94,13 +94,13 @@ export interface CreateSessionResponse {
   attendee: Attendee;
 }
 
+export interface UpdateAttendeeResponse {
+  attendee: Attendee;
+}
+
 export const Api = {
   useSession() {
-    const { data, error } = useSWR<GetSessionResponse, ApiError>(
-      "/api/session",
-      swrFetcher
-    );
-    return { session: data, error: error };
+    return useSWR<GetSessionResponse, ApiError>("/api/session", swrFetcher);
   },
 
   async createSession(
@@ -108,8 +108,20 @@ export const Api = {
     reference: string
   ): Promise<CreateSessionResponse> {
     const resp = await request("/api/session", "POST", null, {
-      email: email,
-      reference: reference,
+      email,
+      reference,
+    });
+    mutate("/api/session");
+    return resp.json();
+  },
+
+  async updateAttendee(
+    name: string,
+    gravatar_email: string
+  ): Promise<UpdateAttendeeResponse> {
+    const resp = await request("/api/attendee", "PUT", null, {
+      name,
+      gravatar_email,
     });
     mutate("/api/session");
     return resp.json();

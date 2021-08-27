@@ -6,6 +6,11 @@ class Attendee < ApplicationRecord
 
   scope :active, -> { where.not(voided_at: nil) }
 
+  def gravatar_email=(o)
+    write_attribute(:gravatar_hash,  Digest::MD5.hexdigest(o.strip.downcase))
+    o
+  end
+
   def as_json(admin: false)
     {
       name: name,
@@ -19,7 +24,7 @@ class Attendee < ApplicationRecord
   end
 
   def avatar_url
-    "" # TODO:
+    "https://www.gravatar.com/avatar/#{gravatar_hash}?s=500" # TODO:
   end
 
   def void!

@@ -7,6 +7,7 @@ import { Container } from "@chakra-ui/react";
 import { theme } from "./theme";
 import { Navbar } from "./Navbar";
 import { Login } from "./Login";
+import { AttendeeEdit } from "./AttendeeEdit";
 
 export interface Props {
 }
@@ -26,6 +27,14 @@ export const App: React.FC<Props> = (_props) => {
                   return <p>hi</p>;
                 }}
               />
+              <Route
+                exact
+                path="/attendee"
+                render={({ match }) => {
+                  return <AttendeeEdit />;
+                }}
+              />
+
               <Route
                 exact
                 path="/session/new"

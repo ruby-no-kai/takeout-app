@@ -10,7 +10,7 @@ class Api::SessionsController < Api::ApplicationController
   end
 
   def create
-    ticket = Ticket.find_by(reference: params[:reference], email: params[:email])
+    ticket = Ticket.find_by(reference: params[:reference], email: params[:email], state: 'complete')
     unless ticket
       raise Api::ApplicationController::Error::Unauthorized, "Ticket not found. Check your entered information is identical to the one shown on your ticket."
     end
@@ -19,7 +19,7 @@ class Api::SessionsController < Api::ApplicationController
     unless attendee
       attendee = ticket.attendees.create!(
         name: "#{ticket.first_name} #{ticket.last_name}",
-        gravatar_hash: Digest::MD5.hexdigest(ticket.email.strip.downcase),
+        gravatar_email: ticket.email,
         ready: false,
         # TODO: is_* flags
       )

@@ -17,12 +17,13 @@ ActiveRecord::Schema.define(version: 2021_08_26_083215) do
 
   create_table "attendees", force: :cascade do |t|
     t.bigint "ticket_id", null: false
-    t.string "name"
-    t.string "gravatar_hash"
-    t.boolean "is_staff"
-    t.boolean "is_speaker"
-    t.boolean "is_committer"
-    t.boolean "is_sponsor"
+    t.string "name", null: false
+    t.string "gravatar_hash", null: false
+    t.boolean "ready", default: false, null: false
+    t.boolean "is_staff", default: false, null: false
+    t.boolean "is_speaker", default: false, null: false
+    t.boolean "is_committer", default: false, null: false
+    t.boolean "is_sponsor", default: false, null: false
     t.datetime "voided_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

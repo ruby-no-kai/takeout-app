@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TakeoutApp</title>
+    <title>RubyKaigi Takeout 2021</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href='https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&amp;family=Titillium+Web:wght@700&amp;display=swap' rel='stylesheet'>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= stylesheet_pack_tag 'application', media: 'all' %>
+    <%= javascript_pack_tag 'vendor' %>
+    <%= javascript_pack_tag 'application' %>
   </head>
 
   <body>

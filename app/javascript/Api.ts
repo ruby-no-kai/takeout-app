@@ -104,11 +104,11 @@ export interface Topic {
   title: string | null;
   author: string | null;
   description: string | null;
+  labels: string[];
 }
 
 export interface Speaker {
   name: string;
-  bio: string;
   github_id: string | null;
   twitter_id: string | null;
   avatar_url: string;

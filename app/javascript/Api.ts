@@ -2,6 +2,8 @@ import useSWR from "swr";
 import { mutate } from "swr";
 import * as Rails from "@rails/ujs";
 
+import { useState } from "react";
+
 export class ApiError extends Error {
   public localError: Error;
   public remoteError: object | null;
@@ -105,6 +107,7 @@ export interface Topic {
   author: string | null;
   description: string | null;
   labels: string[];
+  interpretation: boolean;
 }
 
 export interface Speaker {
@@ -113,6 +116,16 @@ export interface Speaker {
   twitter_id: string | null;
   avatar_url: string;
 }
+
+export interface TrackStreamOptions {
+  interpretation: boolean;
+  caption: boolean;
+}
+
+export type TrackStreamOptionsState = [
+  TrackStreamOptions,
+  (x: TrackStreamOptions) => void
+];
 
 export interface GetSessionResponse {
   attendee: Attendee | null;
@@ -140,6 +153,37 @@ export const Api = {
       "/api/conference",
       swrFetcher
     );
+  },
+
+  // XXX: this is not an API
+  useTrackStreamOptions(): TrackStreamOptionsState {
+    const browserStateKey = "rk-takeout-app--TrackStreamOption";
+    let options: TrackStreamOptions = { interpretation: false, caption: false };
+
+    const browserState = window.localStorage.getItem(browserStateKey);
+    if (browserState) {
+      try {
+        options = JSON.parse(browserState);
+      } catch (e) {
+        console.warn(e);
+      }
+    } else {
+      const acceptJapanese =
+        navigator.languages
+          .map((v) => v.match(/^ja($|-)/) !== null)
+          .indexOf(true) !== -1;
+      options.interpretation = !acceptJapanese;
+    }
+
+    const [state, setState] = useState(options);
+
+    return [
+      state,
+      (x: TrackStreamOptions) => {
+        window.localStorage.setItem(browserStateKey, JSON.stringify(x));
+        setState(x);
+      },
+    ];
   },
 
   async createSession(

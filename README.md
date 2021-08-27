@@ -17,3 +17,5 @@
 - [ ] MediaLive スケジューリング
 - [ ] IVSメタデータ発出
 - [ ] トランジションのモーションどうするか
+- [ ] Interpret/Caption preference の保存
+  - [ ] Interpret がない場合でもわざわざ stream の切り替えをする必要はないぞ

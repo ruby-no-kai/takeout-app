@@ -17,12 +17,14 @@ class Api::SessionsController < Api::ApplicationController
 
     attendee = ticket.active_attendee
     unless attendee
-      attendee = ticket.attendees.create!(
+      attendee = ticket.attendees.build(
         name: "#{ticket.first_name} #{ticket.last_name}",
         gravatar_email: ticket.email,
         ready: false,
         # TODO: is_* flags
       )
+      attendee.assign_inferred_role
+      attendee.save!
     end
 
     if Rails.application.config.x.staff_only

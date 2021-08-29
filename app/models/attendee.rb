@@ -11,6 +11,20 @@ class Attendee < ApplicationRecord
     o
   end
 
+  def assign_inferred_role
+    # Note: using release_title because release_slug may have a randomised value
+    case release_title.downcase
+    when 'staff'
+      self.is_staff = true
+    when 'speaker'
+      self.is_speaker = true
+    when 'ruby committer'
+      self.is_committer = true
+    when 'sponsor'
+      self.is_sponsor = true
+    end
+  end
+
   def as_json(admin: false)
     {
       name: name,

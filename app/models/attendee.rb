@@ -4,7 +4,7 @@ class Attendee < ApplicationRecord
 
   belongs_to :ticket
 
-  scope :active, -> { where.not(voided_at: nil) }
+  scope :active, -> { where(voided_at: nil) }
 
   def gravatar_email=(o)
     write_attribute(:gravatar_hash,  Digest::MD5.hexdigest(o.strip.downcase))

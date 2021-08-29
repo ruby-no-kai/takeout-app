@@ -5,7 +5,7 @@ import videojs from "video.js";
 import { VideoJSIVSTech, VideoJSQualityPlugin } from "amazon-ivs-player";
 import "./videojs";
 
-import { Box } from "@chakra-ui/react";
+import { AspectRatio, Box } from "@chakra-ui/react";
 
 import { Api, Track, TrackStreamOptions } from "./Api";
 
@@ -58,12 +58,11 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
     console.log("useEffect", playbackUrl, elem.current);
 
     const root = document.createElement("div");
-    const vjsdiv = document.createElement("div");
-    vjsdiv.dataset.vjsPlayer = "true";
+    root.dataset.vjsPlayer = "true";
     const video = document.createElement("video");
+    video.classList.add("video-js");
 
-    vjsdiv.appendChild(video);
-    root.appendChild(vjsdiv);
+    root.appendChild(video);
     elem.current.appendChild(root);
 
     const newPlayer = videojs(
@@ -71,14 +70,16 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
       {
         techOrder: ["AmazonIVS"],
         autoplay: true,
+        controls: true,
+        fill: true,
       },
       () => {
         console.log("player is ready");
-        newPlayer.src(playbackUrl);
       }
     ) as videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
 
     newPlayer.enableIVSQualityPlugin();
+    newPlayer.src(playbackUrl);
 
     /*const events: VideoJSEvents = player.getIVSEvents();
     const ivsPlayer = player.getIVSPlayer();
@@ -98,5 +99,9 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
     };
   }, [playbackUrl]);
 
-  return <Box ref={elem} />;
+  return (
+    <AspectRatio ratio={16 / 9}>
+      <Box w="100%" h="100%" ref={elem} />
+    </AspectRatio>
+  );
 };

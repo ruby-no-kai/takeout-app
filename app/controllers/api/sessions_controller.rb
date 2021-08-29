@@ -25,6 +25,12 @@ class Api::SessionsController < Api::ApplicationController
       )
     end
 
+    if Rails.application.config.x.staff_only
+      unless attendee.staff?
+        raise Api::ApplicationController::Error::Forbidden, "currently in staff only mode"
+      end
+    end
+
     session[:attendee_id] = attendee.id
     render(json: {ok: true, attendee: attendee.as_json}.to_json)
   end

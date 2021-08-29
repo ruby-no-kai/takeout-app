@@ -6,7 +6,7 @@ class Api::StreamsController < Api::ApplicationController
     track = Conference.data.fetch(:tracks)[params[:track_slug]]
     raise Api::ApplicationController::Error::NotFound, "unknown track" unless track
 
-    stream_type = params[:interpretation] == '1' ? :interpretation : :general
+    stream_type = params[:interpretation] == '1' ? :interpretation : :main
     stream_info = track.fetch(:ivs)[stream_type]
     raise Api::ApplicationController::Error::NotFound, "stream type not offered" unless stream_info
 

@@ -9,7 +9,7 @@ local ivs_url = 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/vide
       name: '#rubykaigiA',
       slug: 'a',
       ivs: {
-        general: {
+        main: {
           arn: ivs_arn,
           url: ivs_url,
         },
@@ -23,7 +23,7 @@ local ivs_url = 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/vide
       name: '#rubykaigiB',
       slug: 'b',
       ivs: {
-        general: {
+        main: {
           arn: ivs_arn,
           url: ivs_url,
         },

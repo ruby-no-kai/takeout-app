@@ -158,7 +158,9 @@ export interface GetStreamResponse {
 
 export const Api = {
   useSession() {
-    return useSWR<GetSessionResponse, ApiError>("/api/session", swrFetcher);
+    return useSWR<GetSessionResponse, ApiError>("/api/session", swrFetcher, {
+      revalidateOnFocus: false,
+    });
   },
 
   useConference() {

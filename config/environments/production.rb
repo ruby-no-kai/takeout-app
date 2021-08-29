@@ -89,7 +89,7 @@ Rails.application.configure do
     key: '__Host-rk-takeout-sess',
     same_site: :lax,
     secure: true,
-  }
+  )
 
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector

@@ -9,6 +9,8 @@ class Api::AttendeesController < Api::ApplicationController
     current_attendee.gravatar_email = params[:gravatar_email] if params[:gravatar_email].present?
 
     current_attendee.save!
+    UpdateChimeUserJob.perform_later(current_attendee)
+
     render json: {ok: true, attendee: current_attendee.as_json}.to_json
   end
 end

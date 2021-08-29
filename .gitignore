@@ -27,3 +27,5 @@
 
 /public/packs
 node_modules/
+
+.terraform/

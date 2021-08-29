@@ -1,8 +1,10 @@
 class Attendee < ApplicationRecord
-  validates :name, presence: true
+  validates :name, presence: true # TODO: length
   validates :gravatar_hash, presence: true
 
   belongs_to :ticket
+
+  has_one :chime_user, dependent: :destroy
 
   scope :active, -> { where(voided_at: nil) }
 
@@ -13,7 +15,7 @@ class Attendee < ApplicationRecord
 
   def assign_inferred_role
     # Note: using release_title because release_slug may have a randomised value
-    case ticket.release_title.downcase
+    case ticket.release_title&.downcase
     when 'staff'
       self.is_staff = true
     when 'speaker'

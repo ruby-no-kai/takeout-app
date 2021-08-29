@@ -9,6 +9,10 @@ gem 'sass-rails', '>= 6'
 gem 'jsonnet'
 gem 'jwt'
 
+gem 'aws-sdk-core' # sts
+gem 'aws-sdk-chimesdkidentity'
+gem 'aws-sdk-chimesdkmessaging'
+
 gem 'simpacker'
 
 group :development, :test do

@@ -31,7 +31,7 @@ class TitoWebhookController < ApplicationController
     ApplicationRecord.transaction do
       if ticket.save
         if %w(ticket.reassigned ticket.voided).include?(event_name) || ticket.state == 'void'
-          ticket.attendees.each(&:void!)
+          ticket.attendees.each(&:void!) # TODO: void Chime membership
         end
 
         render(status: 200, json: {status: :ok})

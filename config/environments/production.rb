@@ -6,7 +6,11 @@ Rails.application.configure do
     config.x.tito.webhook_secret = ENV.fetch('TITO_WEBHOOK_SECRET')
     config.x.ivs.private_key = ENV.fetch('IVS_PRIVATE_KEY').yield_self { |der| OpenSSL::PKey::EC.new(der.unpack1('m*'), '') }
     config.x.staff_only = ENV['TAKEOUT_STAFF_ONLY'] == '1'
+
+    config.x.chime.user_role_arn = ENV.fetch('TAKEOUT_USER_ROLE_ARN')
   end
+
+  config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :inline : :shoryuken
 
   # Code is not reloaded between requests.
   config.cache_classes = true

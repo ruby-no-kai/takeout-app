@@ -21,7 +21,6 @@ class Api::SessionsController < Api::ApplicationController
         name: "#{ticket.first_name} #{ticket.last_name}",
         gravatar_email: ticket.email,
         ready: false,
-        # TODO: is_* flags
       )
       attendee.assign_inferred_role
       attendee.save!
@@ -32,6 +31,8 @@ class Api::SessionsController < Api::ApplicationController
         raise Api::ApplicationController::Error::Forbidden, "currently in staff only mode"
       end
     end
+
+    CreateChimeUserJob.perform_later(attendee)
 
     session[:attendee_id] = attendee.id
     render(json: {ok: true, attendee: attendee.as_json}.to_json)

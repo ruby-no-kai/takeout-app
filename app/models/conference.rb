@@ -35,4 +35,12 @@ class Conference
       end,
     }
   end
+
+  def self.chime_enabled?
+    !(Rails.env.development? && Rails.application.config.x.chime&.user_role_arn&.blank?)
+  end
+
+  def self.chime_channel_arns
+    data.fetch(:tracks).each_value.map { |t| t.dig(:chime, :channel_arn) }
+  end
 end

@@ -4,10 +4,16 @@ Rails.application.routes.draw do
   %w(
     /
     /session/new
+  ).each do |_|
+    get _ => 'frontend#show'
+  end
+
+  %w(
+    /
     /tracks/:id
     /attendee
   ).each do |_|
-    get _ => 'frontend#show'
+    get _ => 'frontend#show_require_attendee'
   end
 
   scope path: 'api', module: 'api' do

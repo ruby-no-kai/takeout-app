@@ -13,7 +13,7 @@ class Attendee < ApplicationRecord
 
   def assign_inferred_role
     # Note: using release_title because release_slug may have a randomised value
-    case release_title.downcase
+    case ticket.release_title.downcase
     when 'staff'
       self.is_staff = true
     when 'speaker'

@@ -1,13 +1,6 @@
 import React from "react";
 
-import {
-  Box,
-  HStack,
-  Icon,
-  Switch,
-  FormLabel,
-  FormControl,
-} from "@chakra-ui/react";
+import { Box, HStack, Icon, Switch, FormLabel, FormControl } from "@chakra-ui/react";
 
 import ClosedCaptionIcon from "@material-ui/icons/ClosedCaption";
 import TranslateIcon from "@material-ui/icons/Translate";
@@ -19,10 +12,7 @@ export interface Props {
   streamOptionsState: TrackStreamOptionsState;
 }
 
-export const TrackStreamOptionsSelector: React.FC<Props> = ({
-  track,
-  streamOptionsState: [options, setOptions],
-}) => {
+export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptionsState: [options, setOptions] }) => {
   const handleOnChange = (key: "caption" | "interpretation") => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const newOptions = { ...options, [`${key}`]: e.target.checked };
@@ -33,12 +23,7 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({
     <Box>
       <HStack>
         <FormControl display="flex" alignItems="center">
-          <FormLabel
-            htmlFor="TrackStreamOptions__CC"
-            aria-hidden="true"
-            m={0}
-            mr={1}
-          >
+          <FormLabel htmlFor="TrackStreamOptions__CC" aria-hidden="true" m={0} mr={1}>
             <Icon as={ClosedCaptionIcon} />
           </FormLabel>
           <Switch
@@ -49,14 +34,9 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({
           />
         </FormControl>
 
-        {track.topic?.interpretation ? (
+        {track.interpretation && track.topic?.interpretation ? (
           <FormControl display="flex" alignItems="center">
-            <FormLabel
-              htmlFor="TrackStreamOptions__interpret"
-              aria-hidden="true"
-              m={0}
-              mr={1}
-            >
+            <FormLabel htmlFor="TrackStreamOptions__interpret" aria-hidden="true" m={0} mr={1}>
               <Icon as={TranslateIcon} />
             </FormLabel>
             <Switch

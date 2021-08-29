@@ -69,6 +69,18 @@ module.exports = [
           ],
         },
         {
+          test: /\.css$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: "css-loader",
+              options: {
+                url: false,
+              },
+            },
+          ],
+        },
+        {
           test: /\.tsx?$/,
           exclude: /node_module/,
           use: {

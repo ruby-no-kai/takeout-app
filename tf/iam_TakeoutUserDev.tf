@@ -8,7 +8,7 @@ resource "aws_iam_role" "TakeoutUserDev" {
 data "aws_iam_policy_document" "TakeoutUserDev-trust" {
   statement {
     effect  = "Allow"
-    actions = ["sts:AssumeRole"]
+    actions = ["sts:AssumeRole", "sts:TagSession"]
     principals {
       type = "AWS"
       identifiers = [
@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "TakeoutUserDev" {
 
     resources = [
       // rk_takeout_user_id is expected to be given on sts:AssumeRole
-      "arn:aws:chime:us-east-1:${local.aws_account_id}:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/user/$${rk_takeout_user_id}",
+      "arn:aws:chime:us-east-1:${local.aws_account_id}:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/user/$${aws:PrincipalTag/rk_takeout_user_id}",
       "arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/channel/*",
     ]
   }

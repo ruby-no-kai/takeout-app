@@ -10,7 +10,7 @@ class Api::SessionsController < Api::ApplicationController
   end
 
   def create
-    ticket = Ticket.find_by(reference: params[:reference], email: params[:email], state: 'complete')
+    ticket = Ticket.find_by(reference: params[:reference]&.strip, email: params[:email]&.strip, state: 'complete')
     unless ticket
       raise Api::ApplicationController::Error::Unauthorized, "Ticket not found. Check your entered information is identical to the one shown on your ticket."
     end

@@ -14,16 +14,13 @@ module.exports = (_env, argv) => {
   const isProd = argv.mode === "production";
   const devTool = isProd ? {} : { devtool: "source-map" };
 
-  const outputPath = path.resolve(__dirname, "public/packs");
-  console.log(`OUTPUT_PATH: ${outputPath}`);
-
   return [
     {
       ...devTool,
       mode: isProd ? "production" : "development",
       entry: entries,
       output: {
-        path: outputPath,
+        path: path.resolve(__dirname, "public/packs"),
         publicPath: "/packs/",
         filename: isProd ? "[name]-[contenthash].js" : "[name].js",
       },

@@ -2,17 +2,17 @@ import React from "react";
 
 import { Box } from "@chakra-ui/react";
 
-import { Api, TrackStreamOptions } from "./Api";
+import { Api, Track, TrackStreamOptions } from "./Api";
 
 export interface Props {
-  slug: string;
+  track: Track;
   streamOptions: TrackStreamOptions;
 }
 
-export const TrackVideo: React.FC<Props> = ({ slug, streamOptions }) => {
+export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
   const { data: streamInfo } = Api.useStream(
-    slug,
-    streamOptions.interpretation
+    track.slug,
+    streamOptions.interpretation && track.interpretation
   );
   return (
     <Box>

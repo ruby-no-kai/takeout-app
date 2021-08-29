@@ -100,6 +100,7 @@ export interface Track {
   name: string;
   topic: Topic | null;
   speaker: Speaker | null;
+  interpretation: boolean;
   // TODO: card: TrackCard | null;
 }
 

@@ -34,7 +34,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
   );
   return (
     <>
-      <TrackVideo slug={track.slug} streamOptions={streamOptionsState[0]} />
+      <TrackVideo track={track} streamOptions={streamOptionsState[0]} />
       <Container maxW={["auto", "auto", "auto", "1400px"]}>
         {track.topic ? (
           <TrackTopic topic={track.topic} topicNav={trackOptionsSelector} />

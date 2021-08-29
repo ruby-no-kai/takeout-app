@@ -23,12 +23,7 @@ export class ApiError extends Error {
   }
 }
 
-async function request(
-  path: string,
-  method: string,
-  query: object | null,
-  payload: object | null
-) {
+async function request(path: string, method: string, query: object | null, payload: object | null) {
   let url = path;
 
   const headers = new Headers();
@@ -58,16 +53,10 @@ async function request(
 
     let err;
     if (contentType && contentType.match(/^application\/json(;.+)?$/)) {
-      err = new ApiError(
-        new Error(`${path} returned error ${resp.status}`),
-        await resp.json()
-      );
+      err = new ApiError(new Error(`${path} returned error ${resp.status}`), await resp.json());
     } else {
       const text = (await resp.text()).slice(0, 280);
-      err = new ApiError(
-        new Error(`${path} returned error ${resp.status}: ${text}`),
-        null
-      );
+      err = new ApiError(new Error(`${path} returned error ${resp.status}: ${text}`), null);
     }
     console.error(err.localError, err.remoteError);
     throw err;
@@ -124,10 +113,7 @@ export interface TrackStreamOptions {
   caption: boolean;
 }
 
-export type TrackStreamOptionsState = [
-  TrackStreamOptions,
-  (x: TrackStreamOptions) => void
-];
+export type TrackStreamOptionsState = [TrackStreamOptions, (x: TrackStreamOptions) => void];
 
 export interface StreamInfo {
   slug: string;
@@ -164,10 +150,7 @@ export const Api = {
   },
 
   useConference() {
-    return useSWR<GetConferenceResponse, ApiError>(
-      "/api/conference",
-      swrFetcher
-    );
+    return useSWR<GetConferenceResponse, ApiError>("/api/conference", swrFetcher);
   },
 
   // XXX: this is not an API
@@ -183,10 +166,7 @@ export const Api = {
         console.warn(e);
       }
     } else {
-      const acceptJapanese =
-        navigator.languages
-          .map((v) => v.match(/^ja($|-)/) !== null)
-          .indexOf(true) !== -1;
+      const acceptJapanese = navigator.languages.map((v) => v.match(/^ja($|-)/) !== null).indexOf(true) !== -1;
       options.interpretation = !acceptJapanese;
     }
 
@@ -201,10 +181,7 @@ export const Api = {
     ];
   },
 
-  async createSession(
-    email: string,
-    reference: string
-  ): Promise<CreateSessionResponse> {
+  async createSession(email: string, reference: string): Promise<CreateSessionResponse> {
     const resp = await request("/api/session", "POST", null, {
       email,
       reference,
@@ -213,10 +190,7 @@ export const Api = {
     return resp.json();
   },
 
-  async updateAttendee(
-    name: string,
-    gravatar_email: string
-  ): Promise<UpdateAttendeeResponse> {
+  async updateAttendee(name: string, gravatar_email: string): Promise<UpdateAttendeeResponse> {
     const resp = await request("/api/attendee", "PUT", null, {
       name,
       gravatar_email,
@@ -237,12 +211,9 @@ export const Api = {
           if (!knownData || !newData) return false;
           const now = dayjs().unix() + 180;
 
-          return !(
-            knownData.stream.expiry < newData.stream.expiry &&
-            knownData.stream.expiry <= now
-          );
+          return !(knownData.stream.expiry < newData.stream.expiry && knownData.stream.expiry <= now);
         },
-      }
+      },
     );
   },
 };

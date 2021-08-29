@@ -8,8 +8,7 @@ import { registerIVSTech, registerIVSQualityPlugin } from "amazon-ivs-player";
 
 import "video.js/dist/video-js.css";
 
-const createAbsolutePath = (assetPath: string) =>
-  new URL(assetPath, document.URL).toString();
+const createAbsolutePath = (assetPath: string) => new URL(assetPath, document.URL).toString();
 
 // register the tech with videojs
 registerIVSTech(videojs, {

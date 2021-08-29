@@ -84,7 +84,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.session_store :cookie_store, {
+  config.session_store(:cookie_store,
     expire_after: 14.days,
     key: '__Host-rk-takeout-sess',
     same_site: :lax,

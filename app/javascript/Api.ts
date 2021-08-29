@@ -235,7 +235,7 @@ export const Api = {
         compare(knownData, newData) {
           // Accept new data only if expired
           if (!knownData || !newData) return false;
-          const now = dayjs().unix();
+          const now = dayjs().unix() + 180;
 
           return !(
             knownData.stream.expiry < newData.stream.expiry &&

@@ -9,7 +9,7 @@ import { ChatStatus } from "./ChatSession";
 import { ErrorAlert } from "./ErrorAlert";
 
 export interface Props {
-  status: ChatStatus;
+  status: ChatStatus | undefined;
   loading: boolean;
   error: Error | null | undefined;
 }
@@ -19,7 +19,7 @@ export const ChatStatusView: React.FC<Props> = ({ status, loading, error }) => {
 
   let statusHuman = "Doing something (unknown state!?)";
 
-  if (status === "INIT") {
+  if (status === "INIT" || status === undefined) {
     statusHuman = "Obtaining session";
   } else if (status === "READY" || status === "CONNECTING" || status == "CONNECT_ERROR") {
     statusHuman = "Connecting";

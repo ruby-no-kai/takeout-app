@@ -9,6 +9,7 @@ import { useChat } from "./ChatProvider";
 import { ChatStatus, ChatMessage, ChatUpdate } from "./ChatSession";
 
 import { ErrorAlert } from "./ErrorAlert";
+import { ChatStatusView } from "./ChatStatusView";
 import { ChatHistoryView } from "./ChatHistoryView";
 import { ChatForm } from "./ChatForm";
 
@@ -18,8 +19,11 @@ export interface Props {
 
 const HISTORY_LENGTH = 100;
 
-type ChatSessionStatusTuple = [ChatStatus | undefined, Error | null | undefined];
-type ChatHistoryLoadingStatus = { status: "LOADING" } | { status: "LOADED" } | { status: "ERRORED"; error: Error };
+export type ChatSessionStatusTuple = [ChatStatus | undefined, Error | null | undefined];
+type ChatHistoryLoadingStatus =
+  | { status: "LOADING"; error?: null }
+  | { status: "LOADED"; error?: null }
+  | { status: "ERRORED"; error: Error };
 
 export const TrackChat: React.FC<Props> = ({ track }) => {
   const chat = useChat();
@@ -87,11 +91,13 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
 
   return (
     <Box>
-      <p>ch: {trackChannel}</p>
-      <p>status: {chatSessionStatus ?? "unknown"}</p>
-      <p>err: {chatSessionError ?? "N/A"}</p>
       {trackChannel ? (
         <>
+          <ChatStatusView
+            status={chatSessionStatus}
+            loading={isLoadingHistory.status === "LOADING"}
+            error={chatSessionError || isLoadingHistory.error}
+          />
           <ChatHistoryView messages={chatHistory} loading={isLoadingHistory.status === "LOADING"} />
           <ChatForm track={track} channel={trackChannel} />
         </>

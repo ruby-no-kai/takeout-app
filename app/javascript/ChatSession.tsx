@@ -51,7 +51,18 @@ export interface ChatSender extends ChatSenderFlags {
   version: string;
 }
 
+export type ChatUpdateKind =
+  | "CREATE_CHANNEL_MESSAGE"
+  | "UPDATE_CHANNEL_MESSAGE"
+  | "DELETE_CHANNEL_MESSAGE"
+  | "REDACT_CHANNEL_MESSAGE";
+
 export interface ChatUpdate {
+  kind: ChatUpdateKind;
+  message: ChatMessage;
+}
+
+export interface ChatMessage {
   channel: ChannelArn;
   content: string;
   sender: ChatSender;
@@ -88,6 +99,7 @@ export class ChatSession {
   // Note: Updated session data will be used for any reconnections
   public setSessionData(sessionData: GetChatSessionResponse) {
     this.sessionData = sessionData;
+    this.adminArn = sessionData.app_user_arn;
     this.sessionDataEpoch++;
     this.generateChimeClient();
     if (this.sessionDataEpoch === 1) this.updateStatus("READY");
@@ -105,13 +117,14 @@ export class ChatSession {
     const cb = makeWeakCallback(callback);
     if (!this.messageSubscribers.has(channel)) this.messageSubscribers.set(channel, []);
     this.messageSubscribers.get(channel)!.push(cb);
+    console.log("subs", channel, this.messageSubscribers.get(channel));
     return () => {
       const newSubs = this.messageSubscribers.get(channel)!.filter((v) => v !== cb);
       if (newSubs) this.messageSubscribers.set(channel, newSubs);
     };
   }
 
-  // Returns last 50 messages (ascending order based on time created)
+  // Returns last 50 messages (descending order based on time created)
   public async getHistory(channel: ChannelArn) {
     if (!this.chime) throw "cannot retrieve history without session data";
     if (!this.sessionData) throw "cannot retrieve history without session data";
@@ -120,14 +133,15 @@ export class ChatSession {
       new ListChannelMessagesCommand({
         ChimeBearer: this.sessionData.user_arn,
         ChannelArn: channel,
-        SortOrder: "Ascending",
+        SortOrder: "DESCENDING",
         MaxResults: 50,
       }),
     );
-    return (resp.ChannelMessages ?? []).map((v) => this.mapChannelMessage(channel, v));
+    const updates = (resp.ChannelMessages ?? []).map((v) => this.mapChannelMessage(channel, v));
+    return updates.filter((v): v is ChatMessage => !!v);
   }
 
-  public async postMessage(channel: ChannelArn, message: string) {
+  public async postMessage(channel: ChannelArn, content: string) {
     if (!this.chime) throw "cannot post without session data";
     if (!this.sessionData) throw "cannot post without session data";
 
@@ -135,7 +149,7 @@ export class ChatSession {
       new SendChannelMessageCommand({
         ChimeBearer: this.sessionData.user_arn,
         ChannelArn: channel,
-        Content: message,
+        Content: content,
         Type: "STANDARD",
         Persistence: "PERSISTENT",
       }),
@@ -239,33 +253,52 @@ export class ChatSession {
       case "DELETE_CHANNEL_MESSAGE":
         // https://docs.aws.amazon.com/chime/latest/APIReference/API_ChannelMessage.html
         const channelMessage = record as ChimeChannelMessage;
-        this.onChannelMessage(channelMessage);
+        this.onChannelMessage(messageType, channelMessage);
         break;
       default:
         console.log(`Ignoring messageType=${messageType}`);
     }
   }
 
-  onChannelMessage(message: ChimeChannelMessage) {
-    if (message.Type !== "STANDARD") return;
-    if (!message.ChannelArn) return;
+  onChannelMessage(kind: ChatUpdateKind, message: ChimeChannelMessage) {
+    if (message.Type !== "STANDARD") {
+      console.warn("Ignoring message.Type!=STANDARD", { kind, message });
+      return;
+    }
+    if (!message.ChannelArn) {
+      console.warn("Ignoring !message.ChannelArn", { kind, message });
+      return;
+    }
 
     const channel = message.ChannelArn;
-    const chatUpdate = this.mapChannelMessage(channel, message);
-    if (!chatUpdate) return;
+    const chatMessage = this.mapChannelMessage(channel, message);
+    if (!chatMessage) return;
+
+    const update = { message: chatMessage, kind };
 
     const subs = this.messageSubscribers.get(channel);
-    if (subs)
+    console.log("Publishing message update", { channel, update, subs });
+    if (subs) {
       this.messageSubscribers.set(
         channel,
-        subs.filter((v) => v(chatUpdate)),
+        subs.filter((v) => v(update)),
       );
+    }
   }
 
   mapChannelMessage(channel: ChannelArn, message: ChannelMessageSummary) {
-    if (!message.MessageId) return null;
-    if (!message.Content) return null;
-    if (!message.Sender || !message.Sender.Arn || !message.Sender.Name) return null;
+    if (!message.MessageId) {
+      console.warn("message missing ID", channel, message);
+      return null;
+    }
+    if (!message.Content) {
+      console.warn("message missing content", channel, message);
+      return null;
+    }
+    if (!message.Sender || !message.Sender.Arn || !message.Sender.Name) {
+      console.warn("message missing sender", channel, message);
+      return null;
+    }
 
     const isAdmin = message.Sender.Arn == this.adminArn;
     const { name, version, flags } = isAdmin
@@ -279,7 +312,7 @@ export class ChatSession {
       ...flags,
     };
 
-    const update: ChatUpdate = {
+    const update: ChatMessage = {
       channel,
       id: message.MessageId,
       content: message.Content,

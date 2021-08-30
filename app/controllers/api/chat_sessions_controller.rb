@@ -32,6 +32,7 @@ class Api::ChatSessionsController < Api::ApplicationController
     render(json: {
       expiry: exp.to_i,
       app_arn: Conference.data.fetch(:chime).fetch(:app_arn),
+      app_user_arn: Conference.data.fetch(:chime).fetch(:app_user_arn),
       user_arn: current_attendee.chime_user.chime_arn,
       aws_credentials: {
         access_key_id: role_session.credentials.access_key_id,

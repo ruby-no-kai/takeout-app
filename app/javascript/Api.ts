@@ -147,6 +147,7 @@ export interface GetChatSessionResponse {
   expiry: number;
   app_arn: string;
   user_arn: string;
+  app_user_arn: string;
   aws_credentials: AwsCredentials;
   tracks: ChatSessionTracksBag;
 }

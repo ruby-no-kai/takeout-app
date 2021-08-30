@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, Button } from "@chakra-ui/react";
+import { Flex, VStack, HStack, Stack, Box, Button, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 
 import { ChatMessage } from "./ChatSession";
 
@@ -48,6 +48,14 @@ export const ChatHistoryView: React.FC<Props> = ({ messages, loading }) => {
     const el = box.current;
     el.scrollTop = el.scrollHeight;
   }, [loading, autoscrollEnabled, box.current, messages]);
+
+  if (loading) {
+    return (
+      <Flex h="100%" overflowY="hidden" direction="column-reverse">
+        <SkeletonText noOfLines={18} spacing="4" />
+      </Flex>
+    );
+  }
 
   return (
     <Box h="100%" overflowX="hidden" overflowY="scroll" wordBreak="break-word" ref={box}>

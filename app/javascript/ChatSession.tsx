@@ -48,6 +48,7 @@ export interface ChatSenderFlags {
 export interface ChatSender extends ChatSenderFlags {
   handle: string;
   name: string;
+  version: string;
 }
 
 export interface ChatUpdate {
@@ -267,12 +268,13 @@ export class ChatSession {
     if (!message.Sender || !message.Sender.Arn || !message.Sender.Name) return null;
 
     const isAdmin = message.Sender.Arn == this.adminArn;
-    const { name, flags } = isAdmin
-      ? { name: ADMIN_NAME, flags: { isAdmin: true } }
+    const { name, version, flags } = isAdmin
+      ? { name: ADMIN_NAME, version: "0", flags: { isAdmin: true } }
       : parseChimeName(message.Sender.Name);
 
     const sender: ChatSender = {
       handle: message.Sender.Arn.replace(/^.+\/user\//, ""),
+      version,
       name,
       ...flags,
     };
@@ -290,19 +292,21 @@ export class ChatSession {
   }
 }
 
-const CHIME_NAME_PATTERN = /^([tf]+)\|(.*)$/;
+const CHIME_NAME_PATTERN = /^a!([tf]+)!([a-zA-Z0-9]+)\|(.*)$/;
 // Parse ChimeUser#chime_name back to structure
-function parseChimeName(chimeName: string): { name: string; flags: ChatSenderFlags } {
+function parseChimeName(chimeName: string): { name: string; version: string; flags: ChatSenderFlags } {
   const match = CHIME_NAME_PATTERN.exec(chimeName);
   if (!match) {
     console.warn("Cannot parse chimeName", chimeName);
-    return { name: chimeName, flags: {} };
+    return { name: chimeName, version: "-", flags: {} };
   } else {
     const flagsStr = match[1];
-    const name = match[2];
+    const version = match[2];
+    const name = match[3];
 
     return {
       name,
+      version,
       flags: {
         isAnonymous: name === "", // !attendee.ready? may have this name
         isStaff: flagsStr[0] == "t",

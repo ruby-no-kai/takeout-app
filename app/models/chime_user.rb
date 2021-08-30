@@ -5,6 +5,7 @@ class ChimeUser < ApplicationRecord
 
   before_validation :ensure_name
   before_validation :ensure_handle
+  before_validation :ensure_version
 
   def chime_id
     handle
@@ -16,7 +17,7 @@ class ChimeUser < ApplicationRecord
 
   def chime_name
     bits = %i(is_staff is_speaker is_committer).map { |_| attendee[_] ? 't' : 'f' }.join
-    "#{bits}|#{attendee.ready? ? attendee.name : ""}"
+    "a!#{bits}!#{(version || 0).to_s(27)}|#{attendee.ready? ? attendee.name : ""}"
   end
 
   def update_name
@@ -37,5 +38,10 @@ class ChimeUser < ApplicationRecord
         sleep 0.1
       end
     end
+  end
+
+  private def ensure_version
+    self.version ||= 0
+    self.version = self.version_was + 1 if self.version_was && self.changed?
   end
 end

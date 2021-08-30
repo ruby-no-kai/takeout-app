@@ -60,7 +60,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
     <Box>
       {errorAlert}
       <form onSubmit={onSubmit}>
-        <Input {...register("message")} autoFocus isRequired />
+        <Input {...register("message")} autoFocus isRequired autoComplete="off" />
         <Button size="sm" type="submit" isLoading={isRequesting}>
           Send
         </Button>

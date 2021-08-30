@@ -26,7 +26,7 @@ class CreateChimeUserJob < ApplicationJob
       chimemessaging.create_channel_membership(
         channel_arn: channel,
         member_arn: chime_user.chime_arn,
-        type: "HIDDEN",
+        type: "DEFAULT",
 
         chime_bearer: Conference.data.fetch(:chime).fetch(:app_user_arn),
       )

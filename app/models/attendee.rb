@@ -29,6 +29,7 @@ class Attendee < ApplicationRecord
 
   def as_json(admin: false)
     {
+      id: id,
       name: name,
       avatar_url: avatar_url,
       is_ready: ready?,

@@ -23,5 +23,6 @@ Rails.application.routes.draw do
     resource :conference, only: %i(show)
 
     resources :streams, only: %i(show), param: :track_slug
+    resource :chat_session, only: %i(show)
   end
 end

@@ -15,10 +15,8 @@ export interface Props {
 }
 
 export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
-  const { data: streamInfo } = Api.useStream(
-    track.slug,
-    streamOptions.interpretation && track.interpretation
-  );
+  // TODO: handle error
+  const { data: streamInfo } = Api.useStream(track.slug, streamOptions.interpretation && track.interpretation);
 
   const now = dayjs().unix() + 180;
   const streamInfoReady = streamInfo && now < streamInfo.stream.expiry;
@@ -26,10 +24,7 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
   if (streamInfoReady) {
     if (!streamInfo) throw "wut";
     return (
-      <StreamView
-        key={`${streamInfo.stream.slug}/${streamInfo.stream.type}`}
-        playbackUrl={streamInfo.stream.url}
-      />
+      <StreamView key={`${streamInfo.stream.slug}/${streamInfo.stream.type}`} playbackUrl={streamInfo.stream.url} />
     );
   } else {
     // TODO: placeholder
@@ -48,9 +43,7 @@ export interface StreamPlaybackSession {
 }
 
 const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
-  const [session, setSession] = React.useState<StreamPlaybackSession | null>(
-    null
-  );
+  const [session, setSession] = React.useState<StreamPlaybackSession | null>(null);
   const elem = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -75,7 +68,7 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
       },
       () => {
         console.log("player is ready");
-      }
+      },
     ) as videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
 
     newPlayer.enableIVSQualityPlugin();

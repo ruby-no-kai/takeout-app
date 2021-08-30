@@ -1,15 +1,7 @@
 import React from "react";
 import { useParams, useHistory } from "react-router-dom";
 
-import {
-  Flex,
-  Box,
-  Container,
-  Button,
-  Link,
-  Heading,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, Box, Container, Button, Link, Heading, Text } from "@chakra-ui/react";
 import { Center, Circle, Image } from "@chakra-ui/react";
 
 import { Track, TrackStreamOptionsState, Api } from "./Api";
@@ -19,6 +11,7 @@ import { TrackStreamOptionsSelector } from "./TrackStreamOptionsSelector";
 import { TrackTopic } from "./TrackTopic";
 import { TrackSpeaker } from "./TrackSpeaker";
 import { TrackVideo } from "./TrackVideo";
+import { TrackChat } from "./TrackChat";
 
 export interface Props {
   track: Track;
@@ -26,16 +19,25 @@ export interface Props {
 }
 
 export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
-  const trackOptionsSelector = (
-    <TrackStreamOptionsSelector
-      track={track}
-      streamOptionsState={streamOptionsState}
-    />
-  );
+  const streamOptions = streamOptionsState[0];
+  const trackOptionsSelector = <TrackStreamOptionsSelector track={track} streamOptionsState={streamOptionsState} />;
+
+  // TODO: Chakra 側のブレークポイントの調整
+  // TODO: hide chat button
   return (
     <>
-      <Container maxW={["auto", "auto", "auto", "1400px"]}>
-        <TrackVideo track={track} streamOptions={streamOptionsState[0]} />
+      <Container maxW={["auto", "auto", "auto", "1700px"]}>
+        <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]}>
+          <Box w="100%">
+            <TrackVideo track={track} streamOptions={streamOptionsState[0]} />
+          </Box>
+          {streamOptions.chat && track.chat ? (
+            <Box maxW={["auto", "auto", "auto", "400px"]} w="100%">
+              <TrackChat track={track} />
+            </Box>
+          ) : null}
+        </Flex>
+
         {track.topic ? (
           <TrackTopic topic={track.topic} topicNav={trackOptionsSelector} />
         ) : (

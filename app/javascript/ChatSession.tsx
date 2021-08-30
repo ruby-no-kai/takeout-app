@@ -1,0 +1,311 @@
+import { Credentials as AWSCredentials } from "@aws-sdk/types";
+import {
+  ChimeClient,
+  ListChannelMessagesCommand,
+  SendChannelMessageCommand,
+  GetMessagingSessionEndpointCommand,
+  ChannelMessageSummary,
+} from "@aws-sdk/client-chime";
+
+//import * as Chime from "aws-sdk/clients/chime";
+//import * as AWS from "aws-sdk/global";
+
+import dayjs from "dayjs";
+import { Dayjs } from "dayjs";
+
+import { ChimeSigV4Null } from "./polyfill/chimesigv4";
+import { ChimeV4MessagingSession } from "./polyfill/chimesession";
+
+import {
+  ConsoleLogger,
+  Message as ChimeMessage,
+  DefaultMessagingSession,
+  LogLevel,
+  MessagingSessionConfiguration,
+} from "amazon-chime-sdk-js";
+
+import { ChannelArn, GetChatSessionResponse } from "./Api";
+import { makeWeakCallback } from "./weakcallback";
+
+// https://docs.aws.amazon.com/chime/latest/APIReference/API_ChannelMessage.html
+// ChannelMessageSummary & {ChannelArn + Persistence}
+interface ChimeChannelMessage extends ChannelMessageSummary {
+  ChannelArn: ChannelArn;
+}
+
+export const ADMIN_NAME = "RubyKaigi";
+
+export type ChatStatus = "INIT" | "READY" | "CONNECTING" | "CONNECT_ERROR" | "CONNECTED" | "SHUTTING_DOWN";
+
+export interface ChatSenderFlags {
+  isAdmin?: boolean;
+  isStaff?: boolean;
+  isSpeaker?: boolean;
+  isCommitter?: boolean;
+}
+
+export interface ChatSender extends ChatSenderFlags {
+  handle: string;
+  name: string;
+}
+
+export interface ChatUpdate {
+  channel: ChannelArn;
+  content: string;
+  sender: ChatSender;
+  timestamp: Dayjs;
+  id: string;
+  redacted: boolean;
+}
+
+export class ChatSession {
+  public status: ChatStatus;
+  public error: Error | null;
+  sessionData: GetChatSessionResponse | null;
+  sessionDataEpoch: number;
+  sessionDataEpochConnected: number | null;
+  adminArn?: string;
+
+  chime?: ChimeClient;
+  messagingSession: DefaultMessagingSession | null;
+
+  statusSubscribers: Array<(status: ChatStatus, error: Error | null) => void>;
+  messageSubscribers: Map<ChannelArn, Array<(update: ChatUpdate) => void>>;
+
+  constructor() {
+    this.status = "INIT";
+    this.error = null;
+    this.sessionData = null;
+    this.sessionDataEpoch = 0;
+    this.sessionDataEpochConnected = null;
+    this.messagingSession = null;
+    this.statusSubscribers = [];
+    this.messageSubscribers = new Map();
+  }
+
+  // Note: Updated session data will be used for any reconnections
+  public setSessionData(sessionData: GetChatSessionResponse) {
+    this.sessionData = sessionData;
+    this.sessionDataEpoch++;
+    this.generateChimeClient();
+    if (this.sessionDataEpoch === 1) this.updateStatus("READY");
+  }
+
+  public subscribeStatus(callback: (status: ChatStatus, error: Error | null) => void) {
+    const cb = makeWeakCallback(callback);
+    this.statusSubscribers.push(cb);
+    return () => {
+      this.statusSubscribers = this.statusSubscribers.filter((v) => v !== cb);
+    };
+  }
+
+  public subscribeMessageUpdate(channel: ChannelArn, callback: (update: ChatUpdate) => void) {
+    const cb = makeWeakCallback(callback);
+    if (!this.messageSubscribers.has(channel)) this.messageSubscribers.set(channel, []);
+    this.messageSubscribers.get(channel)!.push(cb);
+    return () => {
+      const newSubs = this.messageSubscribers.get(channel)!.filter((v) => v !== cb);
+      if (newSubs) this.messageSubscribers.set(channel, newSubs);
+    };
+  }
+
+  // Returns last 50 messages (ascending order based on time created)
+  public async getHistory(channel: ChannelArn) {
+    if (!this.chime) throw "cannot retrieve history without session data";
+    if (!this.sessionData) throw "cannot retrieve history without session data";
+
+    const resp = await this.chime.send(
+      new ListChannelMessagesCommand({
+        ChimeBearer: this.sessionData.user_arn,
+        ChannelArn: channel,
+        SortOrder: "Ascending",
+        MaxResults: 50,
+      }),
+    );
+    return (resp.ChannelMessages ?? []).map((v) => this.mapChannelMessage(channel, v));
+  }
+
+  public async postMessage(channel: ChannelArn, message: string) {
+    if (!this.chime) throw "cannot post without session data";
+    if (!this.sessionData) throw "cannot post without session data";
+
+    const resp = await this.chime.send(
+      new SendChannelMessageCommand({
+        ChimeBearer: this.sessionData.user_arn,
+        ChannelArn: channel,
+        Content: message,
+        Type: "STANDARD",
+        Persistence: "PERSISTENT",
+      }),
+    );
+    return resp.MessageId;
+  }
+
+  // Returns promise that is resolved after connection attempt has been initiated
+  public async connect() {
+    if (!this.sessionData || !this.chime) throw "cannot initiate connection without session data";
+    if (this.status !== "READY" && this.status !== "SHUTTING_DOWN") throw "cannot connect at this moment";
+
+    this.updateStatus("CONNECTING");
+    this.sessionDataEpochConnected = this.sessionDataEpoch;
+    const sessionData = this.sessionData;
+    try {
+      const logger = new ConsoleLogger("SDK", LogLevel.INFO);
+      const endpoint = await this.chime.send(new GetMessagingSessionEndpointCommand({}));
+
+      const config = new MessagingSessionConfiguration(
+        sessionData.user_arn,
+        null, // generate session id on SDK
+        endpoint.Endpoint!.Url!,
+        null, //new Chime({ region: "us-east-1", credentials: new AWS.Credentials(this.buildAwsCredentials()) }),
+        null, //AWS,
+      );
+      const sigv4 = new ChimeSigV4Null(this.buildAwsCredentials());
+      this.messagingSession = new ChimeV4MessagingSession(config, logger, undefined, undefined, sigv4);
+      //this.messagingSession = new DefaultMessagingSession(config, logger);
+
+      this.messagingSession.addObserver({
+        messagingSessionDidStart: this.onStart.bind(this),
+        messagingSessionDidStartConnecting: this.onConnecting.bind(this),
+        messagingSessionDidStop: this.onStop.bind(this),
+        messagingSessionDidReceiveMessage: this.onMessage.bind(this),
+      });
+
+      this.messagingSession.start();
+    } catch (e) {
+      this.updateStatus("CONNECT_ERROR", e);
+    }
+  }
+
+  public disconnect() {
+    if (!this.messagingSession) return;
+    this.updateStatus("SHUTTING_DOWN");
+    this.messagingSession.stop();
+  }
+
+  updateStatus(status: ChatStatus, error?: Error | null) {
+    this.status = status;
+    if (error !== undefined) this.error = error;
+
+    this.statusSubscribers = this.statusSubscribers.filter((fn) => fn(this.status, this.error));
+  }
+
+  buildAwsCredentials(): AWSCredentials {
+    if (!this.sessionData) throw "cannot build credentials without session data";
+    return {
+      accessKeyId: this.sessionData.aws_credentials.access_key_id,
+      secretAccessKey: this.sessionData.aws_credentials.secret_access_key,
+      sessionToken: this.sessionData.aws_credentials.session_token,
+      expiration: new Date(this.sessionData.expiry * 1000),
+    };
+  }
+
+  generateChimeClient() {
+    this.chime = new ChimeClient({
+      region: "us-east-1",
+      credentials: this.buildAwsCredentials(),
+    });
+  }
+
+  onStart() {
+    this.updateStatus("CONNECTED", null);
+  }
+
+  onConnecting(reconnecting: boolean) {
+    if (reconnecting && this.sessionDataEpoch !== this.sessionDataEpochConnected) {
+      this.disconnect();
+      this.connect();
+    }
+    const e = reconnecting ? new Error("Reconnecting...") : null;
+    this.updateStatus("CONNECTING", e);
+  }
+
+  // Note: CloseEvent given by WebSocket, but SDK ensures callback called only on explicit close action
+  onStop(_e: CloseEvent) {
+    if (this.status === "SHUTTING_DOWN") this.updateStatus("READY", null);
+  }
+
+  onMessage(message: ChimeMessage) {
+    const messageType = message.headers["x-amz-chime-event-type"];
+    const record = JSON.parse(message.payload);
+    console.log("Incoming Message", message);
+    // https://docs.aws.amazon.com/chime/latest/dg/websockets.html#receive-messages
+    switch (messageType) {
+      case "CREATE_CHANNEL_MESSAGE":
+      case "REDACT_CHANNEL_MESSAGE":
+      case "UPDATE_CHANNEL_MESSAGE":
+      case "DELETE_CHANNEL_MESSAGE":
+        // https://docs.aws.amazon.com/chime/latest/APIReference/API_ChannelMessage.html
+        const channelMessage = record as ChimeChannelMessage;
+        this.onChannelMessage(channelMessage);
+        break;
+      default:
+        console.log(`Ignoring messageType=${messageType}`);
+    }
+  }
+
+  onChannelMessage(message: ChimeChannelMessage) {
+    if (message.Type !== "STANDARD") return;
+    if (!message.ChannelArn) return;
+
+    const channel = message.ChannelArn;
+    const chatUpdate = this.mapChannelMessage(channel, message);
+    if (!chatUpdate) return;
+
+    const subs = this.messageSubscribers.get(channel);
+    if (subs)
+      this.messageSubscribers.set(
+        channel,
+        subs.filter((v) => v(chatUpdate)),
+      );
+  }
+
+  mapChannelMessage(channel: ChannelArn, message: ChannelMessageSummary) {
+    if (!message.MessageId) return null;
+    if (!message.Content) return null;
+    if (!message.Sender || !message.Sender.Arn || !message.Sender.Name) return null;
+
+    const isAdmin = message.Sender.Arn == this.adminArn;
+    const { name, flags } = isAdmin
+      ? { name: ADMIN_NAME, flags: { isAdmin: true } }
+      : parseChimeName(message.Sender.Name);
+
+    const sender: ChatSender = {
+      handle: message.Sender.Arn.replace(/^.+\/user\//, ""),
+      name,
+      ...flags,
+    };
+
+    const update: ChatUpdate = {
+      channel,
+      id: message.MessageId,
+      content: message.Content,
+      sender,
+      timestamp: dayjs(message.CreatedTimestamp ? new Date(message.CreatedTimestamp) : new Date()),
+      redacted: message.Redacted === true,
+    };
+
+    return update;
+  }
+}
+
+const CHIME_NAME_PATTERN = /^([tf]+)\|(.+)$/;
+// Parse ChimeUser#chime_name back to structure
+function parseChimeName(chimeName: string): { name: string; flags: ChatSenderFlags } {
+  const match = CHIME_NAME_PATTERN.exec(chimeName);
+  if (!match) {
+    console.warn("Cannot parse chimeName", chimeName);
+    return { name: chimeName, flags: {} };
+  } else {
+    const flagsStr = match[1];
+    const name = match[2];
+    return {
+      name,
+      flags: {
+        isStaff: flagsStr[0] == "t",
+        isSpeaker: flagsStr[1] == "t",
+        isCommitter: flagsStr[2] == "t",
+      },
+    };
+  }
+}

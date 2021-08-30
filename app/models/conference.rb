@@ -8,6 +8,7 @@ class Conference
   def self.to_h
     data
   end
+  
 
   def self.as_json
     {
@@ -30,6 +31,7 @@ class Conference
             avatar_url: 'https://img.sorah.jp/x/icon2021.rect-h.480.png',
           },
           interpretation: !track.dig(:ivs, :interpretation).nil?,
+          chat: !track[:chime].nil?,
         )
 
       end,

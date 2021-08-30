@@ -69,6 +69,7 @@ async function swrFetcher(url: string) {
 }
 
 export interface Attendee {
+  id: number;
   name: string;
   avatar_url: string;
   is_ready: boolean;
@@ -90,6 +91,7 @@ export interface Track {
   topic: Topic | null;
   speaker: Speaker | null;
   interpretation: boolean;
+  chat: boolean;
   // TODO: card: TrackCard | null;
 }
 
@@ -111,6 +113,7 @@ export interface Speaker {
 export interface TrackStreamOptions {
   interpretation: boolean;
   caption: boolean;
+  chat: boolean;
 }
 
 export type TrackStreamOptionsState = [TrackStreamOptions, (x: TrackStreamOptions) => void];
@@ -122,8 +125,30 @@ export interface StreamInfo {
   expiry: number;
 }
 
+export type ChannelArn = string;
+
+export interface TrackChatInfo {
+  channel_arn: ChannelArn;
+}
+
+export interface AwsCredentials {
+  access_key_id: string;
+  secret_access_key: string;
+  session_token: string;
+}
+
 export interface GetSessionResponse {
   attendee: Attendee | null;
+}
+
+export type ChatSessionTracksBag = { [key: string]: TrackChatInfo | null };
+
+export interface GetChatSessionResponse {
+  expiry: number;
+  app_arn: string;
+  user_arn: string;
+  aws_credentials: AwsCredentials;
+  tracks: ChatSessionTracksBag;
 }
 
 export interface GetConferenceResponse {
@@ -156,7 +181,7 @@ export const Api = {
   // XXX: this is not an API
   useTrackStreamOptions(): TrackStreamOptionsState {
     const browserStateKey = "rk-takeout-app--TrackStreamOption";
-    let options: TrackStreamOptions = { interpretation: false, caption: false };
+    let options: TrackStreamOptions = { interpretation: false, caption: false, chat: true };
 
     const browserState = window.localStorage.getItem(browserStateKey);
     if (browserState) {
@@ -164,6 +189,9 @@ export const Api = {
         options = JSON.parse(browserState);
       } catch (e) {
         console.warn(e);
+      }
+      if (!options.hasOwnProperty("chat")) {
+        options.chat = true;
       }
     } else {
       const acceptJapanese = navigator.languages.map((v) => v.match(/^ja($|-)/) !== null).indexOf(true) !== -1;
@@ -212,6 +240,28 @@ export const Api = {
           const now = dayjs().unix() + 180;
 
           return !(knownData.stream.expiry < newData.stream.expiry && knownData.stream.expiry <= now);
+        },
+      },
+    );
+  },
+
+  useChatSession(attendeeId: number | undefined) {
+    // attendeeId for cache buster
+    return useSWR<GetChatSessionResponse, ApiError>(
+      attendeeId ? `/api/chat_session?i=${attendeeId}` : null,
+      swrFetcher,
+      {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: true,
+        refreshInterval: 3600 * 2,
+        refreshWhenHidden: false, // TODO: ほんとうに?
+        refreshWhenOffline: false,
+        compare(knownData, newData) {
+          // Accept new data only if expired
+          if (!knownData || !newData) return false;
+          const now = dayjs().unix() + 180;
+
+          return !(knownData.expiry < newData.expiry && knownData.expiry <= now);
         },
       },
     );

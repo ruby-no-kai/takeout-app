@@ -1,8 +1,7 @@
 import React from "react";
 
-import { Box, Container, Button, Link, FormControl, FormLabel, FormHelperText, Input } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { Center, Circle, Image } from "@chakra-ui/react";
-import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
 
 import { Api, Track } from "./Api";
 import { useChat } from "./ChatProvider";
@@ -89,20 +88,22 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
 
   if (!trackChannel) return <></>;
 
+  // TODO: disable ChatForm until obtain session
+
   return (
-    <Box>
-      {trackChannel ? (
-        <>
-          <ChatStatusView
-            status={chatSessionStatus}
-            loading={isLoadingHistory.status === "LOADING"}
-            error={chatSessionError || isLoadingHistory.error}
-          />
-          <ChatHistoryView messages={chatHistory} loading={isLoadingHistory.status === "LOADING"} />
-          <ChatForm track={track} channel={trackChannel} />
-        </>
-      ) : null}
-    </Box>
+    <Flex direction="column" h="100%" w="100%">
+      <ChatStatusView
+        status={chatSessionStatus}
+        loading={isLoadingHistory.status === "LOADING"}
+        error={chatSessionError || isLoadingHistory.error}
+      />
+      <Box flexGrow={1} flexShrink={0} flexBasis={0} w="100%" overflowX="hidden" overflowY="hidden">
+        <ChatHistoryView messages={chatHistory} loading={isLoadingHistory.status === "LOADING"} />
+      </Box>
+      <Box minH="100px" w="100%">
+        <ChatForm track={track} channel={trackChannel} />
+      </Box>
+    </Flex>
   );
 };
 

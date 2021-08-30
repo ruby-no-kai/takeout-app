@@ -31,12 +31,13 @@ export const ChatStatusView: React.FC<Props> = ({ status, loading, error }) => {
     statusHuman = "Disconnecting";
   }
 
+  // TODO: (refactor) move minH/w/flexBasis to TrackChat
   return (
-    <>
+    <Box minH="16px" w="100%" flexBasis={0}>
       <Box textAlign="center" py={1} mb={2}>
         <Text fontSize="14px">{statusHuman}</Text>
       </Box>
       {error ? <ErrorAlert error={error} /> : null}
-    </>
+    </Box>
   );
 };

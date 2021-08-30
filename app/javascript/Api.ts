@@ -254,7 +254,7 @@ export const Api = {
       {
         revalidateOnFocus: false,
         revalidateOnReconnect: true,
-        refreshInterval: 3600 * 2,
+        refreshInterval: 3600 * 2 * 1000,
         refreshWhenHidden: false, // TODO: ほんとうに?
         refreshWhenOffline: false,
         compare(knownData, newData) {

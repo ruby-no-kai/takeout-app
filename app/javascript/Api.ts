@@ -252,18 +252,12 @@ export const Api = {
       attendeeId ? `/api/chat_session?i=${attendeeId}` : null,
       swrFetcher,
       {
-        revalidateOnFocus: false,
+        revalidateOnFocus: true,
         revalidateOnReconnect: true,
-        refreshInterval: 3600 * 2 * 1000,
-        refreshWhenHidden: false, // TODO: ほんとうに?
+        focusThrottleInterval: 60 * 40 * 1000,
+        refreshInterval: 60 * 80 * 1000,
+        refreshWhenHidden: false,
         refreshWhenOffline: false,
-        compare(knownData, newData) {
-          // Accept new data only if expired
-          if (!knownData || !newData) return false;
-          const now = dayjs().unix() + 180;
-
-          return !(knownData.expiry < newData.expiry && knownData.expiry <= now);
-        },
       },
     );
   },

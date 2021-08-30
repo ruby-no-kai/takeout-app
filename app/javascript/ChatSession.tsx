@@ -102,6 +102,7 @@ export class ChatSession {
     this.adminArn = sessionData.app_user_arn;
     this.sessionDataEpoch++;
     this.generateChimeClient();
+    //console.log({ sessionData, sessionDataEpoch: this.sessionDataEpoch });
     if (this.sessionDataEpoch === 1) this.updateStatus("READY");
   }
 

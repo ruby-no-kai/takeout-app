@@ -39,6 +39,7 @@ export type ChatStatus = "INIT" | "READY" | "CONNECTING" | "CONNECT_ERROR" | "CO
 
 export interface ChatSenderFlags {
   isAdmin?: boolean;
+  isAnonymous?: boolean;
   isStaff?: boolean;
   isSpeaker?: boolean;
   isCommitter?: boolean;
@@ -289,7 +290,7 @@ export class ChatSession {
   }
 }
 
-const CHIME_NAME_PATTERN = /^([tf]+)\|(.+)$/;
+const CHIME_NAME_PATTERN = /^([tf]+)\|(.*)$/;
 // Parse ChimeUser#chime_name back to structure
 function parseChimeName(chimeName: string): { name: string; flags: ChatSenderFlags } {
   const match = CHIME_NAME_PATTERN.exec(chimeName);
@@ -299,9 +300,11 @@ function parseChimeName(chimeName: string): { name: string; flags: ChatSenderFla
   } else {
     const flagsStr = match[1];
     const name = match[2];
+
     return {
       name,
       flags: {
+        isAnonymous: name === "", // !attendee.ready? may have this name
         isStaff: flagsStr[0] == "t",
         isSpeaker: flagsStr[1] == "t",
         isCommitter: flagsStr[2] == "t",

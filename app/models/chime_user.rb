@@ -16,7 +16,7 @@ class ChimeUser < ApplicationRecord
 
   def chime_name
     bits = %i(is_staff is_speaker is_committer).map { |_| attendee[_] ? 't' : 'f' }.join
-    "#{bits}|#{attendee.name}"
+    "#{bits}|#{attendee.ready? ? attendee.name : ""}"
   end
 
   def update_name

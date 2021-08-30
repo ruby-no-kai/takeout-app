@@ -19,7 +19,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
   const [errorAlert, setErrorAlert] = React.useState<JSX.Element | null>(null);
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);
 
-  const { register, handleSubmit, reset } = useForm<{
+  const { register, handleSubmit, reset, setFocus } = useForm<{
     message: string;
     asAdmin: boolean;
   }>({
@@ -49,6 +49,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
       );
     }
     reset({ message: "" });
+    setFocus("message");
     setIsRequesting(false);
   });
 

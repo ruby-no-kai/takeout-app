@@ -51,7 +51,10 @@ data "aws_iam_policy_document" "heroku-takeout-prd" {
       "chime:ListChannelBans",
       "chime:CreateChannelBan",
       "chime:DeleteChannelBan",
-      "chime:ListChannelMembershipsForAppInstanceUser"
+      "chime:ListChannelMembershipsForAppInstanceUser",
+
+      "chime:CreateAppInstanceUser",
+      "chime:UpdateAppInstanceUser",
     ]
 
     resources = [

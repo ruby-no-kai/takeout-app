@@ -34,23 +34,23 @@ data "aws_iam_policy_document" "TakeoutUserDev" {
     actions = [
       "chime:SendChannelMessage",
       "chime:ListChannelMessages",
-      "chime:CreateChannelMembership",
-      "chime:ListChannelMemberships",
-      "chime:DeleteChannelMembership",
-      "chime:CreateChannelModerator",
+      #"chime:CreateChannelMembership",
+      #"chime:ListChannelMemberships",
+      #"chime:DeleteChannelMembership",
+      #"chime:CreateChannelModerator",
       "chime:ListChannelModerators",
       "chime:DescribeChannelModerator",
-      "chime:CreateChannel",
+      #"chime:CreateChannel",
       "chime:DescribeChannel",
       "chime:ListChannels",
-      "chime:DeleteChannel",
+      #"chime:DeleteChannel",
       "chime:RedactChannelMessage",
       "chime:UpdateChannelMessage",
       "chime:Connect",
       "chime:ListChannelBans",
-      "chime:CreateChannelBan",
-      "chime:DeleteChannelBan",
-      "chime:ListChannelMembershipsForAppInstanceUser"
+      #"chime:CreateChannelBan",
+      #"chime:DeleteChannelBan",
+      #"chime:ListChannelMembershipsForAppInstanceUser"
     ]
 
     resources = [

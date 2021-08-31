@@ -3,7 +3,7 @@ import { mutate } from "swr";
 import * as Rails from "@rails/ujs";
 import dayjs from "dayjs";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export class ApiError extends Error {
   public localError: Error;
@@ -69,6 +69,16 @@ function determineConferenceDataUpdatedAt(data: GetConferenceResponse) {
   return Math.max(...timestamps);
 }
 
+function determineEarliestCandidateActivationAt(data: GetConferenceResponse) {
+  const timestamps = data.conference.track_order
+    .map((slug) => data.conference.tracks[slug]?.card_candidate?.at)
+    .filter((v): v is number => !!v);
+  if (timestamps.length < 1) return undefined;
+  const at = Math.min(...timestamps);
+  if (at == Infinity || at == NaN) return undefined;
+  return at;
+}
+
 export function consumeIvsMetadata(metadata: IvsMetadata) {
   mutate(
     "/api/conference",
@@ -78,8 +88,10 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
 
         if (cardUpdate.clear) {
           const track = known.conference.tracks[cardUpdate.clear];
-          console.log("Clearing card", { key: card_key, cardUpdate });
-          if (track) track[card_key] = null;
+          if (track?.[card_key]) {
+            console.log("Clearing card", { key: card_key, cardUpdate });
+            track[card_key] = null;
+          }
         } else if (cardUpdate.card) {
           const track = known.conference.tracks[cardUpdate.card.track];
           console.log("Updating card", { key: card_key, cardUpdate });
@@ -90,6 +102,28 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
     },
     false,
   );
+}
+
+function activateCandidateTrackCard(data: GetConferenceResponse) {
+  console.log("Start activating candidate TrackCard");
+  const now = dayjs().unix();
+  let updated = false;
+  for (const [, track] of Object.entries(data.conference.tracks)) {
+    const candidate = track.card_candidate;
+    if (!candidate) continue;
+    if (now >= candidate.at) {
+      console.log(`Activating candidate TrackCard for track=${track.slug}`, track.card_candidate);
+      updated = true;
+      track.card = candidate;
+      track.card_candidate = null;
+    } else {
+      console.log(`Skipping candidate activation for track=${track.slug}`, track.card_candidate);
+    }
+  }
+  if (updated) {
+    console.log("Mutating /api/conference due to candidate TrackCard activation");
+    mutate("/api/conference", { ...data }, false);
+  }
 }
 
 async function swrFetcher(url: string) {
@@ -223,7 +257,7 @@ export const Api = {
 
   useConference() {
     // TODO: Error handling
-    return useSWR<GetConferenceResponse, ApiError>("/api/conference", swrFetcher, {
+    const swr = useSWR<GetConferenceResponse, ApiError>("/api/conference", swrFetcher, {
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
       //focusThrottleInterval: 15 * 1000, // TODO:
@@ -234,6 +268,25 @@ export const Api = {
         return knownTimestamp > newTimestamp;
       },
     });
+
+    // Schedule candidate TrackCard activation
+    const { data } = swr;
+    useEffect(() => {
+      if (!data) return;
+      const earliestCandidateActivationAt = determineEarliestCandidateActivationAt(data);
+      if (!earliestCandidateActivationAt) return;
+      const timeout = (earliestCandidateActivationAt - dayjs().unix()) * 1000 + 500;
+      console.log(
+        `Scheduling candidate TrackCard activation; earliest will happen at ${dayjs(
+          new Date(earliestCandidateActivationAt * 1000),
+        ).toISOString()}, in ${timeout / 1000}s`,
+      );
+
+      const timer = setTimeout(() => activateCandidateTrackCard(data), timeout);
+      return () => clearTimeout(timer);
+    }, [data]);
+
+    return swr;
   },
 
   // XXX: this is not an API

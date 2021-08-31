@@ -15,12 +15,14 @@
 - [ ] be: スケジュール情報の保存と発出 + IVS
 - [ ] 字幕考える
 - [ ] MediaLive スケジューリング
-- [ ] IVSメタデータ発出
+- [x] IVSメタデータ発出
 - [ ] トランジションのモーションどうするか
 - [x] Interpret/Caption preference の保存
   - [ ] Interpret がない場合でもわざわざ stream の切り替えをする必要はないぞ
 - [ ] fe: ストリーム停止時の挙動 (playlist 404になる)
 - [ ] fe: ストリーム読み込み中のプレースホルダ
+- [ ] fe: asset を S3 に
+- [ ] CloudFront
 
 ## Setup
 

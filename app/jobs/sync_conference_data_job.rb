@@ -9,6 +9,8 @@ class SyncConferenceDataJob < ApplicationJob
 
       validate_data
     end
+
+    upload_speaker_avatars
   end
 
   def sync_speakers
@@ -51,6 +53,23 @@ class SyncConferenceDataJob < ApplicationJob
     ConferencePresentation.all.each do |pr|
       if pr.speakers.map(&:slug).sort != pr.speaker_slugs.sort
         raise "presentation=#{pr.slug} (#{pr.speaker_slugs}) is missing speaker relationship"
+      end
+    end
+  end
+
+  def upload_speaker_avatars
+    s3 = Aws::S3::Client.new(region: Rails.application.config.x.s3.public_region, logger: Rails.logger)
+    ConferenceSpeaker.find_in_batches do |batch|
+      batch.each do |speaker|
+        URI.open(speaker.original_avatar_url, 'r') do |io|
+          s3.put_object(
+            bucket: Rails.application.config.x.s3.public_bucket,
+            key: "#{Rails.application.config.x.s3.public_prefix}avatars/s_#{speaker.slug}",
+            content_type: io.content_type,
+            cache_control: 'pubilc, max-age=86400, stale-while-revalidate=3600',
+            body: io,
+          )
+        end
       end
     end
   end

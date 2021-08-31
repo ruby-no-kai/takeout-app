@@ -45,7 +45,9 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
             {trackOptionsSelector}
           </Flex>
         )}
-        {track.speaker ? <TrackSpeaker speaker={track.speaker} /> : null}
+        {track.speakers?.map((s) => (
+          <TrackSpeaker key={`${s.name}-${s.avatar_url}`} speaker={s} />
+        ))}
       </Container>
     </>
   );

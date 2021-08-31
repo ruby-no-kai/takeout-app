@@ -23,13 +23,13 @@ class Conference
             labels: %w(ja en foobar),
             interpretation: true,
           },
-          speaker: {
+          speakers: [
             id: 'sorah',
             name: 'Sorah Fukumori',
             github_id: 'sorah',
             twitter_id: 'sorah',
             avatar_url: 'https://img.sorah.jp/x/icon2021.rect-h.480.png',
-          },
+          ],
           interpretation: !track.dig(:ivs, :interpretation).nil?,
           chat: !track[:chime].nil?,
         )

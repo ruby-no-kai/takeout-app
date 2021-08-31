@@ -89,7 +89,7 @@ export interface Track {
   slug: string;
   name: string;
   topic: Topic | null;
-  speaker: Speaker | null;
+  speakers: Speaker[] | null;
   interpretation: boolean;
   chat: boolean;
   // TODO: card: TrackCard | null;

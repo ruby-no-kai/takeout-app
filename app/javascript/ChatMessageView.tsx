@@ -1,8 +1,10 @@
 import React from "react";
 
-import { Box, Container } from "@chakra-ui/react";
-import { Text, Badge, Tooltip, Center, Circle, Image } from "@chakra-ui/react";
-import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
+import { Flex, Box, Container } from "@chakra-ui/react";
+import { Text, Badge, Tooltip, Center, Circle } from "@chakra-ui/react";
+import { Avatar, Image } from "@chakra-ui/react";
+
+import { DEFAULT_AVATAR_URL } from "./meta";
 
 import { Api, Track } from "./Api";
 import { ChatStatus, ChatMessage, ChatSender, ChatUpdate } from "./ChatSession";
@@ -16,11 +18,20 @@ export interface Props {
 
 export const ChatMessageView: React.FC<Props> = ({ message }) => {
   return (
-    <Box>
-      <ChatMessageAuthor author={message.sender} />{" "}
-      {message.redacted ? <i>[message removed]</i> : <span>{message.content}</span>}
-    </Box>
+    <Flex mt={2} direction="row" alignItems="center">
+      <ChatMessageAvatar author={message.sender} />
+      <Box ml={2}>
+        <Text p={0} m={0}>
+          <ChatMessageAuthor author={message.sender} />{" "}
+          {message.redacted ? <i>[message removed]</i> : <span>{message.content}</span>}
+        </Text>
+      </Box>
+    </Flex>
   );
+};
+
+const ChatMessageAvatar: React.FC<{ author: ChatSender }> = ({ author }) => {
+  return <Avatar size="xs" bg="#868E96" src={`/avatars/${author.handle}?v=${author.version}`} />;
 };
 
 const AUTHOR_NAME_COLOR = "#828282";

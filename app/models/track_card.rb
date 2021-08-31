@@ -10,12 +10,12 @@ class TrackCard < ApplicationRecord
   scope :active, -> (t = Time.zone.now) { where('activation_at <= ?', t).order(activation_at: :desc) }
   scope :candidate, -> (t = Time.zone.now) { where('activation_at > ?', t).order(activation_at: :desc) }
 
-  def self.current_for(track)
-    self.active.where(track: track).first
+  def self.current_for(track, t: Time.zone.now)
+    self.active(t).where(track: track).first
   end
 
-  def self.candidate_for(track)
-    self.candidate.where(track: track).last
+  def self.candidate_for(track, t: Time.zone.now)
+    self.candidate(t).where(track: track).last
   end
 
   def as_json

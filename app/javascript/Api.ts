@@ -64,6 +64,11 @@ async function request(path: string, method: string, query: object | null, paylo
   return resp;
 }
 
+function determineConferenceDataUpdatedAt(data: GetConferenceResponse) {
+  const timestamps = data.conference.track_order.map((slug) => data.conference.tracks[slug]?.card?.at || 0);
+  return Math.max(...timestamps);
+}
+
 async function swrFetcher(url: string) {
   return (await request(url, "GET", null, null)).json();
 }
@@ -81,7 +86,7 @@ export interface Attendee {
 
 export interface Conference {
   default_track: string;
-  track_order: string[];
+  track_order: TrackSlug[];
   tracks: { [key: string]: Track };
 }
 
@@ -194,7 +199,18 @@ export const Api = {
   },
 
   useConference() {
-    return useSWR<GetConferenceResponse, ApiError>("/api/conference", swrFetcher);
+    // TODO: Error handling
+    return useSWR<GetConferenceResponse, ApiError>("/api/conference", swrFetcher, {
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      //focusThrottleInterval: 15 * 1000, // TODO:
+      compare(knownData, newData) {
+        if (!knownData || !newData) return false;
+        const knownTimestamp = determineConferenceDataUpdatedAt(knownData);
+        const newTimestamp = determineConferenceDataUpdatedAt(newData);
+        return knownTimestamp > newTimestamp;
+      },
+    });
   },
 
   // XXX: this is not an API

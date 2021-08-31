@@ -31,7 +31,7 @@ class Attendee < ApplicationRecord
     {
       id: id,
       name: name,
-      avatar_url: avatar_url,
+      avatar_url: AvatarProvider.url(chime_user&.handle, original_avatar_url, version: chime_user&.version),
       is_ready: ready?,
       is_staff: staff?,
       is_speaker: speaker?,
@@ -40,8 +40,8 @@ class Attendee < ApplicationRecord
     }
   end
 
-  def avatar_url
-    "https://www.gravatar.com/avatar/#{gravatar_hash}?s=500" # TODO:
+  def original_avatar_url
+    "https://www.gravatar.com/avatar/#{gravatar_hash}?r=g&s=250&d=#{URI.encode_www_form_component(Rails.application.config.x.default_avatar_url)}" # TODO:
   end
 
   def void!

@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     get _ => 'frontend#show_require_attendee'
   end
 
+  resources :avatars, only: %i(show), param: :handle
+
   scope path: 'api', module: 'api' do
     resource :session, only: %i(show create destroy)
     resource :attendee, only: %i(update)

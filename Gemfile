@@ -10,6 +10,7 @@ gem 'jsonnet'
 gem 'jwt'
 
 gem 'aws-sdk-core' # sts
+gem 'aws-sdk-s3'
 gem 'aws-sdk-chimesdkidentity'
 gem 'aws-sdk-chimesdkmessaging'
 

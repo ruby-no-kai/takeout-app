@@ -17,6 +17,17 @@ data "aws_iam_policy_document" "heroku-takeout-prd" {
   statement {
     effect = "Allow"
     actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+    ]
+    resources = [
+      "${aws_s3_bucket.rk-takeout-app.arn}/prd/*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
       "sts:TagSession"
     ]
     resources = [

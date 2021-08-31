@@ -7,7 +7,14 @@ Rails.application.configure do
     config.x.ivs.private_key = ENV.fetch('IVS_PRIVATE_KEY').yield_self { |der| OpenSSL::PKey::EC.new(der.unpack1('m*'), '') }
     config.x.staff_only = ENV['TAKEOUT_STAFF_ONLY'] == '1'
 
+    config.x.default_avatar_url = 'https://rubykaigi.org/2021-takeout/images/dummy-avater.png'
+    config.x.avatar_prefix = ENV.fetch('TAKEOUT_AVATAR_PREFIX', nil) # TODO:
+
     config.x.chime.user_role_arn = ENV.fetch('TAKEOUT_USER_ROLE_ARN')
+
+    config.x.s3.public_bucket = ENV.fetch('TAKEOUT_S3_BUCKET')
+    config.x.s3.public_prefix = ENV.fetch('TAKEOUT_S3_PREFIX')
+    config.x.s3.public_region = ENV.fetch('TAKEOUT_S3_REGION')
   end
 
   config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :inline : :shoryuken

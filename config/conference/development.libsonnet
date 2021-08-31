@@ -41,4 +41,7 @@ local ivs_url = 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/vide
     app_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443',
     app_user_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/user/app',
   },
+  ivs: {
+    region: 'us-west-2',
+  },
 }

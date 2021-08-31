@@ -2,12 +2,12 @@ import React from "react";
 import dayjs from "dayjs";
 
 import videojs from "video.js";
-import { VideoJSIVSTech, VideoJSQualityPlugin } from "amazon-ivs-player";
+import { VideoJSEvents as VideoJSIVSEvents, VideoJSIVSTech, VideoJSQualityPlugin } from "amazon-ivs-player";
 import "./videojs";
 
 import { AspectRatio, Box } from "@chakra-ui/react";
 
-import { Api, Track, TrackStreamOptions } from "./Api";
+import { Api, IvsMetadata, Track, TrackStreamOptions } from "./Api";
 
 export interface Props {
   track: Track;
@@ -43,7 +43,7 @@ export interface StreamPlaybackSession {
 }
 
 const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
-  const [session, setSession] = React.useState<StreamPlaybackSession | null>(null);
+  const [_session, setSession] = React.useState<StreamPlaybackSession | null>(null);
   const elem = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -58,7 +58,7 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
     root.appendChild(video);
     elem.current.appendChild(root);
 
-    const newPlayer = videojs(
+    const player = videojs(
       video,
       {
         techOrder: ["AmazonIVS"],
@@ -71,23 +71,32 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
       },
     ) as videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
 
-    newPlayer.enableIVSQualityPlugin();
-    newPlayer.src(playbackUrl);
+    player.enableIVSQualityPlugin();
+    player.src(playbackUrl);
 
-    /*const events: VideoJSEvents = player.getIVSEvents();
+    const events: VideoJSIVSEvents = player.getIVSEvents();
     const ivsPlayer = player.getIVSPlayer();
-    ivsPlayer.addEventListener(events.PlayerState.PLAYING, () => { console.log('IVS Player is playing') })*/
+
+    ivsPlayer.addEventListener(events.PlayerEventType.TEXT_METADATA_CUE, (cue) => {
+      const payload: IvsMetadata = JSON.parse(cue.text);
+      console.log("Incoming IVS Metadata", payload);
+    });
+
+    ivsPlayer.addEventListener(events.PlayerState.PLAYING, () => {
+      console.log("IVS Player is playing");
+    });
 
     setSession({
-      player: newPlayer,
       url: playbackUrl,
+      player,
       root,
     });
+
     console.log("useEffect2", playbackUrl, elem.current);
 
     return () => {
       console.log("dispose...");
-      newPlayer.dispose();
+      player.dispose();
       root.remove();
     };
   }, [playbackUrl]);

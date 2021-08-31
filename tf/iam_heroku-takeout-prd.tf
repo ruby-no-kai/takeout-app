@@ -72,6 +72,16 @@ data "aws_iam_policy_document" "heroku-takeout-prd" {
       "arn:aws:chime:us-east-1:${local.aws_account_id}:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/*", #dev
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ivs:PutMetadata",
+    ]
+    resources = [
+      "arn:aws:ivs:us-west-2:005216166247:channel/oTssPyKzhjoS",
+    ]
+  }
 }
 
 resource "aws_iam_user_policy" "heroku-takeout-prd" {

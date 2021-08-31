@@ -73,6 +73,9 @@ GEM
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
+    aws-sdk-ivs (1.11.0)
+      aws-sdk-core (~> 3, >= 3.119.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-kms (1.47.0)
       aws-sdk-core (~> 3, >= 3.119.0)
       aws-sigv4 (~> 1.1)
@@ -185,6 +188,7 @@ DEPENDENCIES
   aws-sdk-chimesdkidentity
   aws-sdk-chimesdkmessaging
   aws-sdk-core
+  aws-sdk-ivs
   aws-sdk-s3
   byebug
   jsonnet

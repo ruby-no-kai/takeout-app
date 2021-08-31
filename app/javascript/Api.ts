@@ -85,15 +85,19 @@ export interface Conference {
   tracks: { [key: string]: Track };
 }
 
+export type TrackSlug = string;
+
 export interface Track {
-  slug: string;
+  slug: TrackSlug;
   name: string;
   interpretation: boolean;
   chat: boolean;
   card: TrackCard | null;
+  card_candidate: TrackCard | null;
 }
 
 export interface TrackCard {
+  track: TrackSlug;
   at: number;
   interpretation: boolean;
   topic: Topic | null;
@@ -123,7 +127,7 @@ export interface TrackStreamOptions {
 export type TrackStreamOptionsState = [TrackStreamOptions, (x: TrackStreamOptions) => void];
 
 export interface StreamInfo {
-  slug: string;
+  slug: TrackSlug;
   type: string;
   url: string;
   expiry: number;
@@ -170,6 +174,16 @@ export interface UpdateAttendeeResponse {
 
 export interface GetStreamResponse {
   stream: StreamInfo;
+}
+
+export interface IvsMetadata {
+  cards: IvsCardUpdate[];
+}
+
+export interface IvsCardUpdate {
+  candidate?: boolean;
+  clear?: TrackSlug;
+  card: TrackCard | null;
 }
 
 export const Api = {
@@ -232,7 +246,7 @@ export const Api = {
     return resp.json();
   },
 
-  useStream(slug: string, interpretation: boolean) {
+  useStream(slug: TrackSlug, interpretation: boolean) {
     return useSWR<GetStreamResponse, ApiError>(
       `/api/streams/${slug}?interpretation=${interpretation ? "1" : "0"}`,
       swrFetcher,

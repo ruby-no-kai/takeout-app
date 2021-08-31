@@ -8,7 +8,6 @@ class Conference
   def self.to_h
     data
   end
-  
 
   def self.as_json
     {
@@ -19,7 +18,8 @@ class Conference
           chime: track.fetch(:chime, {}).slice(:channel_arn),
           interpretation: !track.dig(:ivs, :interpretation).nil?,
           chat: !track[:chime].nil?,
-          card: TrackCard.latest_for(track.fetch(:slug)).as_json,
+          card: TrackCard.latest_for(track.fetch(:slug))&.as_json,
+          card_candidate: TrackCard.candidate_for(track.fetch(:slug))&.as_json,
         )
       end,
     }
@@ -32,4 +32,13 @@ class Conference
   def self.chime_channel_arns
     data.fetch(:tracks).each_value.map { |t| t.dig(:chime, :channel_arn) }
   end
+
+  def self.ivs_channel_arns
+    data.fetch(:tracks).each_value.flat_map { |t| t.fetch(:ivs, {}).each_value.map { |_| _.fetch(:arn) } }.uniq
+  end
+
+  def self.track_slugs
+    data.fetch(:track_order)
+  end
+
 end

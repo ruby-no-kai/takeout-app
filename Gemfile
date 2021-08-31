@@ -13,6 +13,7 @@ gem 'aws-sdk-core' # sts
 gem 'aws-sdk-s3'
 gem 'aws-sdk-chimesdkidentity'
 gem 'aws-sdk-chimesdkmessaging'
+gem 'aws-sdk-ivs'
 
 gem 'simpacker'
 

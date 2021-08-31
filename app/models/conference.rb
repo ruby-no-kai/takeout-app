@@ -18,7 +18,7 @@ class Conference
           chime: track.fetch(:chime, {}).slice(:channel_arn),
           interpretation: !track.dig(:ivs, :interpretation).nil?,
           chat: !track[:chime].nil?,
-          card: TrackCard.latest_for(track.fetch(:slug))&.as_json,
+          card: TrackCard.current_for(track.fetch(:slug))&.as_json,
           card_candidate: TrackCard.candidate_for(track.fetch(:slug))&.as_json,
         )
       end,

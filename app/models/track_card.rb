@@ -10,7 +10,7 @@ class TrackCard < ApplicationRecord
   scope :active, -> (t = Time.zone.now) { where('activation_at <= ?', t).order(activation_at: :desc) }
   scope :candidate, -> (t = Time.zone.now) { where('activation_at > ?', t).order(activation_at: :desc) }
 
-  def self.latest_for(track) # TODO: latest_for => current_for
+  def self.current_for(track)
     self.active.where(track: track).first
   end
 

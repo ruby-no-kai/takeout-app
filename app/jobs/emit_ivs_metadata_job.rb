@@ -9,7 +9,7 @@ class EmitIvsMetadataJob < ApplicationJob
 
   private def send_current_card
     metadata = make_card_update_chunks(Conference.track_slugs.map do |track|
-      {card: TrackCard.latest_for(track)&.as_json}
+      {card: TrackCard.current_for(track)&.as_json}
     end)
 
     Conference.ivs_channel_arns.each do |arn|

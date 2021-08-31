@@ -94,6 +94,7 @@ export interface Track {
 }
 
 export interface TrackCard {
+  interpretation: boolean;
   topic: Topic | null;
   speakers: Speaker[] | null;
 }
@@ -103,7 +104,6 @@ export interface Topic {
   author: string | null;
   description: string | null;
   labels: string[];
-  interpretation: boolean;
 }
 
 export interface Speaker {

@@ -34,7 +34,7 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptio
           />
         </FormControl>
 
-        {track.interpretation && track.card?.topic?.interpretation ? (
+        {track.interpretation && track.card?.interpretation ? (
           <FormControl display="flex" alignItems="center">
             <FormLabel htmlFor="TrackStreamOptions__interpret" aria-hidden="true" m={0} mr={1}>
               <Icon as={TranslateIcon} />

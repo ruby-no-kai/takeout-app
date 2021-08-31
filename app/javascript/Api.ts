@@ -88,10 +88,11 @@ export interface Conference {
 export interface Track {
   slug: string;
   name: string;
-  topic: Topic | null;
-  speakers: Speaker[] | null;
   interpretation: boolean;
   chat: boolean;
+
+  topic: Topic | null;
+  speakers: Speaker[] | null;
   // TODO: card: TrackCard | null;
 }
 

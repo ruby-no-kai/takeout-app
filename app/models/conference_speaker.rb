@@ -1,0 +1,2 @@
+class ConferenceSpeaker < ApplicationRecord
+end

@@ -5,10 +5,12 @@ class TrackCard < ApplicationRecord
   validate :validate_track
   validate :validate_content
 
+  before_validation :trigger_candidate_emit
+
   scope :active, -> (t = Time.zone.now) { where('activation_at <= ?', t).order(activation_at: :desc) }
   scope :candidate, -> (t = Time.zone.now) { where('activation_at > ?', t).order(activation_at: :desc) }
 
-  def self.latest_for(track)
+  def self.latest_for(track) # TODO: latest_for => current_for
     self.active.where(track: track).first
   end
 
@@ -21,6 +23,18 @@ class TrackCard < ApplicationRecord
       at: self.activation_at.to_i,
       track: track,
     )
+  end
+
+  def candidate?(t = Time.zone.now)
+    activation_at && activation_at > t
+  end
+
+  def trigger_candidate_emit
+    self.pending_candidate_emit = true if (!persisted? || changed?) && candidate? && pending_candidate_emit_was != true
+  end
+
+  def need_emit_as_candidate?(t = Time.zone.now)
+    candidate?(t) && (pending_candidate_emit || (activation_at - t) <= 60)
   end
 
   private def validate_track
@@ -60,10 +74,10 @@ class TrackCard < ApplicationRecord
     end
   end
 
-  def self.create_dummy!(track)
+  def self.create_dummy!(track, at: Time.zone.now)
     create!(
       track: track,
-      activation_at: Time.zone.now,
+      activation_at: at,
       content: {
         interpretation: true,
         topic: {

@@ -21,11 +21,14 @@ class EmitIvsMetadataJob < ApplicationJob
 
   private def send_candidate_card
     candidates, blank_candidates = Conference.track_slugs
-      .map { |track| [track, TrackCard.candidate_for(track)&.as_json] }
+      .map { |track| [track, TrackCard.candidate_for(track)] }
       .partition { |_| _[1] }
 
+    t = Time.zone.now
+    candidates.select! { |_| _[1].need_emit_as_candidate?(t) }
+
     metadata = make_card_update_chunks([
-      *candidates.map { |_|  {candidate: true, card: _[1]} },
+      *candidates.map { |_|  {candidate: true, card: _[1].as_json} },
       *blank_candidates.map { |_| {candidate: true, clear: _[0]} },
     ])
 
@@ -33,6 +36,10 @@ class EmitIvsMetadataJob < ApplicationJob
       metadata.each do |payload|
         @ivs.put_metadata(channel_arn: arn, metadata: payload)
       end
+    end
+
+    candidates.each do |_|
+      _[1].update!(pending_candidate_emit: false)
     end
   end
 

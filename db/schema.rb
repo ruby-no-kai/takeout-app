@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_31_182449) do
+ActiveRecord::Schema.define(version: 2021_08_31_202048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 2021_08_31_182449) do
     t.json "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "pending_candidate_emit", default: false, null: false
     t.index ["track", "activation_at"], name: "index_track_cards_on_track_and_activation_at", unique: true, order: { activation_at: :desc }
   end
 

@@ -16,6 +16,7 @@ gem 'aws-sdk-chimesdkmessaging'
 gem 'aws-sdk-ivs'
 
 gem 'simpacker'
+gem 's3_assets_uploader'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

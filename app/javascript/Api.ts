@@ -69,6 +69,29 @@ function determineConferenceDataUpdatedAt(data: GetConferenceResponse) {
   return Math.max(...timestamps);
 }
 
+export function consumeIvsMetadata(metadata: IvsMetadata) {
+  mutate(
+    "/api/conference",
+    (known: GetConferenceResponse) => {
+      metadata.cards?.forEach((cardUpdate) => {
+        const card_key = cardUpdate.candidate ? "card_candidate" : "card";
+
+        if (cardUpdate.clear) {
+          const track = known.conference.tracks[cardUpdate.clear];
+          console.log("Clearing card", { key: card_key, cardUpdate });
+          if (track) track[card_key] = null;
+        } else if (cardUpdate.card) {
+          const track = known.conference.tracks[cardUpdate.card.track];
+          console.log("Updating card", { key: card_key, cardUpdate });
+          if (track) track[card_key] = cardUpdate.card;
+        }
+      });
+      return { ...known }; // NOTE: returning the same reference doesn't update cache
+    },
+    false,
+  );
+}
+
 async function swrFetcher(url: string) {
   return (await request(url, "GET", null, null)).json();
 }

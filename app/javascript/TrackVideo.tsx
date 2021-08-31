@@ -7,7 +7,7 @@ import "./videojs";
 
 import { AspectRatio, Box } from "@chakra-ui/react";
 
-import { Api, IvsMetadata, Track, TrackStreamOptions } from "./Api";
+import { Api, IvsMetadata, Track, TrackStreamOptions, consumeIvsMetadata } from "./Api";
 
 export interface Props {
   track: Track;
@@ -80,6 +80,11 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
     ivsPlayer.addEventListener(events.PlayerEventType.TEXT_METADATA_CUE, (cue) => {
       const payload: IvsMetadata = JSON.parse(cue.text);
       console.log("Incoming IVS Metadata", payload);
+      try {
+        consumeIvsMetadata(payload);
+      } catch (e) {
+        console.error("IVS metadata error", e);
+      }
     });
 
     ivsPlayer.addEventListener(events.PlayerState.PLAYING, () => {

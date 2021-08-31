@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_31_175426) do
+ActiveRecord::Schema.define(version: 2021_08_31_182449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,6 +88,15 @@ ActiveRecord::Schema.define(version: 2021_08_31_175426) do
     t.index ["email", "reference"], name: "index_tickets_on_email_and_reference"
     t.index ["reference"], name: "index_tickets_on_reference"
     t.index ["tito_id"], name: "index_tickets_on_tito_id", unique: true
+  end
+
+  create_table "track_cards", force: :cascade do |t|
+    t.string "track"
+    t.datetime "activation_at"
+    t.json "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["track", "activation_at"], name: "index_track_cards_on_track_and_activation_at", unique: true, order: { activation_at: :desc }
   end
 
   add_foreign_key "attendees", "tickets"

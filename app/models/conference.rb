@@ -15,27 +15,12 @@ class Conference
       default_track: data.fetch(:default_track),
       track_order: data.fetch(:track_order),
       tracks: data.fetch(:tracks).transform_values do |track|
-        track.except(:ivs).merge( # TODO:
-          card: {
-            interpretation: true,
-            topic: {
-              title: "Topic #{track.fetch(:name)}",
-              author: "Author #{track.fetch(:name)}",
-              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-              labels: %w(ja en foobar),
-            },
-            speakers: [
-              id: 'sorah',
-              name: 'Sorah Fukumori',
-              github_id: 'sorah',
-              twitter_id: 'sorah',
-              avatar_url: 'https://img.sorah.jp/x/icon2021.rect-h.480.png',
-            ],
-          },
+        track.slice(:name, :slug).merge(
+          chime: track.fetch(:chime, {}).slice(:channel_arn),
           interpretation: !track.dig(:ivs, :interpretation).nil?,
           chat: !track[:chime].nil?,
+          card: TrackCard.latest_for(track.fetch(:slug)).as_json,
         )
-
       end,
     }
   end

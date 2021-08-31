@@ -94,6 +94,7 @@ export interface Track {
 }
 
 export interface TrackCard {
+  at: number;
   interpretation: boolean;
   topic: Topic | null;
   speakers: Speaker[] | null;

@@ -38,14 +38,14 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
           ) : null}
         </Flex>
 
-        {track.topic ? (
-          <TrackTopic topic={track.topic} topicNav={trackOptionsSelector} />
+        {track.card?.topic ? (
+          <TrackTopic topic={track.card.topic} topicNav={trackOptionsSelector} />
         ) : (
           <Flex justify="space-between" align="center" w="100%">
             {trackOptionsSelector}
           </Flex>
         )}
-        {track.speakers?.map((s) => (
+        {track.card?.speakers?.map((s) => (
           <TrackSpeaker key={`${s.name}-${s.avatar_url}`} speaker={s} />
         ))}
       </Container>

@@ -90,10 +90,12 @@ export interface Track {
   name: string;
   interpretation: boolean;
   chat: boolean;
+  card: TrackCard | null;
+}
 
+export interface TrackCard {
   topic: Topic | null;
   speakers: Speaker[] | null;
-  // TODO: card: TrackCard | null;
 }
 
 export interface Topic {

@@ -6,8 +6,7 @@ import { Flex, Box, Container } from "@chakra-ui/react";
 import { Track, TrackStreamOptionsState } from "./Api";
 
 const TrackStreamOptionsSelector = loadable(() => import("./TrackStreamOptionsSelector"));
-const TrackTopic = loadable(() => import("./TrackTopic"));
-const TrackSpeaker = loadable(() => import("./TrackSpeaker"));
+const TrackCardView = loadable(() => import("./TrackCardView"));
 const TrackVideo = loadable(() => import("./TrackVideo"));
 const TrackChat = loadable(() => import("./TrackChat"));
 
@@ -36,16 +35,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
           ) : null}
         </Flex>
 
-        {track.card?.topic ? (
-          <TrackTopic topic={track.card.topic} topicNav={trackOptionsSelector} />
-        ) : (
-          <Flex justify="space-between" align="center" w="100%">
-            {trackOptionsSelector}
-          </Flex>
-        )}
-        {track.card?.speakers?.map((s) => (
-          <TrackSpeaker key={`${s.name}-${s.avatar_url}`} speaker={s} />
-        ))}
+        <TrackCardView card={track.card} nav={trackOptionsSelector} />
       </Container>
     </>
   );

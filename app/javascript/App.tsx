@@ -13,6 +13,7 @@ const TrackPage = loadable(() => import("./TrackPage"));
 
 const ControlRoot = loadable(() => import("./ControlRoot"));
 const ControlLogin = loadable(() => import("./ControlLogin"));
+const ControlTrackCardsPage = loadable(() => import("./ControlTrackCardsPage"));
 
 export interface Props {}
 
@@ -41,6 +42,9 @@ export const App: React.FC<Props> = (_props) => {
 
           <Route exact path="/control">
             <ControlRoot />
+          </Route>
+          <Route exact path="/control/track_cards">
+            <ControlTrackCardsPage />
           </Route>
           <Route exact path="/control/session/new">
             <ControlLogin />

@@ -7,7 +7,7 @@ import { Topic } from "./Api";
 
 export interface Props {
   topic: Topic;
-  topicNav: JSX.Element;
+  topicNav: JSX.Element | undefined;
 }
 
 export const TrackTopic: React.FC<Props> = ({ topic, topicNav }) => {

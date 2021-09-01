@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   %w(
     /
     /session/new
+    /control/session/new
   ).each do |_|
     get _ => 'frontend#show'
   end
@@ -16,10 +17,19 @@ Rails.application.routes.draw do
     get _ => 'frontend#show_require_attendee'
   end
 
+  %w(
+    /control
+  ).each do |_|
+    get _ => 'frontend#show_require_control'
+  end
+
   resources :avatars, only: %i(show), param: :handle
 
   scope path: 'api', module: 'api' do
-    resource :session, only: %i(show create destroy)
+    resource :session, only: %i(show create destroy) do
+      post :take_control
+    end
+
     resource :attendee, only: %i(update)
 
     resource :conference, only: %i(show)

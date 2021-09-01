@@ -23,7 +23,7 @@ export class ApiError extends Error {
   }
 }
 
-async function request(path: string, method: string, query: object | null, payload: object | null) {
+export async function request(path: string, method: string, query: object | null, payload: object | null) {
   let url = path;
 
   const headers = new Headers();
@@ -126,7 +126,7 @@ function activateCandidateTrackCard(data: GetConferenceResponse) {
   }
 }
 
-async function swrFetcher(url: string) {
+export async function swrFetcher(url: string) {
   return (await request(url, "GET", null, null)).json();
 }
 
@@ -209,6 +209,7 @@ export interface AwsCredentials {
 
 export interface GetSessionResponse {
   attendee: Attendee | null;
+  control: boolean;
 }
 export type ChatSessionTracksBag = { [key: string]: TrackChatInfo | null };
 

@@ -6,6 +6,7 @@ class Api::SessionsController < Api::ApplicationController
   def show
     render(json: {
       attendee: current_attendee&.as_json,
+      control: !!session[:staff_control],
     }.to_json)
   end
 
@@ -39,7 +40,18 @@ class Api::SessionsController < Api::ApplicationController
   end
 
   def destroy
+    session[:staff_control] = nil
     session[:attendee_id] = nil
     render(json: {ok: true}.to_json)
+  end
+
+  def take_control
+    expect = Rails.application.config.x.control.password
+    if !expect || Rack::Utils.secure_compare(expect, params[:password])
+      session[:staff_control] = true
+      render(json: {ok: true}.to_json)
+    else
+      raise Api::ApplicationController::Error::Unauthorized
+    end
   end
 end

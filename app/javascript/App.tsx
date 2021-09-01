@@ -11,6 +11,9 @@ const Login = loadable(() => import("./Login"));
 const AttendeeEdit = loadable(() => import("./AttendeeEdit"));
 const TrackPage = loadable(() => import("./TrackPage"));
 
+const ControlRoot = loadable(() => import("./ControlRoot"));
+const ControlLogin = loadable(() => import("./ControlLogin"));
+
 export interface Props {}
 
 export const App: React.FC<Props> = (_props) => {
@@ -23,8 +26,7 @@ export const App: React.FC<Props> = (_props) => {
             exact
             path="/"
             render={({ match }) => {
-              return 100;
-              ////////////////return <p>hi</p>;
+              return <p>hi</p>;
             }}
           />
           <Route exact path="/attendee">
@@ -35,6 +37,13 @@ export const App: React.FC<Props> = (_props) => {
           </Route>
           <Route exact path="/tracks/:slug">
             <TrackPage />
+          </Route>
+
+          <Route exact path="/control">
+            <ControlRoot />
+          </Route>
+          <Route exact path="/control/session/new">
+            <ControlLogin />
           </Route>
         </Switch>
       </BrowserRouter>

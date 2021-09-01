@@ -5,6 +5,13 @@ class Api::ApplicationController < ::ApplicationController
     end
   end
 
+  def require_control
+    unless session[:staff_control]
+      raise Error::Unauthorized
+    end
+  end
+
+
   module Error
     class NotFound < StandardError; end
     class BadRequest < StandardError; end

@@ -8,4 +8,10 @@ class ApplicationController < ActionController::Base
       redirect_to "/session/new?void=#{current_attendee&.voided? ? 1 : 0}"
     end
   end
+
+  def require_control
+    unless session[:staff_control]
+      redirect_to "/control/session/new"
+    end
+  end
 end

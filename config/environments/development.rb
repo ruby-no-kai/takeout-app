@@ -12,6 +12,8 @@ Rails.application.configure do
   config.x.s3.public_prefix = ENV['TAKEOUT_S3_PREFIX'] || 'dev/'
   config.x.s3.public_region = ENV['TAKEOUT_S3_REGION'] || 'ap-northeast-1'
 
+  config.x.control.password = ENV['TAKEOUT_CONTROL_PASSWORD']
+
   config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :inline : :shoryuken
 
   # In the development environment your application's code is reloaded any time

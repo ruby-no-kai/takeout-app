@@ -15,6 +15,8 @@ Rails.application.configure do
     config.x.s3.public_bucket = ENV.fetch('TAKEOUT_S3_BUCKET')
     config.x.s3.public_prefix = ENV.fetch('TAKEOUT_S3_PREFIX')
     config.x.s3.public_region = ENV.fetch('TAKEOUT_S3_REGION')
+
+    config.x.control.password = ENV.fetch('TAKEOUT_CONTROL_PASSWORD')
   end
 
   config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :inline : :shoryuken

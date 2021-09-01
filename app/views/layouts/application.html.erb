@@ -11,7 +11,7 @@
 
     <%= stylesheet_pack_tag 'vendor', media: 'all' %>
     <%= stylesheet_pack_tag 'application', media: 'all' %>
-    <%= javascript_pack_tag 'vendor' %>
+    <%= begin; javascript_pack_tag 'vendor'; rescue Simpacker::Manifest::MissingEntryError; end %>
     <%= javascript_pack_tag 'application' %>
   </head>
 

@@ -12,6 +12,7 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
 
   def create
     TrackCard.create!(track_card_params)
+    EmitIvsMetadataJob.perform_later
     render(json: {ok: true}.to_json)
   end
 

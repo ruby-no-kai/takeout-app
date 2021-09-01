@@ -78,6 +78,8 @@ class EmitIvsMetadataJob < ApplicationJob
         chunks.each do |payload|
           @ivs.put_metadata(channel_arn: arn, metadata: payload)
         end
+      rescue Aws::IVS::Errors::ChannelNotBroadcasting => e
+        Rails.logger.warn "#{e.inspect}"
       end
     end
 

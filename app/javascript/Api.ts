@@ -158,9 +158,13 @@ export interface Track {
   card_candidate: TrackCard | null;
 }
 
-export interface TrackCard {
+export interface TrackCard extends TrackCardHeader, TrackCardContent {}
+
+export interface TrackCardHeader {
   track: TrackSlug;
   at: number;
+}
+export interface TrackCardContent {
   interpretation: boolean;
   topic: Topic | null;
   speakers: Speaker[] | null;

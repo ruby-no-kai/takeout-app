@@ -11,7 +11,7 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
   end
 
   def create
-    @track_card.update!(track_card_params)
+    TrackCard.create!(track_card_params)
     render(json: {ok: true}.to_json)
   end
 
@@ -43,7 +43,7 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
     attributes = params[:track_card]
     {
       track: attributes[:track],
-      activation_at: params[:at]&.yield_self { |_| Time.at(_) } || Time.zone.now,
+      activation_at: attributes[:at]&.yield_self { |_| Time.at(_) } || Time.zone.now,
       content: {
         interpretation: attributes[:interpretation],
         topic: attributes[:topic],

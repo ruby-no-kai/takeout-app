@@ -40,6 +40,14 @@ export const ControlApi = {
     });
   },
 
+  async createControlSession(password: string) {
+    const resp = await request("/api/session/take_control", "POST", null, {
+      password,
+    });
+    mutate("/api/session");
+    return resp.json();
+  },
+
   useTrackCards(slug: TrackSlug) {
     return useSWR<ControlGetTrackCardsResponse, ApiError>(
       `/api/control/tracks/${encodeURIComponent(slug)}/cards`,
@@ -47,11 +55,12 @@ export const ControlApi = {
     );
   },
 
-  async createControlSession(password: string) {
-    const resp = await request("/api/session/take_control", "POST", null, {
-      password,
+  async createTrackCard(card: TrackCard) {
+    const url = `/api/control/tracks/${encodeURIComponent(card.track)}/cards`;
+    const resp = await request(url, "POST", null, {
+      track_card: card,
     });
-    mutate("/api/session");
+    mutate(url);
     return resp.json();
   },
 };

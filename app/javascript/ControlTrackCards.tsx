@@ -9,18 +9,20 @@ import { Api, Track, TrackCard } from "./Api";
 import { ControlApi } from "./ControlApi";
 
 const TrackCardView = loadable(() => import("./TrackCardView"));
+const ControlTrackCardForm = loadable(() => import("./ControlTrackCardForm"));
 
 export interface Props {
   track: Track;
 }
 
 export const ControlTrackCards: React.FC<Props> = ({ track }) => {
-  const { data: controlConferenceData } = ControlApi.useConference();
+  //  const { data: controlConferenceData } = ControlApi.useConference();
   const { data: cardsData } = ControlApi.useTrackCards(track.slug);
 
   return (
     <Box>
       <Heading>{track.name}</Heading>
+      <ControlTrackCardForm track={track} />
       {cardsData?.track_cards.map((card) => (
         <TrackCardBox key={`${track.slug}-${card.at}`} card={card} />
       ))}

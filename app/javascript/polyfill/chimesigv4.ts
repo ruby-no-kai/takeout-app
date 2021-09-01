@@ -1,7 +1,7 @@
 // Chime SDK polyfill for AWS SDK JS v3 around SigV4
 // https://github.com/aws/amazon-chime-sdk-js/blob/a427be724151767fe9429a01ac3a0f39532d57b9/src/sigv4/DefaultSigV4.ts#L7
 
-import SigV4 from "amazon-chime-sdk-js/build/sigv4/SigV4";
+import type SigV4 from "amazon-chime-sdk-js/build/sigv4/SigV4";
 import Versioning from "amazon-chime-sdk-js/build/versioning/Versioning";
 
 import { Credentials, HttpRequest, QueryParameterBag } from "@aws-sdk/types";

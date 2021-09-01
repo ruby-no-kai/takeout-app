@@ -5,9 +5,9 @@ import { Flex, Box, Container } from "@chakra-ui/react";
 
 import { Track, TrackStreamOptionsState } from "./Api";
 
-import { TrackStreamOptionsSelector } from "./TrackStreamOptionsSelector";
-import { TrackTopic } from "./TrackTopic";
-import { TrackSpeaker } from "./TrackSpeaker";
+const TrackStreamOptionsSelector = loadable(() => import("./TrackStreamOptionsSelector"));
+const TrackTopic = loadable(() => import("./TrackTopic"));
+const TrackSpeaker = loadable(() => import("./TrackSpeaker"));
 const TrackVideo = loadable(() => import("./TrackVideo"));
 const TrackChat = loadable(() => import("./TrackChat"));
 

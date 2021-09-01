@@ -1,13 +1,11 @@
 import React from "react";
 
 import { Box, Flex } from "@chakra-ui/react";
-import { Center, Circle, Image } from "@chakra-ui/react";
 
-import { Api, Track } from "./Api";
+import { Track } from "./Api";
 import { useChat } from "./ChatProvider";
 import { ChatStatus, ChatMessage, ChatUpdate } from "./ChatSession";
 
-import { ErrorAlert } from "./ErrorAlert";
 import { ChatStatusView } from "./ChatStatusView";
 import { ChatHistoryView } from "./ChatHistoryView";
 import { ChatForm } from "./ChatForm";

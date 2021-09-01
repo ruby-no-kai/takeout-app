@@ -51,3 +51,5 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptio
     </Box>
   );
 };
+
+export default TrackStreamOptionsSelector;

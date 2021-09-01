@@ -1,15 +1,7 @@
 import React from "react";
 
-import {
-  Flex,
-  Box,
-  Container,
-  Button,
-  Link,
-  Heading,
-  Text,
-} from "@chakra-ui/react";
-import { Tag, HStack, Center, Circle, Image } from "@chakra-ui/react";
+import { Flex, Box, Heading, Text } from "@chakra-ui/react";
+import { Tag, HStack } from "@chakra-ui/react";
 
 import { Topic } from "./Api";
 
@@ -42,3 +34,5 @@ export const TrackTopic: React.FC<Props> = ({ topic, topicNav }) => {
     </>
   );
 };
+
+export default TrackTopic;

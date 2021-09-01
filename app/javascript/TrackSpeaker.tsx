@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Box, Container, Button, Link, Heading, Text } from "@chakra-ui/react";
-import { Stack, Center, Circle, Image } from "@chakra-ui/react";
+import { Box, Link, Heading } from "@chakra-ui/react";
+import { Stack, Image } from "@chakra-ui/react";
 
 import { Speaker } from "./Api";
 
@@ -21,18 +21,12 @@ export const TrackSpeaker: React.FC<Props> = ({ speaker }) => {
             <Heading size="lg">{speaker.name}</Heading>
             <Box>
               {speaker.github_id ? (
-                <Link
-                  isExternal
-                  href={`https://github.com/${speaker.github_id}`}
-                >
+                <Link isExternal href={`https://github.com/${speaker.github_id}`}>
                   GitHub
                 </Link>
               ) : null}
               {speaker.twitter_id ? (
-                <Link
-                  isExternal
-                  href={`https://twitter.com/${speaker.twitter_id}`}
-                >
+                <Link isExternal href={`https://twitter.com/${speaker.twitter_id}`}>
                   Twitter
                 </Link>
               ) : null}
@@ -43,3 +37,5 @@ export const TrackSpeaker: React.FC<Props> = ({ speaker }) => {
     </>
   );
 };
+
+export default TrackSpeaker;

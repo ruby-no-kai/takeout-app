@@ -21,7 +21,7 @@ export const ChatMessageView: React.FC<Props> = ({ message }) => {
     <Flex mt={2} direction="row" alignItems="center">
       <ChatMessageAvatar author={message.sender} />
       <Box ml={2}>
-        <Text p={0} m={0}>
+        <Text p={0} m={0} fontSize="sm">
           <ChatMessageAuthor author={message.sender} />{" "}
           {message.redacted ? <i>[message removed]</i> : <span>{message.content}</span>}
         </Text>
@@ -59,7 +59,7 @@ const ChatMessageAuthor: React.FC<{ author: ChatSender }> = ({ author }) => {
     // TODO: isAdmin style
     return (
       <span>
-        <Text as="span" color={AUTHOR_NAME_COLOR} fontWeight="bold">
+        <Text as="span" color={AUTHOR_NAME_COLOR} fontWeight="bold" fontSize="sm">
           RubyKaigi
         </Text>
       </span>
@@ -68,10 +68,10 @@ const ChatMessageAuthor: React.FC<{ author: ChatSender }> = ({ author }) => {
     return (
       <span>
         <Tooltip label={`Anonymous ${author.handle}`}>
-          <Text as="span" color={AUTHOR_NAME_COLOR}>
+          <Text as="span" color={AUTHOR_NAME_COLOR} fontSize="sm">
             Anonymous
           </Text>{" "}
-          <Text as="span" color={AUTHOR_NAME_COLOR} fontWeight="bold">
+          <Text as="span" color={AUTHOR_NAME_COLOR} fontWeight="bold" fontSize="sm">
             {author.handle.slice(0, 5)}
           </Text>
         </Tooltip>
@@ -81,7 +81,7 @@ const ChatMessageAuthor: React.FC<{ author: ChatSender }> = ({ author }) => {
   } else {
     return (
       <span>
-        <Text as="span" color={AUTHOR_NAME_COLOR} fontWeight="bold">
+        <Text as="span" color={AUTHOR_NAME_COLOR} fontWeight="bold" fontSize="sm">
           {author.name}
         </Text>
         {badges}

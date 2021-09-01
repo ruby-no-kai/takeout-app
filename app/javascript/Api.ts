@@ -210,7 +210,6 @@ export interface AwsCredentials {
 export interface GetSessionResponse {
   attendee: Attendee | null;
 }
-
 export type ChatSessionTracksBag = { [key: string]: TrackChatInfo | null };
 
 export interface GetChatSessionResponse {

@@ -2,6 +2,7 @@ import { App } from "../App";
 import React from "react";
 import ReactDOM from "react-dom";
 
+import "video.js/dist/video-js.css";
 import "../application.scss";
 
 import * as Rails from "@rails/ujs";

@@ -104,3 +104,4 @@ export const AttendeeEdit: React.FC<Props> = () => {
     </>
   );
 };
+export default AttendeeEdit;

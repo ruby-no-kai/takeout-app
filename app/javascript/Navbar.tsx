@@ -12,16 +12,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <Flex
-        as="nav"
-        justify="space-between"
-        align="center"
-        w="100%"
-        h="56px"
-        px="18px"
-        py="15px"
-        bgColor={Colors.base}
-      >
+      <Flex as="nav" justify="space-between" align="center" w="100%" h="56px" px="18px" py="15px" bgColor={Colors.base}>
         <Heading as="h1" size="lg">
           <Link isExternal href="https://rubykaigi.org/2021-takeout/">
             RubyKaigi Takeout 2021
@@ -32,3 +23,4 @@ export const Navbar: React.FC = () => {
     </>
   );
 };
+export default Navbar;

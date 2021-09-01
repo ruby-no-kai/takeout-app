@@ -10,19 +10,25 @@
 - [ ] be: 複数トラックの設定
 - [ ] be: タイムテーブル
 - [x] fe: IVS embed
-- [ ] fe: チャット
+- [x] fe: チャット
+  - [ ] fe: チャットのオートスクロールもうすこし賢くする
+  - [ ] デザイン
 - [ ] be: チャットログ回収
 - [ ] be: スケジュール情報の保存と発出 + IVS
 - [ ] 字幕考える
-- [ ] MediaLive スケジューリング
+- [ ] control: MediaLive スケジューリング
 - [x] IVSメタデータ発出
 - [ ] トランジションのモーションどうするか
 - [x] Interpret/Caption preference の保存
   - [ ] Interpret がない場合でもわざわざ stream の切り替えをする必要はないぞ
 - [ ] fe: ストリーム停止時の挙動 (playlist 404になる)
 - [ ] fe: ストリーム読み込み中のプレースホルダ
-- [ ] fe: asset を S3 に
+- [x] fe: asset を S3 に
+- [ ] fe: ローディング画面
 - [ ] CloudFront
+- [ ] control: Attendee の編集
+- [ ] control: TrackCard の作成と保存
+- [ ] チャットで絵文字いれてもしなないようにする
 
 ## Setup
 

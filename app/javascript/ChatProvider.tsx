@@ -1,38 +1,21 @@
 import React from "react";
-import { Api, ChatSessionTracksBag } from "./Api";
+import loadable from "@loadable/component";
 
-import { ChatSession } from "./ChatSession";
+import type { ChatProviderContextData } from "./ChatProviderTypes";
 
-export interface ChatProviderContextData {
-  session?: ChatSession;
-  tracks?: ChatSessionTracksBag;
-  error?: Error;
-}
+const ChatProviderEngine = loadable(() => import("./ChatProviderEngine"));
+
 const ChatProviderContext = React.createContext<ChatProviderContextData>({});
 
 export const ChatProvider: React.FC = ({ children }) => {
-  const { data: sessionData } = Api.useSession();
-  const { data: chatSessionData, error: chatSessionError } = Api.useChatSession(sessionData?.attendee?.id);
+  const [val, set] = React.useState<ChatProviderContextData>({});
 
-  const [chatSession, _setChatSession] = React.useState(new ChatSession());
-
-  React.useEffect(() => {
-    return () => chatSession.disconnect();
-  }, []);
-
-  React.useEffect(() => {
-    console.log(chatSession);
-    if (chatSessionData) chatSession.setSessionData(chatSessionData);
-    if (chatSession.status === "READY") chatSession.connect();
-  }, [chatSessionData?.app_arn, chatSessionData?.user_arn, chatSessionData?.expiry]);
-
-  const data = {
-    session: chatSession,
-    tracks: chatSessionData?.tracks,
-    error: chatSessionError,
-  };
-
-  return <ChatProviderContext.Provider value={data}>{children}</ChatProviderContext.Provider>;
+  return (
+    <>
+      <ChatProviderContext.Provider value={val}>{children}</ChatProviderContext.Provider>
+      <ChatProviderEngine set={set} />
+    </>
+  );
 };
 
 export function useChat() {

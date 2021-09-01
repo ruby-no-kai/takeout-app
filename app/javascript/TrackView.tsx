@@ -1,17 +1,15 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import loadable from "@loadable/component";
 
-import { Flex, Box, Container, Button, Link, Heading, Text } from "@chakra-ui/react";
-import { Center, Circle, Image } from "@chakra-ui/react";
+import { Flex, Box, Container } from "@chakra-ui/react";
 
-import { Track, TrackStreamOptionsState, Api } from "./Api";
-import { ErrorAlert } from "./ErrorAlert";
+import { Track, TrackStreamOptionsState } from "./Api";
 
 import { TrackStreamOptionsSelector } from "./TrackStreamOptionsSelector";
 import { TrackTopic } from "./TrackTopic";
 import { TrackSpeaker } from "./TrackSpeaker";
-import { TrackVideo } from "./TrackVideo";
-import { TrackChat } from "./TrackChat";
+const TrackVideo = loadable(() => import("./TrackVideo"));
+const TrackChat = loadable(() => import("./TrackChat"));
 
 export interface Props {
   track: Track;

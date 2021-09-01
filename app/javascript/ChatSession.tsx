@@ -350,3 +350,5 @@ function parseChimeName(chimeName: string): { name: string; version: string; fla
     };
   }
 }
+
+export default ChatSession;

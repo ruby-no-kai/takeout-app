@@ -112,3 +112,4 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
     </AspectRatio>
   );
 };
+export default TrackVideo;

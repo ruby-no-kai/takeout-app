@@ -143,3 +143,5 @@ function updateChatHistory(existingHistory: ChatMessage[], update: ChatUpdate): 
   }
   return existingHistory.slice(0, HISTORY_LENGTH);
 }
+
+export default TrackChat;

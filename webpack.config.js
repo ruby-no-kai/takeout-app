@@ -28,6 +28,7 @@ module.exports = (_env, argv) => {
         splitChunks: {
           name: "vendor",
           chunks: "initial",
+          hidePathInfo: isProd,
         },
         minimize: isProd,
         minimizer: [

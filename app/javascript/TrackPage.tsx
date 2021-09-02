@@ -77,24 +77,22 @@ export const TrackPageInner: React.FC = () => {
 
   return (
     <>
-      <ChatProvider>
-        <Tabs isLazy index={trackIndex} onChange={onTabChange}>
-          <TabList>
-            {tracks.map((t) => (
-              <Tab key={t.slug}>{t.name}</Tab>
-            ))}
-          </TabList>
-          <TabPanels>
-            {tracks.map((t) => {
-              return (
-                <TabPanel key={t.slug}>
-                  <TrackView track={t} streamOptionsState={streamOptionState} />
-                </TabPanel>
-              );
-            })}
-          </TabPanels>
-        </Tabs>
-      </ChatProvider>
+      <Tabs isLazy index={trackIndex} onChange={onTabChange}>
+        <TabList>
+          {tracks.map((t) => (
+            <Tab key={t.slug}>{t.name}</Tab>
+          ))}
+        </TabList>
+        <TabPanels>
+          {tracks.map((t) => {
+            return (
+              <TabPanel key={t.slug}>
+                <TrackView track={t} streamOptionsState={streamOptionState} />
+              </TabPanel>
+            );
+          })}
+        </TabPanels>
+      </Tabs>
     </>
   );
 };

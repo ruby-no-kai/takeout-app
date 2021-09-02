@@ -26,8 +26,8 @@
 - [x] Interpret/Caption preference の保存
   - [ ] Interpret がない場合でもわざわざ stream の切り替えをする必要はないぞ
 - [ ] fe: ストリーム停止時の挙動 (playlist 404になる)
-- [ ] fe: ストリーム読み込み中のプレースホルダ
-  - [ ] video の minH
+- [x] fe: ストリーム読み込み中のプレースホルダ
+  - [x] video の minH
 - [x] fe: asset を S3 に
 - [ ] fe: ローディング画面
 - [ ] CloudFront

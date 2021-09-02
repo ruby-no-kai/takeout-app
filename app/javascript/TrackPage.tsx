@@ -1,4 +1,5 @@
 import React from "react";
+import dayjs from "dayjs";
 import { useParams, useHistory } from "react-router-dom";
 
 import { Box } from "@chakra-ui/react";
@@ -17,8 +18,31 @@ export const TrackPage: React.FC<Props> = () => {
   const streamOptionState = Api.useTrackStreamOptions();
   const { slug: trackSlug } = useParams<{ slug: string }>();
 
-  const { data: conferenceData, error: conferenceError } = Api.useConference();
-  // const { data: chatSession, error: chatSessionError } = Api.useChatSession();
+  const { data: conferenceData, error: conferenceError, mutate: mutateConferenceData } = Api.useConference();
+
+  React.useEffect(() => {
+    if (!conferenceData) return;
+    const now = dayjs();
+    const isStale = conferenceData.stale_after && conferenceData.stale_after - 2 <= now.unix();
+    console.log("conferenceData freshness", {
+      isStale,
+      now: now.toISOString(),
+      at: dayjs.unix(conferenceData.requested_at).toISOString(),
+      stale_after: dayjs.unix(conferenceData.stale_after).toISOString(),
+    });
+
+    if (isStale) {
+      console.log("conferenceData is stale; request revalidation");
+      mutateConferenceData();
+      const interval = setInterval(() => {
+        console.log("Revalidating stale conferenceData...");
+        mutateConferenceData();
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      console.log("conferenceData is fresh!");
+    }
+  }, [conferenceData?.requested_at, conferenceData?.stale_after]);
 
   if (!conferenceData) {
     return (

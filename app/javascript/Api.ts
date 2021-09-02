@@ -228,6 +228,8 @@ export interface GetChatSessionResponse {
 }
 
 export interface GetConferenceResponse {
+  requested_at: number;
+  stale_after: number;
   conference: Conference;
 }
 

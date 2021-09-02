@@ -4,7 +4,10 @@ import { Flex, Box, Container } from "@chakra-ui/react";
 import { Text, Badge, Tooltip } from "@chakra-ui/react";
 import { Icon, Avatar } from "@chakra-ui/react";
 
-import { ChatStatus, ChatMessage, ChatSender, ChatUpdate } from "./ChatSession";
+import { Portal, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+
+import type { Track, ChatMessage, ChatSender } from "./Api";
+import { Api } from "./Api";
 
 import { Colors } from "./theme";
 import { MicIcon } from "./MicIcon";
@@ -13,20 +16,41 @@ import { LunchDiningIcon } from "./LunchDiningIcon";
 import { CommitterIcon } from "./CommitterIcon";
 
 export interface Props {
+  track: Track;
   message: ChatMessage;
   pinned: boolean;
+  showAdminActions: boolean;
 }
 
-export const ChatMessageView: React.FC<Props> = ({ message, pinned }) => {
+export const ChatMessageView: React.FC<Props> = (props) => {
+  const { track, message, pinned, showAdminActions } = props;
+  const [showMenuButton, setShowMenuButton] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
   return (
-    <Flex mt={2} direction="row" alignItems="center" bg={pinned ? Colors.baseLight : Colors.backgroundColor}>
+    <Flex
+      w="100%"
+      mb={2}
+      direction="row"
+      alignItems="center"
+      bg={pinned ? Colors.baseLight : Colors.backgroundColor}
+      onMouseEnter={() => setShowMenuButton(true)}
+      onMouseLeave={() => setShowMenuButton(false)}
+      onTouchEnd={(e) => {
+        e.preventDefault();
+        setShowMenuButton(!!showMenuButton);
+      }}
+    >
       <ChatMessageAvatar author={message.sender} />
-      <Box ml={2}>
+      <Box ml={2} flexGrow={1} flexShrink={0} flexBasis={0}>
         <ChatMessageAuthor author={message.sender} pinned={pinned} />
         <Text p={0} m={0} ml={1} fontSize="sm" as="span">
           {message.redacted ? <i>[message removed]</i> : <span>{message.content}</span>}
         </Text>
       </Box>
+      {(showAdminActions && showMenuButton) || isMenuOpen ? (
+        <ChatMessageMenu {...props} onOpen={() => setIsMenuOpen(true)} onClose={() => setIsMenuOpen(false)} />
+      ) : null}
     </Flex>
   );
 };
@@ -103,4 +127,26 @@ const ChatAuthorName: React.FC<{ author: ChatSender; fg: string }> = ({ author, 
       </Text>
     );
   }
+};
+
+interface ChatMessageMenuProps extends Props {
+  onOpen: () => void;
+  onClose: () => void;
+}
+
+const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ track, message, pinned, onOpen, onClose }) => {
+  return (
+    <Menu onOpen={onOpen} onClose={onClose}>
+      <MenuButton>Menu</MenuButton>
+      <Portal>
+        <MenuList zIndex="1501">
+          {pinned ? (
+            <MenuItem onClick={() => Api.pinChatMessage(track.slug, null)}>Unpin</MenuItem>
+          ) : (
+            <MenuItem onClick={() => Api.pinChatMessage(track.slug, message)}>Pin</MenuItem>
+          )}
+        </MenuList>
+      </Portal>
+    </Menu>
+  );
 };

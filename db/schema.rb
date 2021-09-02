@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_31_202048) do
+ActiveRecord::Schema.define(version: 2021_09_02_195242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,14 @@ ActiveRecord::Schema.define(version: 2021_08_31_202048) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["ticket_id"], name: "index_attendees_on_ticket_id"
+  end
+
+  create_table "chat_message_pins", force: :cascade do |t|
+    t.string "track", null: false
+    t.json "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["track"], name: "index_chat_message_pins_on_track", unique: true
   end
 
   create_table "chime_users", force: :cascade do |t|

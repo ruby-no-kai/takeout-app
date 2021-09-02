@@ -2,6 +2,7 @@ import useSWR from "swr";
 import { mutate } from "swr";
 import * as Rails from "@rails/ujs";
 import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
 
 import { useState, useEffect } from "react";
 
@@ -251,6 +252,47 @@ export interface GetStreamResponse {
   stream: StreamInfo;
 }
 
+export interface GetChatMessagePinResponse {
+  track: TrackSlug;
+  pin: ChatMessagePin | null;
+}
+
+export interface ChatMessage {
+  channel: ChannelArn;
+  content: string | null;
+  sender: ChatSender;
+  timestamp: Dayjs;
+  id: string;
+  redacted: boolean;
+
+  adminControl: ChatAdminControl | null;
+}
+
+export interface ChatAdminControl {
+  pin?: ChatMessagePin;
+}
+
+// XXX: Determined and given at ChatSession
+export interface ChatSenderFlags {
+  isAdmin?: boolean;
+  isAnonymous?: boolean;
+  isStaff?: boolean;
+  isSpeaker?: boolean;
+  isCommitter?: boolean;
+}
+
+export interface ChatSender extends ChatSenderFlags {
+  handle: string;
+  name: string;
+  version: string;
+}
+
+export interface ChatMessagePin {
+  at: number;
+  track: TrackSlug;
+  message: ChatMessage | null;
+}
+
 export interface IvsMetadata {
   cards: IvsCardUpdate[];
 }
@@ -385,9 +427,28 @@ export const Api = {
     );
   },
 
+  useChatMessagePin(track: TrackSlug | undefined) {
+    return useSWR<GetChatMessagePinResponse, ApiError>(
+      track ? `/api/tracks/${encodeURIComponent(track)}/chat_message_pin` : null,
+      swrFetcher,
+      {
+        revalidateOnFocus: true,
+        revalidateOnReconnect: true,
+        focusThrottleInterval: 60 * 1000,
+      },
+    );
+  },
+
   async sendChatAdminMessage(track: TrackSlug, message: string) {
     const resp = await request(`/api/tracks/${encodeURIComponent(track)}/chat_admin_messages`, "POST", null, {
       message,
+    });
+    return resp.json();
+  },
+
+  async pinChatMessage(track: TrackSlug, chatMessage: ChatMessage | null) {
+    const resp = await request(`/api/tracks/${encodeURIComponent(track)}/chat_admin_message_pin`, "PUT", null, {
+      chat_message: chatMessage,
     });
     return resp.json();
   },

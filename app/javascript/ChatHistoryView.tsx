@@ -2,24 +2,29 @@ import React from "react";
 
 import { Flex, VStack, HStack, Stack, Box, Button, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 
-import { ChatMessage } from "./ChatSession";
+import type { Track, ChatMessage, ChatMessagePin } from "./Api";
 
-import { ErrorAlert } from "./ErrorAlert";
 import { ChatMessageView } from "./ChatMessageView";
 
 export interface Props {
+  track: Track;
   messages: ChatMessage[];
+  pinnedMessage: ChatMessage | null;
   loading: boolean;
+
+  showAdminActions: boolean;
 }
 
-export const ChatHistoryView: React.FC<Props> = ({ messages, loading }) => {
+export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessage, loading, showAdminActions }) => {
   const [autoscrollEnabled, setAutoscrollEnabled] = React.useState(true);
   const [showScrollButton, setShowScrollButton] = React.useState(false);
   const box = React.useRef<HTMLDivElement>(null);
 
   const messageViews = messages
     .filter((v) => v.content !== undefined && v.content !== null)
-    .map((v) => <ChatMessageView key={v.id} message={v} pinned={false} />)
+    .map((v) => (
+      <ChatMessageView key={v.id} track={track} message={v} pinned={false} showAdminActions={showAdminActions} />
+    ))
     .reverse();
   const latestMessageAt = messages[0]?.timestamp;
   const lastLatestMessageAt = usePrevious(latestMessageAt);
@@ -62,6 +67,11 @@ export const ChatHistoryView: React.FC<Props> = ({ messages, loading }) => {
 
   return (
     <Box h="100%" overflowX="hidden" overflowY="scroll" wordBreak="break-word" ref={box}>
+      {pinnedMessage ? (
+        <Box position="sticky" top="0px" zIndex="1500">
+          <ChatMessageView track={track} message={pinnedMessage} pinned={true} showAdminActions={showAdminActions} />
+        </Box>
+      ) : null}
       {showScrollButton ? <Button onClick={() => setAutoscrollEnabled(true)}>bottom</Button> : null}
       {loading ? <p>Loading..</p> : null}
       {messageViews}

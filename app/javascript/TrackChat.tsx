@@ -1,11 +1,12 @@
 import React from "react";
+import { mutate } from "swr";
 
 import { Box, Flex } from "@chakra-ui/react";
-import { Text, Avatar } from "@chakra-ui/react";
 
-import { Track } from "./Api";
+import type { Track, ChatMessage } from "./Api";
+import { Api } from "./Api";
 import { useChat } from "./ChatProvider";
-import { ChatStatus, ChatMessage, ChatUpdate } from "./ChatSession";
+import type { ChatStatus, ChatUpdate } from "./ChatSession";
 
 import { ChatStatusView } from "./ChatStatusView";
 import { ChatHistoryView } from "./ChatHistoryView";
@@ -25,6 +26,8 @@ type ChatHistoryLoadingStatus =
 
 export const TrackChat: React.FC<Props> = ({ track }) => {
   const chat = useChat();
+  const { data: session } = Api.useSession();
+  const { data: chatMessagePin } = Api.useChatMessagePin(track.slug);
   const [[chatSessionStatus, chatSessionError], setChatSessionStatusTuple] = React.useState<ChatSessionStatusTuple>([
     chat?.session?.status,
     chat?.session?.error,
@@ -43,7 +46,17 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
       if (update.message?.content) {
         setChatHistory(updateChatHistory(chatHistory, update));
       }
-      // TODO: handle ChatAdminControl
+      const adminControl = update.message?.adminControl;
+      if (adminControl) {
+        if (adminControl.pin) {
+          // XXX: move to Api
+          mutate(
+            `/api/tracks/${encodeURIComponent(adminControl.pin.track)}/chat_message_pin`,
+            { track: adminControl.pin.track, pin: adminControl.pin },
+            false,
+          );
+        }
+      }
     },
   });
 
@@ -101,7 +114,13 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
         error={chatSessionError || isLoadingHistory.error}
       />
       <Box flexGrow={1} flexShrink={0} flexBasis={0} w="100%" overflowX="hidden" overflowY="hidden">
-        <ChatHistoryView messages={chatHistory} loading={isLoadingHistory.status === "LOADING"} />
+        <ChatHistoryView
+          track={track}
+          messages={chatHistory}
+          loading={isLoadingHistory.status === "LOADING"}
+          showAdminActions={session?.attendee?.is_staff ?? false}
+          pinnedMessage={chatMessagePin?.pin?.message ?? null}
+        />
       </Box>
       <Box minH="100px" w="100%">
         <ChatForm track={track} channel={trackChannel} />

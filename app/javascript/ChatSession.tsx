@@ -11,7 +11,6 @@ import {
 //import * as AWS from "aws-sdk/global";
 
 import dayjs from "dayjs";
-import { Dayjs } from "dayjs";
 
 import { ChimeSigV4Null } from "./polyfill/chimesigv4";
 import { ChimeV4MessagingSession } from "./polyfill/chimesession";
@@ -19,7 +18,7 @@ import { ChimeV4MessagingSession } from "./polyfill/chimesession";
 import { ConsoleLogger, Message as ChimeMessage, LogLevel, MessagingSessionConfiguration } from "amazon-chime-sdk-js";
 import type { DefaultMessagingSession } from "amazon-chime-sdk-js";
 
-import { ChannelArn, GetChatSessionResponse } from "./Api";
+import { ChannelArn, GetChatSessionResponse, ChatMessage, ChatAdminControl, ChatSender, ChatSenderFlags } from "./Api";
 import { makeWeakCallback } from "./weakcallback";
 
 // https://docs.aws.amazon.com/chime/latest/APIReference/API_ChannelMessage.html
@@ -32,20 +31,6 @@ export const ADMIN_NAME = "RubyKaigi";
 
 export type ChatStatus = "INIT" | "READY" | "CONNECTING" | "CONNECT_ERROR" | "CONNECTED" | "SHUTTING_DOWN";
 
-export interface ChatSenderFlags {
-  isAdmin?: boolean;
-  isAnonymous?: boolean;
-  isStaff?: boolean;
-  isSpeaker?: boolean;
-  isCommitter?: boolean;
-}
-
-export interface ChatSender extends ChatSenderFlags {
-  handle: string;
-  name: string;
-  version: string;
-}
-
 export type ChatUpdateKind =
   | "CREATE_CHANNEL_MESSAGE"
   | "UPDATE_CHANNEL_MESSAGE"
@@ -57,23 +42,10 @@ export interface ChatUpdate {
   message: ChatMessage;
 }
 
-export interface ChatMessage {
-  channel: ChannelArn;
-  content: string | null;
-  sender: ChatSender;
-  timestamp: Dayjs;
-  id: string;
-  redacted: boolean;
-
-  adminControl: ChatAdminControl | null;
-}
-
 interface AdminMessage {
   message?: string;
   control?: ChatAdminControl;
 }
-
-export interface ChatAdminControl {}
 
 export class ChatSession {
   public status: ChatStatus;

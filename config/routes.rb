@@ -40,6 +40,8 @@ Rails.application.routes.draw do
 
     resources :tracks, param: :slug, only: %i() do
       resources :chat_admin_messages, only: %i(create)
+      resource :chat_message_pin, only: %i(show)
+      resource :chat_admin_message_pin, only: %i(update)
     end
 
     scope path: 'control', module: 'control' do

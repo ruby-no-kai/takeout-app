@@ -4,7 +4,7 @@ class Api::ConferencesController < Api::ApplicationController
   def show
     now = Time.zone.now
     lifetime = 15.seconds
-    grace = 15.minutes
+    grace = 2.minutes
     response.date = now
     response.headers['expires'] = (now+lifetime).httpdate
     (response.cache_control[:extras] ||= []) << 'no-cache="Set-Cookie"'

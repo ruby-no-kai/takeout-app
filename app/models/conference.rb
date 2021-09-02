@@ -9,7 +9,7 @@ class Conference
     data
   end
 
-  def self.as_json
+  def self.as_json(t: Time.zone.now)
     {
       default_track: data.fetch(:default_track),
       track_order: data.fetch(:track_order),
@@ -18,8 +18,8 @@ class Conference
           chime: track.fetch(:chime, {}).slice(:channel_arn),
           interpretation: !track.dig(:ivs, :interpretation).nil?,
           chat: !track[:chime].nil?,
-          card: TrackCard.current_for(track.fetch(:slug))&.as_json,
-          card_candidate: TrackCard.candidate_for(track.fetch(:slug))&.as_json,
+          card: TrackCard.current_for(track.fetch(:slug), t: t)&.as_json,
+          card_candidate: TrackCard.candidate_for(track.fetch(:slug), t: t)&.as_json,
         )
       end,
     }

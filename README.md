@@ -33,6 +33,7 @@
 - [ ] 言語フィルタ
 - [ ] shoryuken
 - [ ] video の minH
+- [ ] 幕間画面
 
 ## Setup
 

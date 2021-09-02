@@ -243,21 +243,26 @@ export class ChatSession {
   }
 
   onMessage(message: ChimeMessage) {
-    const messageType = message.headers["x-amz-chime-event-type"];
-    const record = JSON.parse(message.payload);
-    console.log("Incoming Message", message);
-    // https://docs.aws.amazon.com/chime/latest/dg/websockets.html#receive-messages
-    switch (messageType) {
-      case "CREATE_CHANNEL_MESSAGE":
-      case "REDACT_CHANNEL_MESSAGE":
-      case "UPDATE_CHANNEL_MESSAGE":
-      case "DELETE_CHANNEL_MESSAGE":
-        // https://docs.aws.amazon.com/chime/latest/APIReference/API_ChannelMessage.html
-        const channelMessage = record as ChimeChannelMessage;
-        this.onChannelMessage(messageType, channelMessage);
-        break;
-      default:
-        console.log(`Ignoring messageType=${messageType}`);
+    try {
+      const messageType = message.headers["x-amz-chime-event-type"];
+      const record = JSON.parse(message.payload);
+      console.log("Incoming Message", message);
+      // https://docs.aws.amazon.com/chime/latest/dg/websockets.html#receive-messages
+      switch (messageType) {
+        case "CREATE_CHANNEL_MESSAGE":
+        case "REDACT_CHANNEL_MESSAGE":
+        case "UPDATE_CHANNEL_MESSAGE":
+        case "DELETE_CHANNEL_MESSAGE":
+          // https://docs.aws.amazon.com/chime/latest/APIReference/API_ChannelMessage.html
+          const channelMessage = record as ChimeChannelMessage;
+          this.onChannelMessage(messageType, channelMessage);
+          break;
+        default:
+          console.log(`Ignoring messageType=${messageType}`);
+      }
+    } catch (e) {
+      // TODO: raven
+      console.error("Error while handling message", e);
     }
   }
 

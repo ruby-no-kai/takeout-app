@@ -39,6 +39,7 @@
 - [ ] shoryuken
 - [ ] 幕間画面
 - [ ] next talks カード
+- [ ] mobile view
 
 ## Setup
 

@@ -2,7 +2,7 @@ import React from "react";
 import dayjs from "dayjs";
 import { useParams, useHistory } from "react-router-dom";
 
-import { Box } from "@chakra-ui/react";
+import { Box, AspectRatio, Container, Skeleton, Flex } from "@chakra-ui/react";
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
 
 import Api from "./Api";
@@ -11,9 +11,15 @@ import { ErrorAlert } from "./ErrorAlert";
 import { ChatProvider } from "./ChatProvider";
 import { TrackView } from "./TrackView";
 
-export interface Props {}
+export const TrackPage: React.FC = () => {
+  return (
+    <ChatProvider>
+      <TrackPageInner />
+    </ChatProvider>
+  );
+};
 
-export const TrackPage: React.FC<Props> = () => {
+export const TrackPageInner: React.FC = () => {
   const history = useHistory();
   const streamOptionState = Api.useTrackStreamOptions();
   const { slug: trackSlug } = useParams<{ slug: string }>();
@@ -54,7 +60,7 @@ export const TrackPage: React.FC<Props> = () => {
             <ErrorAlert error={conferenceError} />
           </Box>
         ) : null}
-        <p>Loading</p>
+        <TrackPageSuspense />
       </>
     );
   }
@@ -92,4 +98,34 @@ export const TrackPage: React.FC<Props> = () => {
     </>
   );
 };
+
+const TrackPageSuspense: React.FC = () => {
+  return (
+    <>
+      <Tabs>
+        <TabList>
+          <Tab>
+            <Skeleton w="40px" h="12px" />
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <Container maxW={["auto", "auto", "auto", "1700px"]}>
+              <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]}>
+                <Box w="100%">
+                  <AspectRatio ratio={16 / 9}>
+                    <Skeleton w="100%" h="100%" />
+                  </AspectRatio>
+                </Box>
+
+                <Box maxW={["auto", "auto", "auto", "400px"]} minH="400px" w="100%" ml={3}></Box>
+              </Flex>
+            </Container>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </>
+  );
+};
+
 export default TrackPage;

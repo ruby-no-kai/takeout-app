@@ -5,7 +5,7 @@ import videojs from "video.js";
 import { VideoJSEvents as VideoJSIVSEvents, VideoJSIVSTech, VideoJSQualityPlugin } from "amazon-ivs-player";
 import "./videojs";
 
-import { AspectRatio, Box } from "@chakra-ui/react";
+import { AspectRatio, Box, Skeleton } from "@chakra-ui/react";
 
 import { Api, IvsMetadata, Track, TrackStreamOptions, consumeIvsMetadata } from "./Api";
 
@@ -27,8 +27,11 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
       <StreamView key={`${streamInfo.stream.slug}/${streamInfo.stream.type}`} playbackUrl={streamInfo.stream.url} />
     );
   } else {
-    // TODO: placeholder
-    return <p>Loading</p>;
+    return (
+      <AspectRatio ratio={16 / 9}>
+        <Skeleton h="100%" w="100%" />
+      </AspectRatio>
+    );
   }
 };
 

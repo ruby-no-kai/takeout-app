@@ -54,3 +54,5 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
     </>
   );
 };
+
+export default TrackView;

@@ -1,5 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
+import { lazy } from "@loadable/component";
 import { useParams, useHistory } from "react-router-dom";
 
 import { Box, AspectRatio, Container, Skeleton, Flex } from "@chakra-ui/react";
@@ -9,7 +10,7 @@ import Api from "./Api";
 import { ErrorAlert } from "./ErrorAlert";
 
 import { ChatProvider } from "./ChatProvider";
-import { TrackView } from "./TrackView";
+const TrackView = lazy(() => import("./TrackView"));
 
 export const TrackPage: React.FC = () => {
   return (
@@ -60,7 +61,7 @@ export const TrackPageInner: React.FC = () => {
             <ErrorAlert error={conferenceError} />
           </Box>
         ) : null}
-        <TrackPageSuspense />
+        <TrackPageSkeleton />
       </>
     );
   }
@@ -87,7 +88,9 @@ export const TrackPageInner: React.FC = () => {
           {tracks.map((t) => {
             return (
               <TabPanel key={t.slug}>
-                <TrackView track={t} streamOptionsState={streamOptionState} />
+                <React.Suspense fallback={<TrackViewSkeleton />}>
+                  <TrackView track={t} streamOptionsState={streamOptionState} />
+                </React.Suspense>
               </TabPanel>
             );
           })}
@@ -97,32 +100,38 @@ export const TrackPageInner: React.FC = () => {
   );
 };
 
-const TrackPageSuspense: React.FC = () => {
+const TrackPageSkeleton: React.FC = () => {
   return (
     <>
       <Tabs>
         <TabList>
           <Tab>
-            <Skeleton w="40px" h="12px" />
+            <Skeleton w="240px" h="25px" />
           </Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Container maxW={["auto", "auto", "auto", "1700px"]}>
-              <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]}>
-                <Box w="100%">
-                  <AspectRatio ratio={16 / 9}>
-                    <Skeleton w="100%" h="100%" />
-                  </AspectRatio>
-                </Box>
-
-                <Box maxW={["auto", "auto", "auto", "400px"]} minH="400px" w="100%" ml={3}></Box>
-              </Flex>
-            </Container>
+            <TrackViewSkeleton />
           </TabPanel>
         </TabPanels>
       </Tabs>
     </>
+  );
+};
+
+const TrackViewSkeleton: React.FC = () => {
+  return (
+    <Container maxW={["auto", "auto", "auto", "1700px"]}>
+      <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]}>
+        <Box w="100%">
+          <AspectRatio ratio={16 / 9}>
+            <Skeleton w="100%" h="100%" />
+          </AspectRatio>
+        </Box>
+
+        <Box maxW={["auto", "auto", "auto", "400px"]} minH="400px" w="100%" ml={3}></Box>
+      </Flex>
+    </Container>
   );
 };
 

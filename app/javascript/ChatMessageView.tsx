@@ -1,28 +1,29 @@
 import React from "react";
 
 import { Flex, Box, Container } from "@chakra-ui/react";
-import { Text, Badge, Tooltip, Center, Circle } from "@chakra-ui/react";
-import { Avatar, Image } from "@chakra-ui/react";
+import { Text, Badge, Tooltip } from "@chakra-ui/react";
+import { Icon, Avatar } from "@chakra-ui/react";
 
-import { DEFAULT_AVATAR_URL } from "./meta";
-
-import { Api, Track } from "./Api";
 import { ChatStatus, ChatMessage, ChatSender, ChatUpdate } from "./ChatSession";
 
-import { ErrorAlert } from "./ErrorAlert";
-import { ChatForm } from "./ChatForm";
+import { Colors } from "./theme";
+import { MicIcon } from "./MicIcon";
+import { CampaignIcon } from "./CampaignIcon";
+import { LunchDiningIcon } from "./LunchDiningIcon";
+import { CommitterIcon } from "./CommitterIcon";
 
 export interface Props {
   message: ChatMessage;
+  pinned: boolean;
 }
 
-export const ChatMessageView: React.FC<Props> = ({ message }) => {
+export const ChatMessageView: React.FC<Props> = ({ message, pinned }) => {
   return (
-    <Flex mt={2} direction="row" alignItems="center">
+    <Flex mt={2} direction="row" alignItems="center" bg={pinned ? Colors.baseLight : Colors.backgroundColor}>
       <ChatMessageAvatar author={message.sender} />
       <Box ml={2}>
-        <Text p={0} m={0} fontSize="sm">
-          <ChatMessageAuthor author={message.sender} />{" "}
+        <ChatMessageAuthor author={message.sender} pinned={pinned} />
+        <Text p={0} m={0} ml={1} fontSize="sm" as="span">
           {message.redacted ? <i>[message removed]</i> : <span>{message.content}</span>}
         </Text>
       </Box>
@@ -31,61 +32,75 @@ export const ChatMessageView: React.FC<Props> = ({ message }) => {
 };
 
 const ChatMessageAvatar: React.FC<{ author: ChatSender }> = ({ author }) => {
-  return <Avatar size="xs" bg="#868E96" src={`/avatars/${author.handle}?v=${author.version}`} />;
+  if (author.isAdmin) {
+    // TODO: webp
+    return <Avatar size="xs" bg="#ffffff" src="/assets/hamburger.jpg" />;
+  } else {
+    return <Avatar size="xs" bg={Colors.defaultAvatarBg} src={`/avatars/${author.handle}?v=${author.version}`} />;
+  }
 };
 
-const AUTHOR_NAME_COLOR = "#828282";
+const ChatMessageAuthor: React.FC<{ author: ChatSender; pinned: boolean }> = ({ author, pinned }) => {
+  const highlight = true; // TODO:
+  const { bg, fg } = [
+    author.isAdmin ? Colors.nameHighlightOrgz : null,
+    highlight && author.isSpeaker ? Colors.nameHighlightSpeaker : null,
+    highlight && author.isCommitter ? Colors.nameHighlightCore : null,
+    pinned ? { bg: Colors.baseLight, fg: Colors.dark } : null,
+  ].filter((v) => !!v)[0] || { bg: Colors.backgroundColor, fg: Colors.textMuted };
 
-const ChatMessageAuthor: React.FC<{ author: ChatSender }> = ({ author }) => {
-  const badges = [
-    author.isStaff ? (
-      <Tooltip label="Staff" key="staff">
-        <Badge>staff</Badge>
-      </Tooltip>
-    ) : null,
-    author.isSpeaker ? (
-      <Tooltip label="Speaker" key="speaker">
-        <Badge>speaker</Badge>
-      </Tooltip>
-    ) : null,
-    author.isCommitter ? (
-      <Tooltip label="committer" key="committer">
-        <Badge>committer</Badge>
-      </Tooltip>
-    ) : null,
-  ];
+  const icons: JSX.Element[] = [];
+  if (author.isAdmin) icons.push(<CampaignIcon key="admin" color={fg} />);
+  if (author.isStaff) icons.push(<LunchDiningIcon key="staff" color={fg} />);
+  if (author.isSpeaker) icons.push(<MicIcon key="speaker" color={fg} />);
+  if (author.isCommitter) icons.push(<CommitterIcon key="committer" color={fg} />);
 
+  const tooltipContents: string[] = [];
+  if (author.isAdmin) tooltipContents.push("Official Announcement");
+  if (author.isStaff) tooltipContents.push("RubyKaigi Staff");
+  if (author.isSpeaker) tooltipContents.push("Speaker");
+  if (author.isCommitter) tooltipContents.push("Ruby Committer");
+  if (author.isAnonymous) tooltipContents.push(`Anonymous ${author.handle}`);
+
+  return (
+    <Tooltip label={tooltipContents.length > 0 ? tooltipContents.join(", ") : undefined} display="inline-block">
+      <Flex display="inline" alignItems="center" direction="row" bgColor={bg} borderRadius="4px" px={1} py="1px">
+        <ChatAuthorName author={author} fg={fg} />
+        {icons.length > 0 ? (
+          <Text as="span" ml={1}>
+            {icons}
+          </Text>
+        ) : null}
+      </Flex>
+    </Tooltip>
+  );
+};
+
+const ChatAuthorName: React.FC<{ author: ChatSender; fg: string }> = ({ author, fg }) => {
+  const fontWeight = "bold";
+  const fontSize = "sm";
   if (author.isAdmin) {
-    // TODO: isAdmin style
     return (
-      <span>
-        <Text as="span" color={AUTHOR_NAME_COLOR} fontWeight="bold" fontSize="sm">
-          RubyKaigi
-        </Text>
-      </span>
+      <Text as="span" color={fg} fontWeight={fontWeight} fontSize={fontSize}>
+        RubyKaigi
+      </Text>
     );
   } else if (author.isAnonymous) {
     return (
-      <span>
-        <Tooltip label={`Anonymous ${author.handle}`}>
-          <Text as="span" color={AUTHOR_NAME_COLOR} fontSize="sm">
-            Anonymous
-          </Text>{" "}
-          <Text as="span" color={AUTHOR_NAME_COLOR} fontWeight="bold" fontSize="sm">
-            {author.handle.slice(0, 5)}
-          </Text>
-        </Tooltip>
-        {badges}
-      </span>
+      <>
+        <Text as="span" color={fg} fontSize={fontSize}>
+          Anonymous
+        </Text>{" "}
+        <Text as="span" color={fg} fontWeight={fontWeight} fontSize={fontSize}>
+          {author.handle.slice(0, 5)}
+        </Text>
+      </>
     );
   } else {
     return (
-      <span>
-        <Text as="span" color={AUTHOR_NAME_COLOR} fontWeight="bold" fontSize="sm">
-          {author.name}
-        </Text>
-        {badges}
-      </span>
+      <Text as="span" color={fg} fontWeight={fontWeight} fontSize={fontSize}>
+        {author.name}
+      </Text>
     );
   }
 };

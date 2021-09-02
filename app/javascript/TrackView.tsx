@@ -29,7 +29,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
             <TrackVideo track={track} streamOptions={streamOptionsState[0]} />
           </Box>
           {streamOptions.chat && track.chat ? (
-            <Box maxW={["auto", "auto", "auto", "400px"]} w="100%">
+            <Box maxW={["auto", "auto", "auto", "400px"]} w="100%" ml={3}>
               <TrackChat track={track} />
             </Box>
           ) : null}

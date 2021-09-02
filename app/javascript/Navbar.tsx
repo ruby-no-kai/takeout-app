@@ -14,7 +14,7 @@ export const Navbar: React.FC = () => {
     <>
       <Flex as="nav" justify="space-between" align="center" w="100%" h="56px" px="18px" py="15px" bgColor={Colors.base}>
         <Heading as="h1" size="lg">
-          <Link isExternal href="https://rubykaigi.org/2021-takeout/">
+          <Link isExternal href="https://rubykaigi.org/2021-takeout/" color={Colors.main}>
             RubyKaigi Takeout 2021
           </Link>
         </Heading>

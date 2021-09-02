@@ -13,10 +13,19 @@ export const Colors = {
   linkHover: "#0092D8",
   lightGray: "#BFC6C9",
 
-  textDefault: main,
+  dark: "#343A40",
+
+  textDefault: "#212529",
   textAccent: accent,
+  textMuted: "#828282",
 
   backgroundColor: "#F9F9F9",
+
+  nameHighlightOrgz: { bg: "#BD4848", fg: "#FFFFFF" },
+  nameHighlightCore: { bg: "#74439B", fg: "#FFFFFF" },
+  nameHighlightSpeaker: { bg: main, fg: "#D7D165" },
+
+  defaultAvatarBg: "#868E96", // TODO:
 };
 
 export const theme = extendTheme({

@@ -17,7 +17,7 @@ export const ChatHistoryView: React.FC<Props> = ({ messages, loading }) => {
   const [showScrollButton, setShowScrollButton] = React.useState(false);
   const box = React.useRef<HTMLDivElement>(null);
 
-  const messageViews = messages.map((v) => <ChatMessageView key={v.id} message={v} />).reverse();
+  const messageViews = messages.map((v) => <ChatMessageView key={v.id} message={v} pinned={false} />).reverse();
   const latestMessageAt = messages[0]?.timestamp;
   const lastLatestMessageAt = usePrevious(latestMessageAt);
 

@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Box, Flex } from "@chakra-ui/react";
+import { Text, Avatar } from "@chakra-ui/react";
 
 import { Track } from "./Api";
 import { useChat } from "./ChatProvider";
@@ -87,6 +88,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
   if (!trackChannel) return <></>;
 
   // TODO: disable ChatForm until obtain session
+  // TODO: pinned ChatMessageView
 
   return (
     <Flex direction="column" h="100%" w="100%">

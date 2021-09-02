@@ -40,6 +40,9 @@
 - [ ] 幕間画面
 - [ ] next talks カード
 - [ ] mobile view
+- [ ] sponsor promo rotate
+- [ ] periodic metadata republish 
+- [ ] fe: 裏番組の表示
 
 ## Setup
 

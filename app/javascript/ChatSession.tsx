@@ -16,13 +16,8 @@ import { Dayjs } from "dayjs";
 import { ChimeSigV4Null } from "./polyfill/chimesigv4";
 import { ChimeV4MessagingSession } from "./polyfill/chimesession";
 
-import {
-  ConsoleLogger,
-  Message as ChimeMessage,
-  DefaultMessagingSession,
-  LogLevel,
-  MessagingSessionConfiguration,
-} from "amazon-chime-sdk-js";
+import { ConsoleLogger, Message as ChimeMessage, LogLevel, MessagingSessionConfiguration } from "amazon-chime-sdk-js";
+import type { DefaultMessagingSession } from "amazon-chime-sdk-js";
 
 import { ChannelArn, GetChatSessionResponse } from "./Api";
 import { makeWeakCallback } from "./weakcallback";
@@ -64,12 +59,21 @@ export interface ChatUpdate {
 
 export interface ChatMessage {
   channel: ChannelArn;
-  content: string;
+  content: string | null;
   sender: ChatSender;
   timestamp: Dayjs;
   id: string;
   redacted: boolean;
+
+  adminControl: ChatAdminControl | null;
 }
+
+interface AdminMessage {
+  message?: string;
+  control?: ChatAdminControl;
+}
+
+export interface ChatAdminControl {}
 
 export class ChatSession {
   public status: ChatStatus;
@@ -318,13 +322,16 @@ export class ChatSession {
       ...flags,
     };
 
+    const [content, adminControl] = isAdmin ? parseAdminMessage(message.Content) : [message.Content, null];
+
     const update: ChatMessage = {
       channel,
       id: message.MessageId,
-      content: message.Content,
+      content: content,
       sender,
       timestamp: dayjs(message.CreatedTimestamp ? new Date(message.CreatedTimestamp) : new Date()),
       redacted: message.Redacted === true,
+      adminControl,
     };
 
     return update;
@@ -354,6 +361,11 @@ function parseChimeName(chimeName: string): { name: string; version: string; fla
       },
     };
   }
+}
+
+function parseAdminMessage(message: string): [string | null, ChatAdminControl | null] {
+  const adminMessage: AdminMessage = JSON.parse(message);
+  return [adminMessage.message ?? null, adminMessage.control ?? null];
 }
 
 export default ChatSession;

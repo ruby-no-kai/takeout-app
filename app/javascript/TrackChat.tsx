@@ -40,7 +40,10 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
     },
     onChatUpdate(update: ChatUpdate) {
       console.log("onChatUpdate", update);
-      setChatHistory(updateChatHistory(chatHistory, update));
+      if (update.message?.content) {
+        setChatHistory(updateChatHistory(chatHistory, update));
+      }
+      // TODO: handle ChatAdminControl
     },
   });
 

@@ -83,6 +83,7 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
   mutate(
     "/api/conference",
     (known: GetConferenceResponse) => {
+      let updated = false;
       metadata.cards?.forEach((cardUpdate) => {
         const card_key = cardUpdate.candidate ? "card_candidate" : "card";
 
@@ -91,13 +92,18 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
           if (track?.[card_key]) {
             console.log("Clearing card", { key: card_key, cardUpdate });
             track[card_key] = null;
+            updated = true;
           }
         } else if (cardUpdate.card) {
           const track = known.conference.tracks[cardUpdate.card.track];
-          console.log("Updating card", { key: card_key, cardUpdate });
-          if (track) track[card_key] = cardUpdate.card;
+          if (track) {
+            console.log("Updating card", { key: card_key, cardUpdate });
+            track[card_key] = cardUpdate.card;
+            updated = true;
+          }
         }
       });
+      if (updated) known.requested_at = 0;
       return { ...known }; // NOTE: returning the same reference doesn't update cache
     },
     false,

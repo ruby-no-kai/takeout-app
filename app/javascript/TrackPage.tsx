@@ -22,6 +22,8 @@ export const TrackPage: React.FC<Props> = () => {
 
   React.useEffect(() => {
     if (!conferenceData) return;
+    if (conferenceData.requested_at === 0) return; // Partially mutated by consumeIvsMetadata
+
     const now = dayjs();
     const isStale = conferenceData.stale_after && conferenceData.stale_after - 2 <= now.unix();
     console.log("conferenceData freshness", {

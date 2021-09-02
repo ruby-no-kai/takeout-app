@@ -15,7 +15,10 @@ import dayjs from "dayjs";
 import { ChimeSigV4Null } from "./polyfill/chimesigv4";
 import { ChimeV4MessagingSession } from "./polyfill/chimesession";
 
-import { ConsoleLogger, Message as ChimeMessage, LogLevel, MessagingSessionConfiguration } from "amazon-chime-sdk-js";
+import Message from "amazon-chime-sdk-js/build/message/Message";
+import ConsoleLogger from "amazon-chime-sdk-js/build/logger/ConsoleLogger";
+import LogLevel from "amazon-chime-sdk-js/build/logger/LogLevel";
+import MessagingSessionConfiguration from "amazon-chime-sdk-js/build/messagingsession/MessagingSessionConfiguration";
 import type { DefaultMessagingSession } from "amazon-chime-sdk-js";
 
 import { ChannelArn, GetChatSessionResponse, ChatMessage, ChatAdminControl, ChatSender, ChatSenderFlags } from "./Api";
@@ -219,7 +222,7 @@ export class ChatSession {
     if (this.status === "SHUTTING_DOWN") this.updateStatus("READY", null);
   }
 
-  onMessage(message: ChimeMessage) {
+  onMessage(message: Message) {
     try {
       const messageType = message.headers["x-amz-chime-event-type"];
       const record = JSON.parse(message.payload);

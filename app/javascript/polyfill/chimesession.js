@@ -1,7 +1,7 @@
 // Chime SDK polyfill for AWS SDK JS v3 around SigV4
 // Overrides DefaultMessagingSession prepareWebSocketUrl() and startConnecting() for ChimeSigV4Null
 
-import { DefaultMessagingSession } from "amazon-chime-sdk-js";
+import DefaultMessagingSession from "amazon-chime-sdk-js/build/messagingsession/DefaultMessagingSession";
 
 export class ChimeV4MessagingSession extends DefaultMessagingSession {
   async prepareWebSocketUrl2() {

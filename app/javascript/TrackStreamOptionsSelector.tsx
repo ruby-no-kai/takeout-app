@@ -2,8 +2,8 @@ import React from "react";
 
 import { Box, HStack, Icon, Switch, FormLabel, FormControl } from "@chakra-ui/react";
 
-import ClosedCaptionIcon from "@material-ui/icons/ClosedCaption";
-import TranslateIcon from "@material-ui/icons/Translate";
+import { ClosedCaptionIcon } from "./ClosedCaptionIcon";
+import { TranslateIcon } from "./TranslateIcon";
 
 import { Track, TrackStreamOptionsState } from "./Api";
 
@@ -22,9 +22,9 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptio
   return (
     <Box>
       <HStack>
-        <FormControl display="flex" alignItems="center">
+        <FormControl display="flex" alignItems="center" h="30px">
           <FormLabel htmlFor="TrackStreamOptions__CC" aria-hidden="true" m={0} mr={1}>
-            <Icon as={ClosedCaptionIcon} />
+            <ClosedCaptionIcon w="24px" h="24px" />
           </FormLabel>
           <Switch
             aria-label="Closed Caption"
@@ -35,9 +35,9 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptio
         </FormControl>
 
         {track.interpretation && track.card?.interpretation ? (
-          <FormControl display="flex" alignItems="center">
+          <FormControl display="flex" alignItems="center" h="30px">
             <FormLabel htmlFor="TrackStreamOptions__interpret" aria-hidden="true" m={0} mr={1}>
-              <Icon as={TranslateIcon} />
+              <TranslateIcon w="24px" h="24px" />
             </FormLabel>
             <Switch
               aria-label="Japanese to English Interpretation"

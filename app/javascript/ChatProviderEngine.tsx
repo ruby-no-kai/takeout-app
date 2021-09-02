@@ -1,4 +1,5 @@
 import React from "react";
+import dayjs from "dayjs";
 import { Api } from "./Api";
 import type { ChatProviderContextData } from "./ChatProviderTypes";
 
@@ -6,7 +7,11 @@ import { ChatSession } from "./ChatSession";
 
 export const ChatProviderEngine: React.FC<{ set: (x: ChatProviderContextData) => void }> = ({ set }) => {
   const { data: sessionData } = Api.useSession();
-  const { data: chatSessionData, error: chatSessionError } = Api.useChatSession(sessionData?.attendee?.id);
+  const {
+    data: chatSessionData,
+    mutate: mutateChatSession,
+    error: chatSessionError,
+  } = Api.useChatSession(sessionData?.attendee?.id);
 
   const [chatSession, _setChatSession] = React.useState(new ChatSession());
 
@@ -15,8 +20,32 @@ export const ChatProviderEngine: React.FC<{ set: (x: ChatProviderContextData) =>
   }, []);
 
   React.useEffect(() => {
-    console.log(chatSession);
-    if (chatSessionData) chatSession.setSessionData(chatSessionData);
+    if (!chatSessionData) return;
+
+    const checkSessionExpiration = () => {
+      const now = dayjs().unix();
+      const remainingLifetime = chatSessionData.expiry - now;
+      const gracePeriod = chatSessionData.grace || 300;
+      if (remainingLifetime < gracePeriod) {
+        console.log("Request renewal of chatSessionData");
+        mutateChatSession();
+      }
+    };
+
+    checkSessionExpiration();
+    const interval = setInterval(checkSessionExpiration, 30 * 1000);
+    return () => clearInterval(interval);
+  }, [chatSessionData?.expiry]);
+
+  React.useEffect(() => {
+    if (chatSessionData) {
+      const now = dayjs().unix();
+      if (chatSessionData.expiry <= now) {
+        console.warn("chatSessionData is expired, waiting mutate");
+        return;
+      }
+      chatSession.setSessionData(chatSessionData);
+    }
     if (chatSession.status === "READY") chatSession.connect();
   }, [chatSessionData?.app_arn, chatSessionData?.user_arn, chatSessionData?.expiry]);
 

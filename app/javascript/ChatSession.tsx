@@ -102,6 +102,7 @@ export class ChatSession {
 
   // Note: Updated session data will be used for any reconnections
   public setSessionData(sessionData: GetChatSessionResponse) {
+    console.log("ChatSession: updated sessionData", sessionData);
     this.sessionData = sessionData;
     this.adminArn = sessionData.app_user_arn;
     this.sessionDataEpoch++;

@@ -219,6 +219,7 @@ export type ChatSessionTracksBag = { [key: string]: TrackChatInfo | null };
 
 export interface GetChatSessionResponse {
   expiry: number;
+  grace: number;
   app_arn: string;
   user_arn: string;
   app_user_arn: string;

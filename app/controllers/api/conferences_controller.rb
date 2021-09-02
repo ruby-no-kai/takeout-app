@@ -8,7 +8,7 @@ class Api::ConferencesController < Api::ApplicationController
     response.date = now
     response.headers['expires'] = (now+lifetime).httpdate
     (response.cache_control[:extras] ||= []) << 'no-cache="Set-Cookie"'
-    response.cache_control.merge!( public: false, stale_while_revalidate: grace, stale_if_error: grace )
+    response.cache_control.merge!( public: true, stale_while_revalidate: grace, stale_if_error: grace )
 
     render(json: {
       requested_at: now.to_i,

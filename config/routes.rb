@@ -38,6 +38,10 @@ Rails.application.routes.draw do
     resources :streams, only: %i(show), param: :track_slug
     resource :chat_session, only: %i(show)
 
+    resources :tracks, param: :slug, only: %i() do
+      resources :chat_admin_messages, only: %i(create)
+    end
+
     scope path: 'control', module: 'control' do
       resource :conference, only: %i(show)
 

@@ -1,7 +1,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Box, Container, Button, Link, FormControl, FormLabel, FormHelperText, Input } from "@chakra-ui/react";
-import { Center, Circle, Image } from "@chakra-ui/react";
+import { Box, Button, Link, FormControl, FormLabel, Switch, Input } from "@chakra-ui/react";
+import { VStack, Flex } from "@chakra-ui/react";
+
+import { CampaignIcon } from "./CampaignIcon";
 
 import { Api, Track, ChannelArn } from "./Api";
 import { useChat } from "./ChatProvider";
@@ -15,11 +17,14 @@ export interface Props {
 
 export const ChatForm: React.FC<Props> = ({ track, channel }) => {
   const chat = useChat();
+
   const { data: session } = Api.useSession();
+  const isStaff = session?.attendee?.is_staff;
+
   const [errorAlert, setErrorAlert] = React.useState<JSX.Element | null>(null);
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);
 
-  const { register, handleSubmit, reset, setFocus } = useForm<{
+  const { register, handleSubmit, reset, setFocus, watch } = useForm<{
     message: string;
     asAdmin: boolean;
   }>({
@@ -29,6 +34,8 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
     },
   });
 
+  const asAdmin = watch("asAdmin");
+
   const onSubmit = handleSubmit(async (data) => {
     if (!chat.session) return;
     if (isRequesting) return;
@@ -36,11 +43,12 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
     setErrorAlert(null);
 
     try {
-      if (data.asAdmin) {
-        throw "unimplemented"; //TODO: asAdmin
+      if (data.asAdmin && isStaff) {
+        await Api.sendChatAdminMessage(track.slug, data.message);
       } else {
         await chat.session.postMessage(channel, data.message);
       }
+      reset({ message: "", asAdmin: false });
     } catch (e) {
       setErrorAlert(
         <Box my={2}>
@@ -48,7 +56,6 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
         </Box>,
       );
     }
-    reset({ message: "" });
     setFocus("message");
     setIsRequesting(false);
   });
@@ -61,10 +68,30 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
     <Box>
       {errorAlert}
       <form onSubmit={onSubmit}>
-        <Input {...register("message")} autoFocus isRequired autoComplete="off" />
-        <Button size="sm" type="submit" isLoading={isRequesting}>
-          Send
-        </Button>
+        <VStack w="100%">
+          <Box w="100%">
+            <Input {...register("message")} autoFocus isRequired autoComplete="off" />
+          </Box>
+          <Flex w="100%">
+            {isStaff ? (
+              <FormControl display="flex" alignSelf="center" h="30px">
+                <FormLabel htmlFor="ChatForm__asAdmin" aria-hidden="true" m={0} mr={1}>
+                  <CampaignIcon w="24px" h="24px" />
+                </FormLabel>
+                <Switch
+                  aria-label="Send as admin announcement"
+                  id="ChatForm__asAdmin"
+                  size="sm"
+                  isChecked={asAdmin}
+                  {...register("asAdmin")}
+                />
+              </FormControl>
+            ) : null}
+            <Button size="sm" type="submit" isLoading={isRequesting}>
+              Send
+            </Button>
+          </Flex>
+        </VStack>
       </form>
     </Box>
   );

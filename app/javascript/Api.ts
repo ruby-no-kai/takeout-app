@@ -375,6 +375,13 @@ export const Api = {
       },
     );
   },
+
+  async sendChatAdminMessage(track: TrackSlug, message: string) {
+    const resp = await request(`/api/tracks/${encodeURIComponent(track)}/chat_admin_messages`, "POST", null, {
+      message,
+    });
+    return resp.json();
+  },
 };
 
 export default Api;

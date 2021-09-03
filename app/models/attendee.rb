@@ -36,8 +36,8 @@ class Attendee < ApplicationRecord
       is_staff: staff?,
       is_speaker: speaker?,
       is_committer: committer?,
-      is_sponsor: sponsor?,
-    }
+    }.merge(admin ? {is_sponsor: sponsor?} : {})
+      
   end
 
   def original_avatar_url

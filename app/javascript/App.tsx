@@ -14,6 +14,8 @@ const TrackPage = loadable(() => import("./TrackPage"));
 const ControlRoot = loadable(() => import("./ControlRoot"));
 const ControlLogin = loadable(() => import("./ControlLogin"));
 const ControlTrackCardsPage = loadable(() => import("./ControlTrackCardsPage"));
+const ControlAttendeesPage = loadable(() => import("./ControlAttendeesPage"));
+const ControlAttendeeEdit = loadable(() => import("./ControlAttendeeEdit"));
 
 export interface Props {}
 
@@ -42,6 +44,12 @@ export const App: React.FC<Props> = (_props) => {
 
           <Route exact path="/control">
             <ControlRoot />
+          </Route>
+          <Route exact path="/control/attendees">
+            <ControlAttendeesPage />
+          </Route>
+          <Route exact path="/control/attendees/:id">
+            <ControlAttendeeEdit />
           </Route>
           <Route exact path="/control/track_cards">
             <ControlTrackCardsPage />

@@ -18,12 +18,7 @@ class Api::SessionsController < Api::ApplicationController
 
     attendee = ticket.active_attendee
     unless attendee
-      attendee = ticket.attendees.build(
-        name: "#{ticket.first_name} #{ticket.last_name}",
-        gravatar_email: ticket.email,
-        ready: false,
-      )
-      attendee.assign_inferred_role
+      attendee = ticket.build_attendee
       attendee.save!
     end
 

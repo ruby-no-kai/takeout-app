@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   %w(
     /control
     /control/track_cards
+    /control/attendees
+    /control/attendees/:id
   ).each do |_|
     get _ => 'frontend#show_require_control'
   end
@@ -50,6 +52,8 @@ Rails.application.routes.draw do
       resources :tracks, param: :slug, only: %i() do
         resources :track_cards, only: %i(index create update destroy), path: 'cards'
       end
+
+      resources :attendees, only: %i(index show update)
     end
   end
 end

@@ -7,6 +7,15 @@ class ChimeUser < ApplicationRecord
   before_validation :ensure_handle
   before_validation :ensure_version
 
+  def as_json
+    {
+      handle: handle,
+      name: name,
+      version: version,
+      is_ready: ready,
+    }
+  end
+
   def chime_id
     handle
   end

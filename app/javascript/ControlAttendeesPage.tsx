@@ -59,7 +59,11 @@ export const ControlTrackCardsPage: React.FC = () => {
                         )}
                       </Link>
                     </Td>
-                    <Td>{item.ticket.reference}</Td>
+                    <Td>
+                      <Link href={item.ticket.admin_url} isExternal>
+                        {item.ticket.reference}
+                      </Link>
+                    </Td>
                     <Td>
                       {[
                         item.attendee.is_speaker ? "Speaker" : null,

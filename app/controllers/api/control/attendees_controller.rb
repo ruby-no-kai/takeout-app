@@ -31,7 +31,7 @@ class Api::Control::AttendeesController < Api::Control::ApplicationController
   def update
     @ticket = Ticket.find(params[:id])
 
-    attendee = ticket.active_attendee || ticket.build_attendee
+    attendee = @ticket.active_attendee || @ticket.build_attendee
 
     attendee_params = params.require(:attendee).permit(:is_staff, :is_speaker, :is_committer, :name)
     attendee.update!(attendee_params)

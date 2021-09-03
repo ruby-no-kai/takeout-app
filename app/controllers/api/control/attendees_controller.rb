@@ -1,6 +1,6 @@
 class Api::Control::AttendeesController < Api::Control::ApplicationController
   def index
-    @tickets = Ticket.all.where.not(email: nil).left_joins(attendees: :chime_user)
+    @tickets = Ticket.all.where.not(email: nil).left_joins(attendees: :chime_user).order(first_name: :asc, last_name: :asc)
     query = params[:query].presence
     if query
       @tickets = @tickets.where("(' ' || tickets.first_name || ' ' || tickets.last_name || ' ') like ('%' || ? || '%') or tickets.reference = ?", query, query)

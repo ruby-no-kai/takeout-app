@@ -28,7 +28,7 @@ export const ControlTrackCardsPage: React.FC = () => {
       <Container mt="20px" maxW={["auto", "auto", "auto", "1400px"]}>
         <Box>
           <form onSubmit={onSubmit}>
-            <Input {...register("query")} placeholder="Name or reference code" />
+            <Input {...register("query")} placeholder="Name, reference code (or submit empty to list all attendees)" />
             <Button mt={4} size="lg" type="submit" isLoading={isValidating}>
               Search
             </Button>

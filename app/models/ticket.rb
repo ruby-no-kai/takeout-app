@@ -22,9 +22,9 @@ class Ticket < ApplicationRecord
   end
 
   def build_attendee
-    self.attendees.build(
-      name: "#{ticket.first_name} #{ticket.last_name}",
-      gravatar_email: ticket.email,
+    attendee = self.attendees.build(
+      name: "#{first_name} #{last_name}",
+      gravatar_email: email,
       ready: false,
     )
     attendee.assign_inferred_role

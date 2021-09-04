@@ -20,6 +20,7 @@ export const ControlAttendeeEdit: React.FC<Props> = () => {
       is_staff: React.useMemo(() => data?.attendee?.is_staff, [data]),
       is_speaker: React.useMemo(() => data?.attendee?.is_speaker, [data]),
       is_committer: React.useMemo(() => data?.attendee?.is_committer, [data]),
+      presentation_slugs: React.useMemo(() => data?.attendee?.presentation_slugs || [], [data]),
     },
   });
 
@@ -67,6 +68,10 @@ export const ControlAttendeeEdit: React.FC<Props> = () => {
           <FormControl mt={4} id="attendee__committer" isRequired>
             <FormLabel>Committer</FormLabel>
             <Checkbox {...register("is_committer")} />
+          </FormControl>
+          <FormControl mt={4} id="attendee__presentation_slugs">
+            <FormLabel>Presentation Slugs</FormLabel>
+            <Input {...register("presentation_slugs.0")} />
           </FormControl>
 
           <Button mt={4} size="lg" type="submit" isLoading={isRequesting}>

@@ -68,6 +68,7 @@ export interface ControlUpdateAttendeeRequestAttendee {
   is_staff: boolean;
   is_speaker: boolean;
   is_committer: boolean;
+  presentation_slugs: string[];
 }
 
 export const ControlApi = {

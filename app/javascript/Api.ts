@@ -145,7 +145,9 @@ export interface Attendee {
   is_staff: boolean;
   is_speaker: boolean;
   is_committer: boolean;
-  is_sponsor: boolean;
+
+  is_sponsor?: boolean;
+  presentation_slugs?: string[];
 }
 
 export interface Conference {

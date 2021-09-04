@@ -33,8 +33,10 @@ class Api::Control::AttendeesController < Api::Control::ApplicationController
 
     attendee = @ticket.active_attendee || @ticket.build_attendee
 
-    attendee_params = params.require(:attendee).permit(:is_staff, :is_speaker, :is_committer, :name)
-    attendee.update!(attendee_params)
+    attendee_params = params.require(:attendee).permit(:is_staff, :is_speaker, :is_committer, :name, presentation_slugs: [])
+    attendee.assign_attributes(attendee_params)
+    attendee.presentation_slugs = attendee.presentation_slugs.select(&:present?)
+    attendee.save!
 
     if attendee.ready?
       UpdateChimeUserJob.perform_later(attendee)

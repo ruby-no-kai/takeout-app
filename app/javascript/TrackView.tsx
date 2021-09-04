@@ -10,6 +10,7 @@ const TrackStreamOptionsSelector = loadable(() => import("./TrackStreamOptionsSe
 const TrackCardView = lazy(() => import("./TrackCardView"));
 const TrackVideo = lazy(() => import("./TrackVideo"));
 const TrackChat = lazy(() => import("./TrackChat"));
+const TrackCaption = lazy(() => import("./TrackCaption"));
 
 export interface Props {
   track: Track;
@@ -46,6 +47,12 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
             </Box>
           ) : null}
         </Flex>
+
+        {streamOptions.caption ? (
+          <React.Suspense fallback={<Skeleton w="100%" h="100px" />}>
+            <TrackCaption track={track} />
+          </React.Suspense>
+        ) : null}
 
         <React.Suspense fallback={<Skeleton w="100%" h="20px" />}>
           <TrackCardView card={track.card} nav={trackOptionsSelector} />

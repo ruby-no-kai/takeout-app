@@ -212,6 +212,7 @@ export type ChannelArn = string;
 
 export interface TrackChatInfo {
   channel_arn: ChannelArn;
+  caption_channel_arn?: ChannelArn;
 }
 
 export interface AwsCredentials {
@@ -272,6 +273,13 @@ export interface ChatMessage {
 
 export interface ChatAdminControl {
   pin?: ChatMessagePin;
+  caption?: ChatCaption;
+}
+
+export interface ChatCaption {
+  result_id: string;
+  is_partial: boolean;
+  transcript: string;
 }
 
 // XXX: Determined and given at ChatSession
@@ -452,6 +460,11 @@ export const Api = {
     const resp = await request(`/api/tracks/${encodeURIComponent(track)}/chat_admin_message_pin`, "PUT", null, {
       chat_message: chatMessage,
     });
+    return resp.json();
+  },
+
+  async createCaptionChatMembership(track: TrackSlug) {
+    const resp = await request(`/api/tracks/${encodeURIComponent(track)}/caption_chat_membership`, "POST", null, {});
     return resp.json();
   },
 };

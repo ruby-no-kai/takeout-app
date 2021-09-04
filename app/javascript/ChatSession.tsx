@@ -2,6 +2,7 @@ import { Credentials as AWSCredentials } from "@aws-sdk/types";
 import {
   ChimeClient,
   ListChannelMessagesCommand,
+  DeleteChannelMembershipCommand,
   SendChannelMessageCommand,
   GetMessagingSessionEndpointCommand,
   ChannelMessageSummary,
@@ -136,6 +137,20 @@ export class ChatSession {
       }),
     );
     return resp.MessageId;
+  }
+
+  public async deleteChannelMembership(channel: ChannelArn) {
+    if (!this.chime) throw "cannot post without session data";
+    if (!this.sessionData) throw "cannot post without session data";
+
+    const resp = await this.chime.send(
+      new DeleteChannelMembershipCommand({
+        ChimeBearer: this.sessionData.user_arn,
+        ChannelArn: channel,
+        MemberArn: this.sessionData.user_arn,
+      }),
+    );
+    return resp;
   }
 
   // Returns promise that is resolved after connection attempt has been initiated

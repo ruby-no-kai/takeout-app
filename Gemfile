@@ -18,6 +18,9 @@ gem 'aws-sdk-ivs'
 gem 'simpacker'
 gem 's3_assets_uploader'
 
+gem 'http-2'
+gem 'aws-sdk-transcribestreamingservice'
+
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end

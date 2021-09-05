@@ -10,6 +10,7 @@ export interface Props {}
 
 export const Login: React.FC<Props> = () => {
   const history = useHistory();
+  const { data: conferenceData } = Api.useConference();
   const [errorAlert, setErrorAlert] = React.useState<JSX.Element | null>(null);
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);
   const { register, handleSubmit } = useForm<{
@@ -25,8 +26,11 @@ export const Login: React.FC<Props> = () => {
       setErrorAlert(null);
 
       if (resp.attendee.is_ready) {
-        history.push("/tracks/a");
-        // TODO: redirect to /tracks/:default
+        if (conferenceData) {
+          history.push(`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`);
+        } else {
+          location.href = "/";
+        }
       } else {
         history.push("/attendee");
       }

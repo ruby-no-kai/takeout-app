@@ -10,7 +10,8 @@ import { ErrorAlert } from "./ErrorAlert";
 export interface Props {}
 
 export const AttendeeEdit: React.FC<Props> = () => {
-  const { data: session, error: sessionError, isValidating: sessionValidating } = Api.useSession();
+  const { data: conferenceData } = Api.useConference();
+  const { data: session, error: sessionError } = Api.useSession();
   const history = useHistory();
   const [errorAlert, setErrorAlert] = React.useState<JSX.Element | null>(null);
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);
@@ -41,7 +42,11 @@ export const AttendeeEdit: React.FC<Props> = () => {
       if (wasReady) {
         // TODO: notice saved message
       } else {
-        history.push("/tracks/a"); // TODO: default track
+        if (conferenceData) {
+          history.push(`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`);
+        } else {
+          location.href = "/";
+        }
       }
     } catch (e) {
       setErrorAlert(

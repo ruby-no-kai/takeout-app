@@ -18,7 +18,8 @@
   - [ ] chat mod action
 - [ ] be: チャットログ回収
 - [x] be: スケジュール情報の保存と発出 + IVS
-- [ ] 字幕考える
+- [x] 字幕考える
+  - [ ] 字幕きったときに他窓でも hide されないと混乱する
 - [ ] control: MediaLive スケジューリング
   - [ ] be: タイムテーブル
 - [x] IVSメタデータ発出
@@ -32,7 +33,7 @@
 - [x] fe: asset を S3 に
 - [ ] fe: ローディング画面
 - [ ] CloudFront
-- [ ] control: Attendee の編集
+- [x] control: Attendee の編集
 - [x] control: TrackCard の作成と保存
   - [ ] かしこいエディタ
 - [ ] チャットで絵文字いれてもしなないようにする

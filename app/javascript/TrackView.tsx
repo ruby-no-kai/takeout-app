@@ -21,6 +21,18 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
   const [streamOptions, setStreamOptions] = streamOptionsState;
   const trackOptionsSelector = <TrackStreamOptionsSelector track={track} streamOptionsState={streamOptionsState} />;
 
+  // Preload candidate speaker images
+  React.useEffect(() => {
+    if (!track.card_candidate) return;
+    if (!track.card_candidate.speakers) return;
+
+    track.card_candidate.speakers.forEach((s) => {
+      const i = new Image();
+      i.onload = () => console.log("Preloaded", s.avatar_url);
+      i.src = s.avatar_url;
+    });
+  }, [track.card_candidate]);
+
   // TODO: Chakra 側のブレークポイントの調整
   // TODO: hide chat button
   return (

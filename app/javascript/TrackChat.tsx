@@ -1,10 +1,9 @@
 import React from "react";
-import { mutate } from "swr";
 
 import { Box, Flex } from "@chakra-ui/react";
 
 import type { Track, ChatMessage } from "./Api";
-import { Api } from "./Api";
+import { Api, consumeChatAdminControl } from "./Api";
 import { useChat } from "./ChatProvider";
 import type { ChatStatus, ChatUpdate } from "./ChatSession";
 
@@ -48,14 +47,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
       }
       const adminControl = update.message?.adminControl;
       if (adminControl) {
-        if (adminControl.pin) {
-          // XXX: move to Api
-          mutate(
-            `/api/tracks/${encodeURIComponent(adminControl.pin.track)}/chat_message_pin`,
-            { track: adminControl.pin.track, pin: adminControl.pin },
-            false,
-          );
-        }
+        consumeChatAdminControl(adminControl);
       }
     },
   });

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_04_135210) do
+ActiveRecord::Schema.define(version: 2021_09_05_034430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,17 @@ ActiveRecord::Schema.define(version: 2021_09_04_135210) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["track"], name: "index_chat_message_pins_on_track", unique: true
+  end
+
+  create_table "chat_spotlights", force: :cascade do |t|
+    t.string "track", null: false
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at"
+    t.string "handles", default: [], null: false, array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["starts_at"], name: "index_chat_spotlights_on_starts_at"
+    t.index ["track", "starts_at"], name: "index_chat_spotlights_on_track_and_starts_at"
   end
 
   create_table "chime_users", force: :cascade do |t|

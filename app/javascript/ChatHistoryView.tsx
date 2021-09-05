@@ -2,7 +2,7 @@ import React from "react";
 
 import { Flex, VStack, HStack, Stack, Box, Button, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 
-import type { Track, ChatMessage, ChatMessagePin } from "./Api";
+import type { Track, ChatMessage } from "./Api";
 
 import { ChatMessageView } from "./ChatMessageView";
 

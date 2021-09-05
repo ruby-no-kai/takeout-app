@@ -13,14 +13,17 @@
 - [x] fe: チャット
   - [ ] fe: チャットのオートスクロールもうすこし賢くする
   - [ ] デザイン
-  - [ ] 現スピーカーのみのハイライト
+  - [x] 現スピーカーのみのハイライト
   - [ ] ChatAdminControl ここから以前を隠すフラグ
   - [ ] chat mod action
 - [ ] be: チャットログ回収
 - [x] be: スケジュール情報の保存と発出 + IVS
 - [x] 字幕考える
   - [x] 字幕きったときに他窓でも hide されないと混乱する
-- [ ] control: MediaLive スケジューリング
+- [ ] control: cue
+  - [ ] TrackCard
+  - [ ] MediaLive スケジューリング
+  - [ ] ChatSpotlight
   - [ ] be: タイムテーブル
 - [x] IVSメタデータ発出
 - [ ] トランジションのモーションどうするか
@@ -44,6 +47,9 @@
 - [ ] mobile view
 - [ ] sponsor promo rotate
 - [ ] periodic metadata republish 
+  - [ ] ivs cards
+  - [ ] chime pins
+  - [ ] chime spotlights
 - [ ] fe: 裏番組の表示
 - [ ] production
   - [ ] IVS

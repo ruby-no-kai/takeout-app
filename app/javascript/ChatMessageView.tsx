@@ -7,7 +7,7 @@ import { Icon, Avatar } from "@chakra-ui/react";
 import { Portal, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 
 import type { Track, ChatMessage, ChatSender } from "./Api";
-import { Api } from "./Api";
+import { Api, ChatSpotlight, ChatHandle } from "./Api";
 
 import { Colors } from "./theme";
 import { MicIcon } from "./MicIcon";
@@ -27,6 +27,8 @@ export const ChatMessageView: React.FC<Props> = (props) => {
   const [showMenuButton, setShowMenuButton] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
+  const hasSpotlight = React.useMemo(() => isMessageSpotlighted(message, track.spotlights), [track.spotlights]);
+
   return (
     <Flex
       w="100%"
@@ -43,7 +45,7 @@ export const ChatMessageView: React.FC<Props> = (props) => {
     >
       <ChatMessageAvatar author={message.sender} />
       <Box ml={2} flexGrow={1} flexShrink={0} flexBasis={0}>
-        <ChatMessageAuthor author={message.sender} pinned={pinned} />
+        <ChatMessageAuthor author={message.sender} pinned={pinned} highlight={hasSpotlight} />
         <Text p={0} m={0} ml={1} fontSize="sm" as="span">
           {message.redacted ? <i>[message removed]</i> : <span>{message.content}</span>}
         </Text>
@@ -71,12 +73,16 @@ const ChatMessageAvatar: React.FC<{ author: ChatSender }> = ({ author }) => {
   }
 };
 
-const ChatMessageAuthor: React.FC<{ author: ChatSender; pinned: boolean }> = ({ author, pinned }) => {
-  const highlight = true; // TODO:
+const ChatMessageAuthor: React.FC<{ author: ChatSender; highlight: boolean; pinned: boolean }> = ({
+  author,
+  highlight,
+  pinned,
+}) => {
   const { bg, fg } = [
     author.isAdmin ? Colors.nameHighlightOrgz : null,
     highlight && author.isSpeaker ? Colors.nameHighlightSpeaker : null,
     highlight && author.isCommitter ? Colors.nameHighlightCore : null,
+    highlight ? Colors.nameHighlightSpeaker : null,
     pinned ? { bg: Colors.baseLight, fg: Colors.dark } : null,
   ].filter((v) => !!v)[0] || { bg: Colors.backgroundColor, fg: Colors.textMuted };
 
@@ -157,3 +163,17 @@ const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ track, message, pinne
     </Menu>
   );
 };
+
+function isMessageSpotlighted(message: ChatMessage, spotlights: ChatSpotlight[]): boolean {
+  const ts = message.timestamp.unix();
+  const handle = message.sender.handle;
+  return (
+    spotlights.findIndex((spotlight) => {
+      return (
+        spotlight.starts_at <= ts &&
+        (spotlight.ends_at ? ts < spotlight.ends_at : true) &&
+        spotlight.handles.indexOf(handle) !== -1
+      );
+    }) !== -1
+  );
+}

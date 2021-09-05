@@ -20,6 +20,7 @@ class Conference
           chat: !track[:chime].nil?,
           card: TrackCard.current_for(track.fetch(:slug), t: t)&.as_json,
           card_candidate: TrackCard.candidate_for(track.fetch(:slug), t: t)&.as_json,
+          spotlights: ChatSpotlight.where(track: track.fetch(:slug)).order(starts_at: :asc).map(&:as_json),
         )
       end,
     }

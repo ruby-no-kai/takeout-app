@@ -111,6 +111,36 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
   );
 }
 
+export function consumeChatAdminControl(adminControl: ChatAdminControl) {
+  if (adminControl.pin) {
+    mutate(
+      `/api/tracks/${encodeURIComponent(adminControl.pin.track)}/chat_message_pin`,
+      { track: adminControl.pin.track, pin: adminControl.pin },
+      false,
+    );
+  }
+  if (adminControl.spotlights) {
+    const spotlights = adminControl.spotlights;
+    mutate(
+      "/api/conference",
+      (known: GetConferenceResponse) => {
+        spotlights.forEach((spotlight) => {
+          const track = known.conference.tracks[spotlight.track];
+          if (!track) return;
+          const idx = track.spotlights.findIndex((v) => v.id === spotlight.id);
+          if (idx !== -1) {
+            track.spotlights[idx] = spotlight;
+          } else {
+            track.spotlights.push(spotlight);
+          }
+        });
+        return { ...known };
+      },
+      false,
+    );
+  }
+}
+
 function activateCandidateTrackCard(data: GetConferenceResponse) {
   console.log("Start activating candidate TrackCard");
   const now = dayjs().unix();
@@ -165,6 +195,7 @@ export interface Track {
   chat: boolean;
   card: TrackCard | null;
   card_candidate: TrackCard | null;
+  spotlights: ChatSpotlight[];
 }
 
 export interface TrackCard extends TrackCardHeader, TrackCardContent {}
@@ -191,6 +222,14 @@ export interface Speaker {
   github_id: string | null;
   twitter_id: string | null;
   avatar_url: string;
+}
+
+export interface ChatSpotlight {
+  id: number;
+  track: TrackSlug;
+  starts_at: number;
+  ends_at: number;
+  handles: ChatHandle[];
 }
 
 export interface TrackStreamOptions {
@@ -274,6 +313,7 @@ export interface ChatMessage {
 export interface ChatAdminControl {
   pin?: ChatMessagePin;
   caption?: ChatCaption;
+  spotlights?: ChatSpotlight[];
 }
 
 export interface ChatCaption {
@@ -291,8 +331,10 @@ export interface ChatSenderFlags {
   isCommitter?: boolean;
 }
 
+export type ChatHandle = string;
+
 export interface ChatSender extends ChatSenderFlags {
-  handle: string;
+  handle: ChatHandle;
   name: string;
   version: string;
 }

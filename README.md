@@ -74,4 +74,5 @@ aws chime create-app-instance-admin --app-instance-arn "arn:aws:chime:us-east-1:
 
 MIT License (c) Sorah Fukumori 2021
 
-(unless otherwise noted)
+- unless otherwise noted
+  - e.g. `app/javascript/*Icon.tsx`

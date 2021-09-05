@@ -13,6 +13,8 @@ export const Colors = {
   linkHover: "#0092D8",
   lightGray: "#BFC6C9",
 
+  secondary: "#7C757D",
+
   dark: "#343A40",
 
   textDefault: "#212529",
@@ -20,6 +22,8 @@ export const Colors = {
   textMuted: "#828282",
 
   backgroundColor: "#F9F9F9",
+
+  border: "#DFDFDF",
 
   nameHighlightOrgz: { bg: "#BD4848", fg: "#FFFFFF" },
   nameHighlightCore: { bg: "#74439B", fg: "#FFFFFF" },

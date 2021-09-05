@@ -43,7 +43,7 @@ class TranscribeEngine
     end
 
     @output_stream.on_event do |event|
-      p event
+      p event unless event.is_a?(Aws::TranscribeStreamingService::Types::TranscriptEvent)
     end
   end
 
@@ -56,6 +56,7 @@ class TranscribeEngine
     @client.connection.errors.each do |e|
       p e
     end
+    raise
   end
 
   def start

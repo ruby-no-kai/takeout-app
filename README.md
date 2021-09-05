@@ -44,6 +44,11 @@
 - [ ] sponsor promo rotate
 - [ ] periodic metadata republish 
 - [ ] fe: 裏番組の表示
+- [ ] production
+  - [ ] IVS
+  - [ ] MediaLive
+  - [ ] Chime
+  - [ ] IAM
 
 ## Setup
 

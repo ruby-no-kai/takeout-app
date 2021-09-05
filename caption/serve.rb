@@ -84,16 +84,11 @@ class TranscribeEngine
   end
 end
 
-class ChimeMessgagingOutput
-  CaptionData = Struct.new(:result_id, :is_partial, :transcript)
+CaptionData = Struct.new(:result_id, :is_partial, :transcript)
 
-  def initialize(chime_user_arn:, channel_arn:)
-    @chimemessaging = Aws::ChimeSDKMessaging::Client.new(region: 'us-east-1', logger: Logger.new($stdout))
-    @chime_user_arn = chime_user_arn
-    @channel_arn = channel_arn
-
-    @id_map = {}
-    @data_lock = Mutex.new
+class GenericOutput
+  def initialize()
+   @data_lock = Mutex.new
     @data = {}
   end
 
@@ -117,37 +112,57 @@ class ChimeMessgagingOutput
           end
 
           data.each do |k, caption|
-            message_id = @id_map[caption.result_id]
-
-            content = {control: {caption: caption.to_h}}.to_json
-
-            if message_id
-              p [:update_channel_message, message_id, caption]
-              @chimemessaging.update_channel_message(
-                chime_bearer: @chime_user_arn,
-                channel_arn: @channel_arn,
-                message_id: message_id,
-                content: content,
-              )
-            else
-              p [:send_channel_message, caption]
-              resp = @chimemessaging.send_channel_message(
-                chime_bearer: @chime_user_arn,
-                channel_arn: @channel_arn,
-                content: content,
-                type: 'STANDARD',
-                persistence: 'PERSISTENT',
-              )
-              @id_map[caption.result_id] = resp.message_id
-            end
-
-            @id_map.delete(caption.result_id) unless caption.is_partial
+            handle(caption)
           end
-          # TODO: handle transient error
         end
         sleep 0.7
       end
     end.abort_on_exception = true
+  end
+end
+
+
+class ChimeMessgagingOutput < GenericOutput
+  def initialize(chime_user_arn:, channel_arn:)
+    @chimemessaging = Aws::ChimeSDKMessaging::Client.new(region: 'us-east-1', logger: Logger.new($stdout))
+    @chime_user_arn = chime_user_arn
+    @channel_arn = channel_arn
+
+    super
+  end
+
+  def handle(caption)
+    message_id = @id_map[caption.result_id]
+
+    content = {control: {caption: caption.to_h}}.to_json
+
+    if message_id
+      p [:update_channel_message, message_id, caption]
+      @chimemessaging.update_channel_message(
+        chime_bearer: @chime_user_arn,
+        channel_arn: @channel_arn,
+        message_id: message_id,
+        content: content,
+      )
+    else
+      p [:send_channel_message, caption]
+      resp = @chimemessaging.send_channel_message(
+        chime_bearer: @chime_user_arn,
+        channel_arn: @channel_arn,
+        content: content,
+        type: 'STANDARD',
+        persistence: 'PERSISTENT',
+      )
+      @id_map[caption.result_id] = resp.message_id
+    end
+
+    @id_map.delete(caption.result_id) unless caption.is_partial
+  end
+end
+
+class StderrOutput < GenericOutput
+  def handle(caption)
+    $stderr.puts caption.to_h.to_json
   end
 end
 
@@ -156,15 +171,19 @@ track_slug = ARGV[0]
 chime_user_arn = Conference.data.fetch(:chime).fetch(:app_user_arn)
 channel_arn = Conference.data
   .fetch(:tracks)
-  .fetch(track_slug)
-  .fetch(:chime)
-  .fetch(:caption_channel_arn)
+  .fetch(track_slug, {})
+  .fetch(:chime, {})
+  .fetch(:caption_channel_arn, nil)
 
 p env: Rails.env, chime_user_arn: chime_user_arn, channel_arn: channel_arn
 
+if track_slug && !channel_arn
+  raise "define caption_channel_arn"
+end
+
 input = StdinInput.new
 engine = TranscribeEngine.new
-output = ChimeMessgagingOutput.new(chime_user_arn: chime_user_arn, channel_arn: channel_arn)
+output = track_slug ? ChimeMessgagingOutput.new(chime_user_arn: chime_user_arn, channel_arn: channel_arn) : StderrOutput.new
 
 input.on_data do |chunk|
   p on_audio: chunk.bytesize

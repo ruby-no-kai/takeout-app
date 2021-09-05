@@ -93,7 +93,7 @@ const ChatMessageAuthor: React.FC<{ author: ChatSender; highlight: boolean; pinn
   if (author.isAdmin) icons.push(<CampaignIcon key="admin" color={fg} />);
   if (author.isStaff) icons.push(<LunchDiningIcon key="staff" color={fg} />);
   if (author.isSpeaker) icons.push(<MicIcon key="speaker" color={fg} />);
-  if (author.isCommitter) icons.push(<CommitterIcon key="committer" color={fg} />);
+  if (author.isCommitter) icons.push(<CommitterIcon key="committer" color={fg} boxSize="12px" />);
 
   const tooltipContents: string[] = [];
   if (author.isAdmin) tooltipContents.push("Official Announcement");

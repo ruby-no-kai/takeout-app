@@ -33,10 +33,11 @@ export const ChatMessageView: React.FC<Props> = (props) => {
   return (
     <Flex
       w="100%"
-      mb={2}
       direction="row"
       alignItems="center"
       bg={pinned ? Colors.baseLight : Colors.backgroundColor}
+      py={pinned ? "10px" : "0"}
+      px="15px"
       onMouseEnter={() => setShowMenuButton(true)}
       onMouseLeave={() => setShowMenuButton(false)}
       onTouchEnd={(e) => {
@@ -45,7 +46,7 @@ export const ChatMessageView: React.FC<Props> = (props) => {
       }}
     >
       <ChatMessageAvatar author={message.sender} />
-      <Box ml={2} flexGrow={1} flexShrink={0} flexBasis={0}>
+      <Box ml="8px" flexGrow={1} flexShrink={0} flexBasis={0}>
         <ChatMessageAuthor author={message.sender} pinned={pinned} highlight={hasSpotlight} />
         <Text p={0} m={0} ml={1} fontSize="sm" as="span">
           {message.redacted ? <i>[message removed]</i> : <span>{message.content}</span>}

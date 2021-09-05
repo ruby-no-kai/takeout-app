@@ -131,7 +131,7 @@ const TrackViewSkeleton: React.FC = () => {
           </AspectRatio>
         </Box>
 
-        <Box maxW={["auto", "auto", "auto", "400px"]} minH="400px" w="100%" ml={3}></Box>
+        <Box maxW={["auto", "auto", "auto", "400px"]} minH="400px" w="100%" ml="30px"></Box>
       </Flex>
     </Container>
   );

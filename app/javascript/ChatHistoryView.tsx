@@ -68,13 +68,15 @@ export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessag
   return (
     <Box h="100%" overflowX="hidden" overflowY="scroll" wordBreak="break-word" ref={box}>
       {pinnedMessage ? (
-        <Box position="sticky" top="0px" zIndex="1500">
+        <Box position="sticky" left="0" top="0" zIndex="1500" w="100%">
           <ChatMessageView track={track} message={pinnedMessage} pinned={true} showAdminActions={showAdminActions} />
         </Box>
       ) : null}
       {showScrollButton ? <Button onClick={() => setAutoscrollEnabled(true)}>bottom</Button> : null}
       {loading ? <p>Loading..</p> : null}
-      {messageViews}
+      <VStack w="100%" spacing="8px" my="8px">
+        {messageViews}
+      </VStack>
     </Box>
   );
 };

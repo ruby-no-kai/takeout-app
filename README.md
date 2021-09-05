@@ -51,6 +51,7 @@
   - [ ] chime pins
   - [ ] chime spotlights
 - [ ] fe: 裏番組の表示
+- [ ] !attendee.is_ready で警告
 - [ ] production
   - [ ] IVS
   - [ ] MediaLive

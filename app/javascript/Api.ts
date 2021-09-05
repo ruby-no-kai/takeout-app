@@ -303,7 +303,7 @@ export interface ChatMessage {
   channel: ChannelArn;
   content: string | null;
   sender: ChatSender;
-  timestamp: Dayjs;
+  timestamp: number; // millis
   id: string;
   redacted: boolean;
 

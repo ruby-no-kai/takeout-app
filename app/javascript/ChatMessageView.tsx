@@ -1,4 +1,5 @@
 import React from "react";
+import dayjs from "dayjs";
 
 import { Flex, Box, Container } from "@chakra-ui/react";
 import { Text, Badge, Tooltip } from "@chakra-ui/react";
@@ -168,7 +169,7 @@ const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ track, message, pinne
 };
 
 function isMessageSpotlighted(message: ChatMessage, spotlights: ChatSpotlight[]): boolean {
-  const ts = message.timestamp.unix();
+  const ts = dayjs(message.timestamp).unix();
   const handle = message.sender.handle;
   return (
     spotlights.findIndex((spotlight) => {

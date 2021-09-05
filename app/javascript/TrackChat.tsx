@@ -122,7 +122,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
 };
 
 function sortChatHistoryNewestFirst(a: ChatMessage, b: ChatMessage) {
-  return b.timestamp.unix() - a.timestamp.unix();
+  return b.timestamp - a.timestamp;
 }
 
 function mergeChatHistory(existingHistory: ChatMessage[], newHistory: ChatMessage[]): ChatMessage[] {

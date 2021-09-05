@@ -334,7 +334,7 @@ export class ChatSession {
       id: message.MessageId,
       content: content,
       sender,
-      timestamp: dayjs(message.CreatedTimestamp ? new Date(message.CreatedTimestamp) : new Date()),
+      timestamp: dayjs(message.CreatedTimestamp ? new Date(message.CreatedTimestamp) : new Date()).valueOf(),
       redacted: message.Redacted === true,
       adminControl,
     };

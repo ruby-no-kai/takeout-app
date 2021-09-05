@@ -78,13 +78,16 @@ const ChatMessageAuthor: React.FC<{ author: ChatSender; highlight: boolean; pinn
   highlight,
   pinned,
 }) => {
+  const defaultBg = pinned ? Colors.baseLight : Colors.backgroundColor;
   const { bg, fg } = [
     author.isAdmin ? Colors.nameHighlightOrgz : null,
     highlight && author.isSpeaker ? Colors.nameHighlightSpeaker : null,
     highlight && author.isCommitter ? Colors.nameHighlightCore : null,
     highlight ? Colors.nameHighlightSpeaker : null,
-    pinned ? { bg: Colors.baseLight, fg: Colors.dark } : null,
-  ].filter((v) => !!v)[0] || { bg: Colors.backgroundColor, fg: Colors.textMuted };
+    author.isSpeaker ? { bg: defaultBg, fg: Colors.nameSpeaker } : null,
+    author.isCommitter ? { bg: defaultBg, fg: Colors.nameCore } : null,
+    pinned ? { bg: defaultBg, fg: Colors.dark } : null,
+  ].filter((v) => !!v)[0] || { bg: defaultBg, fg: Colors.textMuted };
 
   const icons: JSX.Element[] = [];
   if (author.isAdmin) icons.push(<CampaignIcon key="admin" color={fg} />);
@@ -104,7 +107,7 @@ const ChatMessageAuthor: React.FC<{ author: ChatSender; highlight: boolean; pinn
       <Flex display="inline" alignItems="center" direction="row" bgColor={bg} borderRadius="4px" px={1} py="1px">
         <ChatAuthorName author={author} fg={fg} />
         {icons.length > 0 ? (
-          <Text as="span" ml={1}>
+          <Text as="span" ml={1} color={fg}>
             {icons}
           </Text>
         ) : null}

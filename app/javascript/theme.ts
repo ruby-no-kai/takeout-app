@@ -23,7 +23,10 @@ export const Colors = {
 
   nameHighlightOrgz: { bg: "#BD4848", fg: "#FFFFFF" },
   nameHighlightCore: { bg: "#74439B", fg: "#FFFFFF" },
-  nameHighlightSpeaker: { bg: main, fg: "#D7D165" },
+  nameHighlightSpeaker: { bg: "#D7D165", fg: main },
+
+  nameSpeaker: main, // TODO:
+  nameCore: "#74439B",
 
   defaultAvatarBg: "#868E96", // TODO:
 };

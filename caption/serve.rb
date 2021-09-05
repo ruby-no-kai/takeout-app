@@ -130,7 +130,7 @@ class ChimeMessgagingOutput < GenericOutput
 
     @id_map = {}
 
-    super
+    super()
   end
 
   def handle(caption)

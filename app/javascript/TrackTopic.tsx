@@ -57,7 +57,7 @@ export const TrackTopic: React.FC<Props> = ({ card, topicNav }) => {
         </HStack>
         <Box>{topicNav}</Box>
       </Flex>
-      <Box py="18px" borderTop="1px solid" borderColor={Colors.border}>
+      <Box py="18px" borderTop="1px solid" borderColor={Colors.border} w="100%">
         <Text as="p">{topic.description}</Text>
       </Box>
     </VStack>

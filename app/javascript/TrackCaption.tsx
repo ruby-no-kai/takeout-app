@@ -68,7 +68,7 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
     };
   }, [chat.session, captionChannel]);
 
-  const lastCompleteCaption = completeCaptions[0];
+  const [lastCompleteCaption, ...pastCompleteCaptions] = completeCaptions;
   const partialCaption =
     partialCaptionCand && lastCompleteCaption?.result_id !== partialCaptionCand.result_id ? partialCaptionCand : null;
 
@@ -81,6 +81,8 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
   }, [box.current, lastCompleteCaption, partialCaption]);
 
   if (!captionChannel) return <></>;
+
+  // TODO: Colors.textMuted is inappropriate
 
   return (
     <Box
@@ -99,8 +101,19 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
       ref={box}
     >
       <Text color="#FFFFFF">
-        {completeCaptions.map((v) => <span key={v.result_id}>{v.transcript} </span>).reverse()}
-        <span> {partialCaption?.transcript}</span>
+        {pastCompleteCaptions
+          .map((v) => (
+            <Text as="span" color={Colors.textMuted} key={v.result_id}>
+              {v.transcript}{" "}
+            </Text>
+          ))
+          .reverse()}
+        {lastCompleteCaption ? (
+          <Text as="span" color={partialCaption ? Colors.textMuted : "inherit"} key={lastCompleteCaption.result_id}>
+            {lastCompleteCaption.transcript}{" "}
+          </Text>
+        ) : null}
+        <span>{partialCaption?.transcript}</span>
       </Text>
     </Box>
   );

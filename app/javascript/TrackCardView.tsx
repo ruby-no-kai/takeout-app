@@ -16,13 +16,7 @@ export interface Props {
 export const TrackCardView: React.FC<Props> = ({ card, nav }) => {
   return (
     <Box>
-      {card?.topic ? (
-        <TrackTopic topic={card.topic} topicNav={nav} />
-      ) : (
-        <Flex justify="space-between" align="center" w="100%">
-          {nav}
-        </Flex>
-      )}
+      <TrackTopic card={card} topicNav={nav} />
       {card?.speakers?.map((s) => (
         <TrackSpeaker key={`${s.name}-${s.avatar_url}`} speaker={s} />
       ))}

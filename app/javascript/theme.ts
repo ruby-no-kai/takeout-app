@@ -56,16 +56,21 @@ export const theme = extendTheme({
             tablist: {
               borderBottom: "1px solid",
               borderColor: Colors.border,
+              backgroundColor: "#FFFFFF",
             },
             tab: {
-              borderBottom: "1px solid",
-              borderColor: "transparent",
+              backgroundColor: "#FFFFFF",
               color: Colors.textMuted,
+              fontWeight: 400,
+              "& .rk-tracks-tabs-name": {
+                borderBottom: "1px solid",
+                borderColor: "transparent",
+              },
               _selected: {
                 color: main,
                 "& .rk-tracks-tabs-name": {
-                  fontWeight: "bold", // TODO
                   borderColor: main,
+                  fontWeight: 700,
                 },
               },
               //_active: {

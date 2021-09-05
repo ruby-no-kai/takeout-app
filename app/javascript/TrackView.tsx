@@ -37,6 +37,11 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
             >
               <TrackVideo track={track} streamOptions={streamOptionsState[0]} />
             </React.Suspense>
+            {streamOptions.caption ? (
+              <React.Suspense fallback={<Skeleton w="100%" h="80px" />}>
+                <TrackCaption track={track} />
+              </React.Suspense>
+            ) : null}
           </Box>
 
           {streamOptions.chat && track.chat ? (
@@ -47,12 +52,6 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
             </Box>
           ) : null}
         </Flex>
-
-        {streamOptions.caption ? (
-          <React.Suspense fallback={<Skeleton w="100%" h="100px" />}>
-            <TrackCaption track={track} />
-          </React.Suspense>
-        ) : null}
 
         <React.Suspense fallback={<Skeleton w="100%" h="20px" />}>
           <TrackCardView card={track.card} nav={trackOptionsSelector} />

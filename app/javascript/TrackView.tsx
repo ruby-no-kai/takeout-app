@@ -18,7 +18,7 @@ export interface Props {
 }
 
 export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
-  const streamOptions = streamOptionsState[0];
+  const [streamOptions, setStreamOptions] = streamOptionsState;
   const trackOptionsSelector = <TrackStreamOptionsSelector track={track} streamOptionsState={streamOptionsState} />;
 
   // TODO: Chakra 側のブレークポイントの調整
@@ -39,7 +39,12 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
             </React.Suspense>
             {streamOptions.caption ? (
               <React.Suspense fallback={<Skeleton w="100%" h="80px" />}>
-                <TrackCaption track={track} />
+                <TrackCaption
+                  track={track}
+                  onUnsubscribe={() => {
+                    setStreamOptions({ ...streamOptions, caption: false });
+                  }}
+                />
               </React.Suspense>
             ) : null}
           </Box>

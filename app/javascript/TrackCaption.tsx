@@ -11,9 +11,10 @@ import type { ChatStatus, ChatUpdate } from "./ChatSession";
 
 export interface Props {
   track: Track;
+  onUnsubscribe: () => void;
 }
 
-export const TrackCaption: React.FC<Props> = ({ track }) => {
+export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
   const chat = useChat();
   const [chatSessionStatus, setChatSessionStatus] = React.useState(chat?.session?.status);
   const captionChannel = track.chat ? chat.tracks?.[track.slug]?.caption_channel_arn ?? null : null;
@@ -28,12 +29,17 @@ export const TrackCaption: React.FC<Props> = ({ track }) => {
       setChatSessionStatus(status);
     },
     onChatUpdate(update: ChatUpdate) {
+      if (update.kind == "DELETE_CHANNEL_MEMBERSHIP" && update.member!.Arn === chat.session?.getSelfArn()) {
+        onUnsubscribe();
+      }
+
       const caption = update.message?.adminControl?.caption;
       if (!caption) return;
       if (caption.is_partial) {
         setPartialCaption(caption);
       } else {
-        setCompleteCaptions([caption, ...completeCaptions].slice(0, 2));
+        const newCompleteCaptions = [caption, ...completeCaptions].slice(0, 10);
+        setCompleteCaptions(newCompleteCaptions);
       }
     },
   });

@@ -144,20 +144,23 @@ function mergeChatHistory(existingHistory: ChatMessage[], newHistory: ChatMessag
 }
 
 function updateChatHistory(existingHistory: ChatMessage[], update: ChatUpdate): ChatMessage[] {
+  if (!update.message) throw "updateChatHistory: ChatUpdate#message is falsy";
+  const message = update.message;
+
   console.log("updateChatHistory", { existingHistory, update });
   switch (update.kind) {
     case "CREATE_CHANNEL_MESSAGE":
-      existingHistory.splice(0, 0, update.message);
+      existingHistory.splice(0, 0, message);
       break;
     case "DELETE_CHANNEL_MESSAGE":
       existingHistory.forEach((v, i) => {
-        if (v.id === update.message.id) existingHistory[i].redacted = true;
+        if (v.id === message.id) existingHistory[i].redacted = true;
       });
       break;
     case "REDACT_CHANNEL_MESSAGE":
     case "UPDATE_CHANNEL_MESSAGE":
       existingHistory.forEach((v, i) => {
-        if (v.id === update.message.id) existingHistory[i] = v;
+        if (v.id === message.id) existingHistory[i] = v;
       });
       break;
     default:

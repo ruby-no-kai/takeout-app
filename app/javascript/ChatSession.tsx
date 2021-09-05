@@ -6,6 +6,8 @@ import {
   SendChannelMessageCommand,
   GetMessagingSessionEndpointCommand,
   ChannelMessageSummary,
+  ChannelMembership,
+  Identity,
 } from "@aws-sdk/client-chime";
 
 //import * as Chime from "aws-sdk/clients/chime";
@@ -39,11 +41,14 @@ export type ChatUpdateKind =
   | "CREATE_CHANNEL_MESSAGE"
   | "UPDATE_CHANNEL_MESSAGE"
   | "DELETE_CHANNEL_MESSAGE"
-  | "REDACT_CHANNEL_MESSAGE";
+  | "REDACT_CHANNEL_MESSAGE"
+  | "CREATE_CHANNEL_MEMBERSHIP"
+  | "DELETE_CHANNEL_MEMBERSHIP";
 
 export interface ChatUpdate {
   kind: ChatUpdateKind;
-  message: ChatMessage;
+  message?: ChatMessage;
+  member?: Identity;
 }
 
 interface AdminMessage {
@@ -85,6 +90,10 @@ export class ChatSession {
     this.generateChimeClient();
     //console.log({ sessionData, sessionDataEpoch: this.sessionDataEpoch });
     if (this.sessionDataEpoch === 1) this.updateStatus("READY");
+  }
+
+  getSelfArn(): string | undefined {
+    return this.sessionData?.user_arn;
   }
 
   public subscribeStatus(callback: (status: ChatStatus, error: Error | null) => void) {
@@ -252,6 +261,11 @@ export class ChatSession {
           const channelMessage = record as ChimeChannelMessage;
           this.onChannelMessage(messageType, channelMessage);
           break;
+        case "CREATE_CHANNEL_MEMBERSHIP":
+        case "DELETE_CHANNEL_MEMBERSHIP":
+          const channelMembership = record as ChannelMembership;
+          this.onChannelMembershipEvent(messageType, channelMembership);
+          break;
         default:
           console.log(`Ignoring messageType=${messageType}`);
       }
@@ -326,6 +340,20 @@ export class ChatSession {
     };
 
     return update;
+  }
+
+  onChannelMembershipEvent(kind: ChatUpdateKind, record: ChannelMembership) {
+    const channel = record.ChannelArn;
+    if (!channel) return;
+    const update = { kind, member: record.Member };
+
+    const subs = this.messageSubscribers.get(channel);
+    if (subs) {
+      this.messageSubscribers.set(
+        channel,
+        subs.filter((v) => v(update)),
+      );
+    }
   }
 }
 

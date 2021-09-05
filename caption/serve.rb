@@ -128,6 +128,8 @@ class ChimeMessgagingOutput < GenericOutput
     @chime_user_arn = chime_user_arn
     @channel_arn = channel_arn
 
+    @id_map = {}
+
     super
   end
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Flex, Box, Heading, Text, Link } from "@chakra-ui/react";
-import { Tag, HStack } from "@chakra-ui/react";
+import { Tag, HStack, VStack } from "@chakra-ui/react";
 
 import type { TrackCard, Speaker } from "./Api";
 
@@ -27,11 +27,11 @@ export const TrackTopic: React.FC<Props> = ({ card, topicNav }) => {
   }
 
   return (
-    <Box>
-      <Flex justify="space-between" align="center" w="100%" alignItems="top" mb="18px">
-        <HStack flexGrow={1} flexShrink={0} flexBasis={0} alignItems="top">
+    <VStack spacing="18px">
+      <Flex justify="space-between" align="center" w="100%" alignItems="top">
+        <HStack flexGrow={1} flexShrink={0} flexBasis={0} alignItems="top" spacing="12px">
           {card.speakers && card.speakers.length > 0 ? (
-            <Box w="100%" maxW="64px" mr="12px">
+            <Box w="100%" maxW="64px">
               <SpeakerAvatar speakers={card.speakers} />
             </Box>
           ) : null}
@@ -60,7 +60,7 @@ export const TrackTopic: React.FC<Props> = ({ card, topicNav }) => {
       <Box py="18px" borderTop="1px solid" borderColor={Colors.border}>
         <Text as="p">{topic.description}</Text>
       </Box>
-    </Box>
+    </VStack>
   );
 };
 
@@ -70,20 +70,29 @@ const TrackTopicSpeaker: React.FC<{ speaker: Speaker }> = ({ speaker }) => {
     (speaker.github_id && `https://github.com/${speaker.github_id}`) ||
     (speaker.twitter_id && `https://twitter.com/${speaker.twitter_id}`);
   return (
-    <HStack as="p" fontSize="16px" fontWeight="400" h="20px" lineHeight="24px" mt="3px" color={Colors.secondary}>
+    <HStack
+      as="p"
+      spacing={2}
+      fontSize="16px"
+      fontWeight="400"
+      h="20px"
+      lineHeight="24px"
+      mt="3px"
+      color={Colors.secondary}
+    >
       <Text as="span">{speaker.name}</Text>
       {primaryAlias && primaryLink ? (
-        <Link isExternal href={primaryLink} m={0} ml={1}>
+        <Link isExternal href={primaryLink} m={0}>
           @{primaryAlias}
         </Link>
       ) : null}
       {speaker.github_id ? (
-        <Link isExternal href={`https://github.com/${speaker.github_id}`} m={0} ml={1}>
+        <Link isExternal href={`https://github.com/${speaker.github_id}`} m={0}>
           <GitHubIcon boxSize="16px" />
         </Link>
       ) : null}
       {speaker.twitter_id ? (
-        <Link isExternal href={`https://twitter.com/${speaker.twitter_id}`} m={0} ml={1}>
+        <Link isExternal href={`https://twitter.com/${speaker.twitter_id}`} m={0}>
           <TwitterIcon boxSize="16px" />
         </Link>
       ) : null}

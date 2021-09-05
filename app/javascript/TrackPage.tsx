@@ -78,10 +78,12 @@ export const TrackPageInner: React.FC = () => {
 
   return (
     <>
-      <Tabs isLazy index={trackIndex} onChange={onTabChange}>
+      <Tabs isLazy index={trackIndex} onChange={onTabChange} variant="rk-tracks">
         <TabList>
           {tracks.map((t) => (
-            <Tab key={t.slug}>{t.name}</Tab>
+            <Tab key={t.slug}>
+              <span className="rk-tracks-tabs-name">{t.name}</span>
+            </Tab>
           ))}
         </TabList>
         <TabPanels>

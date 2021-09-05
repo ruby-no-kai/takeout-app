@@ -48,4 +48,37 @@ export const theme = extendTheme({
       },
     },
   },
+  components: {
+    Tabs: {
+      variants: {
+        "rk-tracks": (_props) => {
+          return {
+            tablist: {
+              borderBottom: "1px solid",
+              borderColor: Colors.border,
+            },
+            tab: {
+              borderBottom: "1px solid",
+              borderColor: "transparent",
+              color: Colors.textMuted,
+              _selected: {
+                color: main,
+                "& .rk-tracks-tabs-name": {
+                  fontWeight: "bold", // TODO
+                  borderColor: main,
+                },
+              },
+              //_active: {
+              //  bg: main,
+              //},
+              //_disabled: {
+              //  opacity: 0.4,
+              //  cursor: "not-allowed",
+              //},
+            },
+          };
+        },
+      },
+    },
+  },
 });

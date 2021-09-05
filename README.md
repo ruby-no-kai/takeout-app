@@ -51,6 +51,7 @@
   - [ ] chime pins
   - [ ] chime spotlights
 - [ ] fe: 裏番組の表示
+- [ ] fe: 字幕 テキストエリアは width せまいほうがいいかも
 - [ ] !attendee.is_ready で警告
 - [ ] production
   - [ ] IVS
@@ -69,6 +70,12 @@ aws chime create-app-instance --name rk-takeout-dev
 aws chime create-app-instance-user --app-instance-arn "arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443" --app-instance-user-id app --name app
 aws chime create-app-instance-admin --app-instance-arn "arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443" --app-instance-admin-arn arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/user/app
 ```
+
+### IVS
+
+### MediaLive
+
+### caption/serve.rb
 
 ## License
 

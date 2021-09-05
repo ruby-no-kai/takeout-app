@@ -19,11 +19,12 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
   const [chatSessionStatus, setChatSessionStatus] = React.useState(chat?.session?.status);
   const captionChannel = track.chat ? chat.tracks?.[track.slug]?.caption_channel_arn ?? null : null;
 
-  const [completeCaptions, setCompleteCaptions] = React.useState<ChatCaption[]>([]);
-  const [partialCaptionCand, setPartialCaption] = React.useState<ChatCaption | null>(null);
+  const [captions, setCaptions] = React.useState<ChatCaption[]>([]);
+  const [lastCompleteId, setLastCompleteId] = React.useState<string | null>(null);
 
   const box = React.useRef<HTMLDivElement>(null);
 
+  // XXX: たまたま中で同じ配列を破壊しながら進んでいるので助かっているだけ2
   const [chatCallbacks, _setChatCallbacks] = React.useState({
     onStatusChange(status: ChatStatus, _error: Error | null) {
       setChatSessionStatus(status);
@@ -35,11 +36,20 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
 
       const caption = update.message?.adminControl?.caption;
       if (!caption) return;
-      if (caption.is_partial) {
-        setPartialCaption(caption);
+
+      if (update.kind === "CREATE_CHANNEL_MESSAGE") {
+        captions.splice(0, 0, caption);
+        setCaptions([...captions]);
+        setLastCompleteId(null);
       } else {
-        const newCompleteCaptions = [caption, ...completeCaptions].slice(0, 10);
-        setCompleteCaptions(newCompleteCaptions);
+        const idx = captions.findIndex((c) => (c.result_id === caption.result_id ? caption : c));
+        if (idx !== -1) {
+          captions[idx] = caption;
+        } else {
+          captions.splice(0, 0, caption);
+        }
+        if (!caption.is_partial) setLastCompleteId(caption.result_id);
+        setCaptions([...captions]);
       }
     },
   });
@@ -68,17 +78,13 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
     };
   }, [chat.session, captionChannel]);
 
-  const [lastCompleteCaption, ...pastCompleteCaptions] = completeCaptions;
-  const partialCaption =
-    partialCaptionCand && lastCompleteCaption?.result_id !== partialCaptionCand.result_id ? partialCaptionCand : null;
-
   React.useEffect(() => {
     console.log("caption autoscroll chance");
     if (!box.current) return;
     console.log("caption autoscroll do");
     const el = box.current;
     el.scrollTop = el.scrollHeight;
-  }, [box.current, lastCompleteCaption, partialCaption]);
+  }, [box.current, captions]);
 
   if (!captionChannel) return <></>;
 
@@ -101,19 +107,17 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
       ref={box}
     >
       <Text color="#FFFFFF">
-        {pastCompleteCaptions
+        {captions
           .map((v) => (
-            <Text as="span" color={Colors.textMuted} key={v.result_id}>
+            <Text
+              as="span"
+              color={v.is_partial || lastCompleteId === v.result_id ? "inherit" : Colors.textMuted}
+              key={v.result_id}
+            >
               {v.transcript}{" "}
             </Text>
           ))
           .reverse()}
-        {lastCompleteCaption ? (
-          <Text as="span" color={partialCaption ? Colors.textMuted : "inherit"} key={lastCompleteCaption.result_id}>
-            {lastCompleteCaption.transcript}{" "}
-          </Text>
-        ) : null}
-        <span>{partialCaption?.transcript}</span>
       </Text>
     </Box>
   );

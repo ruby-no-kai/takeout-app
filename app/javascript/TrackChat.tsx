@@ -35,6 +35,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
   const [chatHistory, setChatHistory] = React.useState<ChatMessage[]>([]);
   const trackChannel = track.chat ? chat.tracks?.[track.slug]?.channel_arn ?? null : null;
 
+  // XXX: たまたま中で同じ配列を破壊しながら進んでいるので助かっているだけ1
   const [chatCallbacks, _setChatCallbacks] = React.useState({
     onStatusChange(status: ChatStatus, error: Error | null) {
       console.log("onStatusChange", status, error);

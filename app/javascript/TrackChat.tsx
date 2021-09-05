@@ -136,6 +136,7 @@ function mergeChatHistory(existingHistory: ChatMessage[], newHistory: ChatMessag
   return existingHistory.slice(0, HISTORY_LENGTH);
 }
 
+// TODO: 元の配列を保持しつづけてるのでメモリリーク
 function updateChatHistory(existingHistory: ChatMessage[], update: ChatUpdate): ChatMessage[] {
   if (!update.message) throw "updateChatHistory: ChatUpdate#message is falsy";
   const message = update.message;

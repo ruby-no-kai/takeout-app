@@ -42,6 +42,7 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
         setCaptions([...captions]);
         setLastCompleteId(null);
       } else {
+        // TODO: 元の配列を保持しつづけてるのでメモリリーク & 過去のを消せていない
         const idx = captions.findIndex((c) => (c.result_id === caption.result_id ? caption : c));
         if (idx !== -1) {
           captions[idx] = caption;

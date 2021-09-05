@@ -491,9 +491,10 @@ export const Api = {
     );
   },
 
-  async sendChatAdminMessage(track: TrackSlug, message: string) {
-    const resp = await request(`/api/tracks/${encodeURIComponent(track)}/chat_admin_messages`, "POST", null, {
+  async sendChatMessage(track: TrackSlug, message: string, asAdmin?: boolean) {
+    const resp = await request(`/api/tracks/${encodeURIComponent(track)}/chat_messages`, "POST", null, {
       message,
+      as_admin: !!asAdmin,
     });
     return resp.json();
   },

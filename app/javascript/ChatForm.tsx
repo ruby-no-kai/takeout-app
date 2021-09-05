@@ -44,9 +44,14 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
 
     try {
       if (data.asAdmin && isStaff) {
-        await Api.sendChatAdminMessage(track.slug, data.message);
+        await Api.sendChatMessage(track.slug, data.message, true);
       } else {
-        await chat.session.postMessage(channel, data.message);
+        // Workaround: aws-sdk-v3 sigv4 fails to generate correct signature for payload containing emoji...
+        if (/\p{Extended_Pictographic}/u.test(data.message)) {
+          await Api.sendChatMessage(track.slug, data.message, false);
+        } else {
+          await chat.session.postMessage(channel, data.message);
+        }
       }
       reset({ message: "", asAdmin: false });
     } catch (e) {

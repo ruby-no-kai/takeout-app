@@ -8,7 +8,8 @@ require 'json'
 require_relative '../config/environment'
 require_relative '../app/models/conference'
 
-# ffmpeg -i ... -vn -f s16le -ar 16000 -ac 1 - | ruby serve.rb a main |& tee -a /tmp/serve
+# ffmpeg -i ... -vn -f s16le -ar 16000 -ac 1 - | ruby serve.rb a |& tee -a /tmp/serve
+# ffmpeg -i udp://0.0.0.0:10000 -f mpegts -c:a pcm_s16le -vn -f s16le -ar 16000 -ac 1 - | ruby serve.rb a |& tee -a /tmp/serve
 class StdinInput
   def initialize
     @on_data = proc { }
@@ -31,20 +32,6 @@ class StdinInput
   end
 end
 
-class UdpInput
-  def initialize
-    @on_data = proc { }
-  end
-
-  def on_data(&block)
-    @on_data = block
-    self
-  end
-
-  def start
-  end
-end
-
 class TranscribeEngine
   def initialize
     @client = Aws::TranscribeStreamingService::AsyncClient.new(region: 'ap-northeast-1')
@@ -53,6 +40,10 @@ class TranscribeEngine
 
     @output_stream.on_bad_request_exception_event do |exception|
       raise exception
+    end
+
+    @output_stream.on_event do |event|
+      p event
     end
   end
 

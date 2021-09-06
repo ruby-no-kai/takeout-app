@@ -89,7 +89,7 @@ export const TrackPageInner: React.FC = () => {
       <TabPanels>
         {tracks.map((t) => {
           return (
-            <TabPanel key={t.slug}>
+            <TabPanel key={t.slug} p={0}>
               <React.Suspense fallback={<TrackViewSkeleton />}>
                 <TrackView track={t} streamOptionsState={streamOptionState} />
               </React.Suspense>
@@ -110,7 +110,7 @@ const TrackPageSkeleton: React.FC = () => {
         </Tab>
       </TabList>
       <TabPanels>
-        <TabPanel>
+        <TabPanel p={0}>
           <TrackViewSkeleton />
         </TabPanel>
       </TabPanels>
@@ -120,7 +120,7 @@ const TrackPageSkeleton: React.FC = () => {
 
 const TrackViewSkeleton: React.FC = () => {
   return (
-    <Container maxW={["auto", "auto", "auto", "1700px"]}>
+    <Container maxW={["auto", "auto", "auto", "1700px"]} px="15px" py="22px">
       <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]}>
         <Box w="100%">
           <AspectRatio ratio={16 / 9}>

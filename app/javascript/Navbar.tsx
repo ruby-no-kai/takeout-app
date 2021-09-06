@@ -16,7 +16,7 @@ export const Navbar: React.FC = () => {
   // TODO: bgImage...
 
   return (
-    <Flex as="nav" justify="space-between" alignItems="center" w="100%" h="56px" px="18px" bgColor={Colors.bg}>
+    <Flex as="nav" justify="space-between" alignItems="center" w="100%" h="56px" px="15px" bgColor={Colors.bg}>
       <Heading as="h1" size="lg" fontSize="22px" css={{ "& svg": { height: "22px", width: "auto" } }}>
         {conferenceData?.conference ? (
           <Link as={RouterLink} to={`/tracks/${conferenceData.conference.default_track}`} color={Colors.main}>

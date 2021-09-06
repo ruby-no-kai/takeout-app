@@ -36,7 +36,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
   // TODO: Chakra 側のブレークポイントの調整
   // TODO: hide chat button
   return (
-    <Container maxW={["auto", "auto", "auto", "1700px"]}>
+    <Container maxW={["auto", "auto", "auto", "1700px"]} px="15px" py="22px">
       <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]}>
         <Box w="100%">
           <React.Suspense

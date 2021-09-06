@@ -57,6 +57,7 @@
 - [ ] fe: 字幕 テキストエリアは width せまいほうがいいかも
 - [ ] !attendee.is_ready で警告
 - [ ] なんか TrackCardTopic のテキスト長で動画の width 変わるんですけど＞＜
+- [ ] スクロールバー有無でレイアウトずれる (padding せますぎたぶん)
 - [ ] production
   - [ ] IVS
   - [ ] MediaLive

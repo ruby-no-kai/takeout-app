@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Box, Container } from "@chakra-ui/react";
-import { Text, Badge, Tooltip, Center, Circle, Image } from "@chakra-ui/react";
+import { Box, VStack, HStack } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
+import { Collapse, CircularProgress } from "@chakra-ui/react";
 
-import { Api } from "./Api";
 import { ChatStatus } from "./ChatSession";
 
 import { ErrorAlert } from "./ErrorAlert";
@@ -15,28 +15,45 @@ export interface Props {
 }
 
 export const ChatStatusView: React.FC<Props> = ({ status, loading, error }) => {
-  if (status === "CONNECTED" && !loading && !error) return <></>;
+  const shouldClose = status === "CONNECTED" && !loading && !error;
+  const [shouldCloseState, setShouldCloseState] = React.useState(shouldClose);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShouldCloseState(shouldClose), 1500);
+    return () => clearTimeout(timer);
+  }, [shouldClose]);
 
   let statusHuman = "Doing something (unknown state!?)";
+  let progress = -1;
 
   if (status === "INIT" || status === undefined) {
-    statusHuman = "Obtaining session";
+    statusHuman = "Obtaining chat session";
+    progress = 25;
   } else if (status === "READY" || status === "CONNECTING" || status == "CONNECT_ERROR") {
-    statusHuman = "Connecting";
+    statusHuman = "Connecting to chat";
+    progress = 50;
   } else if (loading) {
-    statusHuman = "Loading history";
+    statusHuman = "Loading chat history";
+    progress = 75;
   } else if (status === "CONNECTED") {
-    statusHuman = "Connected";
+    statusHuman = "Connected to chat";
+    progress = 100;
   } else if (status === "SHUTTING_DOWN") {
     statusHuman = "Disconnecting";
+    progress = -1;
   }
 
   // TODO: (refactor) move minH/w/flexBasis to TrackChat
   return (
-    <Box minH="16px" w="100%" flexBasis={0}>
-      <Box textAlign="center" py={1} mb={2}>
-        <Text fontSize="14px">{statusHuman}</Text>
-      </Box>
+    <Box w="100%" flexBasis={0}>
+      <Collapse in={!shouldCloseState} animateOpacity>
+        <VStack py={1} w="100%">
+          <HStack>
+            <CircularProgress value={progress} isIndeterminate={progress === -1} size="15px" />
+            <Text fontSize="14px">{statusHuman}</Text>
+          </HStack>
+        </VStack>
+      </Collapse>
       {error ? <ErrorAlert error={error} /> : null}
     </Box>
   );

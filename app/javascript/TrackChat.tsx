@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Skeleton } from "@chakra-ui/react";
 
 import type { Track, ChatMessage } from "./Api";
 import { Api, consumeChatAdminControl } from "./Api";
@@ -95,10 +95,12 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
       });
   }, [chat.session, chatSessionStatus, trackChannel]);
 
-  if (!trackChannel) return <></>;
+  if (!track.chat) {
+    console.warn("TrackChat: NO TRACK CHAT PRESENT");
+    return <></>;
+  }
 
   // TODO: disable ChatForm until obtain session
-  // TODO: pinned ChatMessageView
 
   return (
     <Flex direction="column" h="100%" w="100%" border="1px solid" borderColor={Colors.chatBorder2}>
@@ -108,13 +110,17 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
         error={chatSessionError || isLoadingHistory.error}
       />
       <Box flexGrow={1} flexShrink={0} flexBasis={0} w="100%" overflowX="hidden" overflowY="hidden">
-        <ChatHistoryView
-          track={track}
-          messages={chatHistory}
-          loading={isLoadingHistory.status === "LOADING"}
-          showAdminActions={session?.attendee?.is_staff ?? false}
-          pinnedMessage={chatMessagePin?.pin?.message ?? null}
-        />
+        {trackChannel ? (
+          <ChatHistoryView
+            track={track}
+            messages={chatHistory}
+            loading={isLoadingHistory.status === "LOADING"}
+            showAdminActions={session?.attendee?.is_staff ?? false}
+            pinnedMessage={chatMessagePin?.pin?.message ?? null}
+          />
+        ) : (
+          <Skeleton flexGrow={1} flexShrink={0} flexBasis={0} />
+        )}
       </Box>
       <Box w="100%">
         <ChatForm track={track} channel={trackChannel} />

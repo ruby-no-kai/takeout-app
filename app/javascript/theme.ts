@@ -40,6 +40,8 @@ export const Colors = {
 };
 
 export const theme = extendTheme({
+  useSystemColorMode: false,
+
   fonts: {
     heading: "Titillium Web",
     body: "Roboto",

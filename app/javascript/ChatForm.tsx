@@ -16,7 +16,7 @@ import { ErrorAlert } from "./ErrorAlert";
 
 export interface Props {
   track: Track;
-  channel: ChannelArn;
+  channel: ChannelArn | null;
 }
 
 export const ChatForm: React.FC<Props> = ({ track, channel }) => {
@@ -41,7 +41,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
   const asAdmin = watch("asAdmin");
 
   const onSubmit = handleSubmit(async (data) => {
-    if (!chat.session) return;
+    if (!chat.session || !channel) return;
     if (isRequesting) return;
     setIsRequesting(true);
     setErrorAlert(null);
@@ -69,9 +69,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
     setIsRequesting(false);
   });
 
-  if (!session?.attendee || !chat.session) {
-    return <></>;
-  }
+  const shouldDisable = !session?.attendee || !chat.session || !channel;
 
   // TODO: errorAlert to toast
 
@@ -88,6 +86,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
               placeholder={asAdmin ? "SAY SOMETHING AS ADMIN..." : "Send a message"}
               autoFocus
               isRequired
+              isDisabled={shouldDisable}
               autoComplete="off"
               rows={1}
               minRows={1}
@@ -114,6 +113,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
                   id="ChatForm__asAdmin"
                   size="sm"
                   isChecked={asAdmin}
+                  isDisabled={shouldDisable}
                   {...register("asAdmin")}
                 />
               </FormControl>
@@ -126,6 +126,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
               aria-label="Send"
               type="submit"
               isLoading={isRequesting}
+              isDisabled={shouldDisable}
             />
           </Flex>
         </VStack>

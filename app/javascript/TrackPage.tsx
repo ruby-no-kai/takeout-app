@@ -3,8 +3,9 @@ import React from "react";
 import dayjs from "dayjs";
 import { lazy } from "@loadable/component";
 import { Redirect, useParams, useHistory } from "react-router-dom";
+import { motion } from "framer-motion";
 
-import { Box, AspectRatio, Container, Skeleton, Flex } from "@chakra-ui/react";
+import { HStack, Box, AspectRatio, Container, Skeleton, Flex } from "@chakra-ui/react";
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
 
 import { Api, Track } from "./Api";
@@ -105,19 +106,52 @@ export const TrackPageInner: React.FC = () => {
 };
 
 const TrackTabContent: React.FC<{ track: Track; selected: boolean }> = ({ track, selected }) => {
+  const topicTitle = track.card?.topic?.title;
+  const [shouldShowTopic, setShouldShowTopic] = React.useState(true);
+  const [isHovered, setIsHovered] = React.useState(false);
+  const [hadHovered, setHadHovered] = React.useState(false);
+  const [lastTopicTitle, setLastTopicTitle] = React.useState(topicTitle);
+
+  React.useEffect(() => {
+    if (lastTopicTitle !== topicTitle) {
+      setLastTopicTitle(topicTitle);
+      const timer = setTimeout(() => setShouldShowTopic(false), 5000);
+      return () => clearTimeout(timer);
+    } else if (isHovered) {
+      setShouldShowTopic(true);
+      setHadHovered(true);
+    } else {
+      const timer = setTimeout(() => setShouldShowTopic(false), hadHovered ? 500 : 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [topicTitle, shouldShowTopic, isHovered]);
+
+  console.log({ shouldShowTopic });
+
   const topic = track.card?.topic;
 
   return (
-    <>
+    <HStack
+      as="span"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      spacing={0}
+      maxH="25px"
+    >
       <span className="rk-tracks-tabs-name">{track.name}</span>
       {topic && !selected ? (
-        <>
+        <motion.span
+          style={{ display: "inline-block", overflow: "hidden", maxHeight: "25px" }}
+          animate={shouldShowTopic ? "open" : "closed"}
+          transition={{ duration: 0.4 }}
+          variants={{ open: { width: "auto", height: "auto", opacity: 1 }, closed: { width: 0, opacity: 0 } }}
+        >
           <span className="rk-tracks-tabs-topic-divider">{"–"}</span>
           <span className="rk-tracks-tabs-topic-title">{topic.title}</span>
-          <span className="rk-tracks-tabs-topic-author">{topic.author}</span>
-        </>
+          <span className="rk-tracks-tabs-topic-author">{topic.author !== "" ? `by ${topic.author}` : ""}</span>
+        </motion.span>
       ) : null}
-    </>
+    </HStack>
   );
 };
 

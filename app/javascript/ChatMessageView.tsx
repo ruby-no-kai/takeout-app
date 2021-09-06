@@ -199,15 +199,15 @@ const ChatMessageText: React.FC<{ content: string }> = ({ content }) => {
   let lastIndex = 0;
   for (let i = 0; i < matches.length; i++) {
     const m = matches[i];
-    result.push(<>{content.substring(lastIndex, m.getOffset())}</>);
+    result.push(<React.Fragment key={`${i}a`}>{content.substring(lastIndex, m.getOffset())}</React.Fragment>);
     if (m instanceof UrlMatch) {
       result.push(
-        <Link key={`${i}a`} textDecoration="underline" rel="nofollow">
+        <Link key={`${i}b`} textDecoration="underline" rel="nofollow">
           {truncateSmart(m.getAnchorText(), 30, "…")}
         </Link>,
       );
     } else {
-      result.push(<React.Fragment key={`${i}b`}>{m.getMatchedText()}</React.Fragment>);
+      result.push(<React.Fragment key={`${i}c`}>{m.getMatchedText()}</React.Fragment>);
     }
     lastIndex = m.getOffset() + m.getMatchedText().length;
   }

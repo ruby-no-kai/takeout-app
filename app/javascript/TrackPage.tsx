@@ -143,8 +143,10 @@ const TrackTabContent: React.FC<{ track: Track; selected: boolean }> = ({ track,
         <motion.span
           style={{ display: "inline-block", overflow: "hidden", maxHeight: "25px" }}
           animate={shouldShowTopic ? "open" : "closed"}
-          transition={{ duration: 0.4 }}
-          variants={{ open: { width: "auto", height: "auto", opacity: 1 }, closed: { width: 0, opacity: 0 } }}
+          variants={{
+            open: { width: "auto", height: "auto", opacity: 1, transition: { duration: 0.25 } },
+            closed: { width: 0, opacity: 0, transition: { duration: 0.75 } },
+          }}
         >
           <span className="rk-tracks-tabs-topic-divider">{"–"}</span>
           <span className="rk-tracks-tabs-topic-title">{topic.title}</span>

@@ -197,16 +197,16 @@ const ChatMessageText: React.FC<{ content: string }> = ({ content }) => {
     result.push(<>{content.substring(lastIndex, m.getOffset())}</>);
     if (m instanceof UrlMatch) {
       result.push(
-        <Link isExternal href={m.getUrl()} textDecoration="underline" rel="nofollow">
+        <Link key={`${i}a`} textDecoration="underline" rel="nofollow">
           {truncateSmart(m.getAnchorText(), 30, "…")}
         </Link>,
       );
     } else {
-      result.push(<>{m.getMatchedText()}</>);
+      result.push(<React.Fragment key={`${i}b`}>{m.getMatchedText()}</React.Fragment>);
     }
     lastIndex = m.getOffset() + m.getMatchedText().length;
   }
-  result.push(<>{content.substring(lastIndex)}</>);
+  result.push(<React.Fragment key="last">{content.substring(lastIndex)}</React.Fragment>);
   return <span>{result}</span>;
 };
 

@@ -1,13 +1,15 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Box, Button, Link, FormControl, FormLabel, Switch, Input, Textarea } from "@chakra-ui/react";
+import { Box, IconButton, Link, FormControl, FormLabel, Switch, Input, Textarea } from "@chakra-ui/react";
 import { Tooltip, VStack, Flex } from "@chakra-ui/react";
 
 import TextareaAutoSize from "react-textarea-autosize";
 
 import { CampaignIcon } from "./CampaignIcon";
+import { SendIcon } from "./SendIcon";
 
 import { Api, Track, ChannelArn } from "./Api";
+import { Colors } from "./theme";
 import { useChat } from "./ChatProvider";
 
 import { ErrorAlert } from "./ErrorAlert";
@@ -74,7 +76,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
   // TODO: errorAlert to toast
 
   return (
-    <Box p="16px">
+    <Box p="16px" bgColor="#ffffff" borderTop="1px solid" borderColor={Colors.chatBorder}>
       {errorAlert}
       <form onSubmit={onSubmit}>
         <VStack w="100%">
@@ -116,9 +118,15 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
                 />
               </FormControl>
             ) : null}
-            <Button size="sm" type="submit" isLoading={isRequesting}>
-              Send
-            </Button>
+            <IconButton
+              icon={<SendIcon boxSize="14px" />}
+              minW="30px"
+              w="30px"
+              h="30px"
+              aria-label="Send"
+              type="submit"
+              isLoading={isRequesting}
+            />
           </Flex>
         </VStack>
       </form>

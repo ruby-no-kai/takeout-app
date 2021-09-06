@@ -4,6 +4,7 @@ import { Box, Flex } from "@chakra-ui/react";
 
 import type { Track, ChatMessage } from "./Api";
 import { Api, consumeChatAdminControl } from "./Api";
+import { Colors } from "./theme";
 import { useChat } from "./ChatProvider";
 import type { ChatStatus, ChatUpdate } from "./ChatSession";
 
@@ -100,7 +101,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
   // TODO: pinned ChatMessageView
 
   return (
-    <Flex direction="column" h="100%" w="100%">
+    <Flex direction="column" h="100%" w="100%" border="1px solid" borderColor={Colors.chatBorder2}>
       <ChatStatusView
         status={chatSessionStatus}
         loading={isLoadingHistory.status === "LOADING"}

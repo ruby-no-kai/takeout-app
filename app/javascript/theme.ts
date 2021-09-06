@@ -26,6 +26,8 @@ export const Colors = {
   backgroundColor: "#F9F9F9",
 
   border: "#DFDFDF",
+  chatBorder: "#CED4DA", // TODO:
+  chatBorder2: "#E0E0E0", // TODO:
 
   nameHighlightOrgz: { bg: "#BD4848", fg: "#FFFFFF" },
   nameHighlightCore: { bg: "#74439B", fg: "#FFFFFF" },

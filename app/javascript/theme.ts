@@ -52,6 +52,9 @@ export const theme = extendTheme({
         color: Colors.textDefault,
         backgroundColor: Colors.backgroundColor,
       },
+      "::placeholder": {
+        color: Colors.textMuted,
+      },
     },
   },
   colors: {

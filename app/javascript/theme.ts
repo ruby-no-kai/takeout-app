@@ -89,6 +89,15 @@ export const theme = extendTheme({
                   fontWeight: 700,
                 },
               },
+              "& .rk-tracks-tabs-topic-divider": {
+                marginLeft: "0.2rem",
+                marginRight: "0.2rem",
+              },
+              "& .rk-tracks-tabs-topic-author": {
+                marginLeft: "0.3rem",
+                fontSize: "12px",
+              },
+
               //_active: {
               //  bg: main,
               //},

@@ -7,7 +7,7 @@ import { Redirect, useParams, useHistory } from "react-router-dom";
 import { Box, AspectRatio, Container, Skeleton, Flex } from "@chakra-ui/react";
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
 
-import Api from "./Api";
+import { Api, Track } from "./Api";
 import { ErrorAlert } from "./ErrorAlert";
 
 import { ChatProvider } from "./ChatProvider";
@@ -85,7 +85,7 @@ export const TrackPageInner: React.FC = () => {
       <TabList>
         {tracks.map((t) => (
           <Tab key={t.slug}>
-            <span className="rk-tracks-tabs-name">{t.name}</span>
+            <TrackTabContent track={t} selected={t.slug === trackSlug} />
           </Tab>
         ))}
       </TabList>
@@ -101,6 +101,23 @@ export const TrackPageInner: React.FC = () => {
         })}
       </TabPanels>
     </Tabs>
+  );
+};
+
+const TrackTabContent: React.FC<{ track: Track; selected: boolean }> = ({ track, selected }) => {
+  const topic = track.card?.topic;
+
+  return (
+    <>
+      <span className="rk-tracks-tabs-name">{track.name}</span>
+      {topic && !selected ? (
+        <>
+          <span className="rk-tracks-tabs-topic-divider">{"–"}</span>
+          <span className="rk-tracks-tabs-topic-title">{topic.title}</span>
+          <span className="rk-tracks-tabs-topic-author">{topic.author}</span>
+        </>
+      ) : null}
+    </>
   );
 };
 

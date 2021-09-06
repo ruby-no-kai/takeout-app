@@ -16,6 +16,7 @@
   - [x] 現スピーカーのみのハイライト
   - [ ] ChatAdminControl ここから以前を隠すフラグ
   - [ ] chat mod action
+  - [ ] isAdmin white 背景
   - [ ] 自動リンク
 - [ ] be: チャットログ回収
 - [x] be: スケジュール情報の保存と発出 + IVS
@@ -37,6 +38,7 @@
 - [x] fe: asset を S3 に
 - [ ] fe: ローディング画面
 - [ ] CloudFront
+- [ ] control: nav
 - [x] control: Attendee の編集
 - [x] control: TrackCard の作成と保存
   - [ ] かしこいエディタ
@@ -54,6 +56,7 @@
 - [ ] fe: 裏番組の表示
 - [ ] fe: 字幕 テキストエリアは width せまいほうがいいかも
 - [ ] !attendee.is_ready で警告
+- [ ] なんか TrackCardTopic のテキスト長で動画の width 変わるんですけど＞＜
 - [ ] production
   - [ ] IVS
   - [ ] MediaLive

@@ -61,7 +61,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
         </Box>
 
         {streamOptions.chat && track.chat ? (
-          <Box maxW={["auto", "auto", "auto", "400px"]} minH="400px" w="100%" ml="30px">
+          <Box maxW={["auto", "auto", "auto", "400px"]} minH={["600px", "600px", "600px", "auto"]} w="100%" ml="30px">
             <React.Suspense fallback={<Skeleton w="100%" h="100%" />}>
               <TrackChat track={track} />
             </React.Suspense>

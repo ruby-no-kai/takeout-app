@@ -116,7 +116,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
           pinnedMessage={chatMessagePin?.pin?.message ?? null}
         />
       </Box>
-      <Box minH="100px" w="100%">
+      <Box w="100%">
         <ChatForm track={track} channel={trackChannel} />
       </Box>
     </Flex>

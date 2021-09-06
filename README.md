@@ -17,7 +17,7 @@
   - [ ] ChatAdminControl ここから以前を隠すフラグ
   - [ ] chat mod action
   - [x] isAdmin white 背景
-  - [ ] 自動リンク
+  - [x] 自動リンク
 - [ ] be: チャットログ回収
 - [x] be: スケジュール情報の保存と発出 + IVS
 - [x] 字幕考える

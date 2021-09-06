@@ -52,7 +52,11 @@ export const ChatMessageView: React.FC<Props> = (props) => {
       <Box ml="8px" flexGrow={1} flexShrink={0} flexBasis={0}>
         <ChatMessageAuthor author={message.sender} pinned={pinned} highlight={hasSpotlight} />
         <Text p={0} m={0} ml={1} fontSize="sm" as="span">
-          {message.redacted ? <i>[message removed]</i> : <ChatMessageText content={message.content || ""} />}
+          {message.redacted ? (
+            <i>[message removed]</i>
+          ) : (
+            React.useMemo(() => <ChatMessageText content={message.content || ""} />, [message.content])
+          )}
         </Text>
       </Box>
       {(showAdminActions && showMenuButton) || isMenuOpen ? (

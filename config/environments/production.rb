@@ -7,7 +7,7 @@ Rails.application.configure do
     config.x.ivs.private_key = ENV.fetch('IVS_PRIVATE_KEY').yield_self { |der| OpenSSL::PKey::EC.new(der.unpack1('m*'), '') }
     config.x.staff_only = ENV['TAKEOUT_STAFF_ONLY'] == '1'
 
-    config.x.default_avatar_url = 'https://rubykaigi.org/2021-takeout/images/dummy-avater.png'
+    config.x.default_avatar_url = '/assets/dummy-avatar.jpg'
     config.x.avatar_prefix = ENV.fetch('TAKEOUT_AVATAR_PREFIX', nil) # TODO:
 
     config.x.chime.user_role_arn = ENV.fetch('TAKEOUT_USER_ROLE_ARN')

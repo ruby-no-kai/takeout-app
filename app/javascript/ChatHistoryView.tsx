@@ -74,7 +74,7 @@ export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessag
       ) : null}
       {showScrollButton ? <Button onClick={() => setAutoscrollEnabled(true)}>bottom</Button> : null}
       {loading ? <p>Loading..</p> : null}
-      <VStack w="100%" spacing="8px" my="8px">
+      <VStack w="100%" spacing="2px" my="8px">
         {messageViews}
       </VStack>
     </Box>

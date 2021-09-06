@@ -35,8 +35,8 @@ export const ChatMessageView: React.FC<Props> = (props) => {
       w="100%"
       direction="row"
       alignItems="center"
-      bg={pinned ? Colors.baseLight : Colors.backgroundColor}
-      py={pinned ? "10px" : "0"}
+      bg={pinned ? Colors.baseLight : message.sender.isAdmin ? "#ffffff" : Colors.backgroundColor}
+      py={pinned ? "10px" : "4px"}
       px="15px"
       onMouseEnter={() => setShowMenuButton(true)}
       onMouseLeave={() => setShowMenuButton(false)}

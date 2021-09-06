@@ -1,7 +1,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Box, Button, Link, FormControl, FormLabel, Switch, Input } from "@chakra-ui/react";
-import { VStack, Flex } from "@chakra-ui/react";
+import { Box, Button, Link, FormControl, FormLabel, Switch, Input, Textarea } from "@chakra-ui/react";
+import { Tooltip, VStack, Flex } from "@chakra-ui/react";
+
+import TextareaAutoSize from "react-textarea-autosize";
 
 import { CampaignIcon } from "./CampaignIcon";
 
@@ -69,22 +71,44 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
     return <></>;
   }
 
+  // TODO: errorAlert to toast
+
   return (
-    <Box>
+    <Box p="16px">
       {errorAlert}
       <form onSubmit={onSubmit}>
         <VStack w="100%">
           <Box w="100%">
-            <Input {...register("message")} autoFocus isRequired autoComplete="off" />
+            <Textarea
+              as={TextareaAutoSize}
+              {...register("message")}
+              size="sm"
+              placeholder={asAdmin ? "SAY SOMETHING AS ADMIN..." : "Send a message"}
+              autoFocus
+              isRequired
+              autoComplete="off"
+              rows={1}
+              minRows={1}
+              maxRows={4}
+              onKeyPress={(e) => {
+                if (e.key == "Enter") {
+                  e.preventDefault();
+                  onSubmit();
+                }
+              }}
+              css={{ resize: "none" }}
+            />
           </Box>
           <Flex w="100%">
             {isStaff ? (
               <FormControl display="flex" alignSelf="center" h="30px">
                 <FormLabel htmlFor="ChatForm__asAdmin" aria-hidden="true" m={0} mr={1}>
-                  <CampaignIcon w="24px" h="24px" />
+                  <Tooltip label="Send as an official announcement">
+                    <CampaignIcon w="24px" h="24px" />
+                  </Tooltip>
                 </FormLabel>
                 <Switch
-                  aria-label="Send as admin announcement"
+                  aria-label="Send as an official announcement"
                   id="ChatForm__asAdmin"
                   size="sm"
                   isChecked={asAdmin}

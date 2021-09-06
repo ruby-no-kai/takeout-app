@@ -4,6 +4,8 @@ import { Box, VStack, HStack } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { Collapse, CircularProgress } from "@chakra-ui/react";
 
+import { Colors } from "./theme";
+
 import { ChatStatus } from "./ChatSession";
 
 import { ErrorAlert } from "./ErrorAlert";
@@ -47,7 +49,7 @@ export const ChatStatusView: React.FC<Props> = ({ status, loading, error }) => {
   return (
     <Box w="100%" flexBasis={0}>
       <Collapse in={!shouldCloseState} animateOpacity>
-        <VStack py={1} w="100%">
+        <VStack py={1} w="100%" bgColor="#ffffff" borderBottom="1px solid" borderColor={Colors.chatBorder}>
           <HStack>
             <CircularProgress value={progress} isIndeterminate={progress === -1} size="15px" />
             <Text fontSize="14px">{statusHuman}</Text>

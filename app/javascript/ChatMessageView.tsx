@@ -105,8 +105,12 @@ const ChatMessageAuthor: React.FC<{ author: ChatSender; highlight: boolean; pinn
   if (author.isAnonymous) tooltipContents.push(`Anonymous ${author.handle}`);
 
   return (
-    <Tooltip label={tooltipContents.length > 0 ? tooltipContents.join(", ") : undefined} display="inline-block">
-      <Flex display="inline" alignItems="center" direction="row" bgColor={bg} borderRadius="4px" px={1} py="1px">
+    <Tooltip
+      label={tooltipContents.length > 0 ? tooltipContents.join(", ") : undefined}
+      display="inline-block"
+      ml="-4px"
+    >
+      <Flex display="inline" alignItems="center" direction="row" bgColor={bg} borderRadius="4px" px="4px" py="1px">
         <ChatAuthorName author={author} fg={fg} />
         {icons.length > 0 ? (
           <Text as="span" ml={1} color={fg}>

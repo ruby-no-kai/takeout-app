@@ -1,8 +1,11 @@
 import React from "react";
 import dayjs from "dayjs";
+import Autolinker from "autolinker";
+import { truncateSmart } from "autolinker/dist/es2015/truncate/truncate-smart";
+import { UrlMatch } from "autolinker";
 
 import { Flex, Box, Container } from "@chakra-ui/react";
-import { Text, Badge, Tooltip } from "@chakra-ui/react";
+import { Text, Link, Badge, Tooltip } from "@chakra-ui/react";
 import { Icon, Avatar } from "@chakra-ui/react";
 
 import { Portal, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
@@ -49,7 +52,7 @@ export const ChatMessageView: React.FC<Props> = (props) => {
       <Box ml="8px" flexGrow={1} flexShrink={0} flexBasis={0}>
         <ChatMessageAuthor author={message.sender} pinned={pinned} highlight={hasSpotlight} />
         <Text p={0} m={0} ml={1} fontSize="sm" as="span">
-          {message.redacted ? <i>[message removed]</i> : <span>{message.content}</span>}
+          {message.redacted ? <i>[message removed]</i> : <ChatMessageText content={message.content || ""} />}
         </Text>
       </Box>
       {(showAdminActions && showMenuButton) || isMenuOpen ? (
@@ -171,6 +174,36 @@ const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ track, message, pinne
       </Portal>
     </Menu>
   );
+};
+
+const ChatMessageText: React.FC<{ content: string }> = ({ content }) => {
+  const result: JSX.Element[] = [];
+  const matches = Autolinker.parse(content, {
+    urls: true,
+    email: false,
+    phone: false,
+    mention: false,
+    hashtag: false,
+    stripPrefix: false,
+    truncate: { length: 20, location: "middle" },
+  });
+  let lastIndex = 0;
+  for (let i = 0; i < matches.length; i++) {
+    const m = matches[i];
+    result.push(<>{content.substring(lastIndex, m.getOffset())}</>);
+    if (m instanceof UrlMatch) {
+      result.push(
+        <Link isExternal href={m.getUrl()} textDecoration="underline" rel="nofollow">
+          {truncateSmart(m.getAnchorText(), 30, "…")}
+        </Link>,
+      );
+    } else {
+      result.push(<>{m.getMatchedText()}</>);
+    }
+    lastIndex = m.getOffset() + m.getMatchedText().length;
+  }
+  result.push(<>{content.substring(lastIndex)}</>);
+  return <span>{result}</span>;
 };
 
 function isMessageSpotlighted(message: ChatMessage, spotlights: ChatSpotlight[]): boolean {

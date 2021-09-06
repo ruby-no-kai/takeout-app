@@ -2,7 +2,7 @@ import React from "react";
 
 import dayjs from "dayjs";
 import { lazy } from "@loadable/component";
-import { useParams, useHistory } from "react-router-dom";
+import { Redirect, useParams, useHistory } from "react-router-dom";
 
 import { Box, AspectRatio, Container, Skeleton, Flex } from "@chakra-ui/react";
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
@@ -79,6 +79,9 @@ export const TrackPageInner: React.FC = () => {
 
   return (
     <Tabs isLazy index={trackIndex} onChange={onTabChange} variant="rk-tracks">
+      {trackIndex === -1 ? (
+        <Redirect to={`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`} />
+      ) : null}
       <TabList>
         {tracks.map((t) => (
           <Tab key={t.slug}>

@@ -3,7 +3,7 @@
 
 ## Todos
 
-- [ ] navbar リンク・デザイン
+- [x] navbar リンク・デザイン
 - [x] attendee ログイン
   - [ ] デザイン
 - [x] attendee 設定
@@ -16,6 +16,7 @@
   - [x] 現スピーカーのみのハイライト
   - [ ] ChatAdminControl ここから以前を隠すフラグ
   - [ ] chat mod action
+  - [ ] 自動リンク
 - [ ] be: チャットログ回収
 - [x] be: スケジュール情報の保存と発出 + IVS
 - [x] 字幕考える

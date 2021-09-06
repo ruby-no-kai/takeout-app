@@ -95,46 +95,44 @@ export const LoginForm: React.FC = () => {
 
   // TODO: link to registration page and support email
   return (
-    <>
-      <Box maxW="360px" w="100%">
-        <form onSubmit={onSubmit}>
-          <FormControl mt={4} id="login_email" isRequired>
-            <FormLabel>Email Address</FormLabel>
-            <FormHelperText color={Colors.textMuted} my={1}>
-              Must be identital to the one registered to your ticket
-            </FormHelperText>
-            <Input {...register("email")} type="email" autoFocus backgroundColor="white" />
-          </FormControl>
-          <FormControl mt={4} id="login_reference" isRequired>
-            <FormLabel>Ticket ID (Reference Code)</FormLabel>
-            <FormHelperText color={Colors.textMuted} my={1}>
-              Code should be shown at{" "}
-              <Link
-                href="https://img.sorah.jp/x/20210827_112054_xnimUYcsKE.png"
-                isExternal
-                target="_blank"
-                textDecoration="underline"
-              >
-                the upper right of a confirmation email
-              </Link>{" "}
-              you received.
-            </FormHelperText>
-            <Input
-              {...register("reference")}
-              type="password"
-              placeholder="e.g. ABCD-1, XY1N-10, ..."
-              backgroundColor="white"
-            />
-          </FormControl>
-          <Flex direction="row" justifyContent="space-around" w="100%" mt="30px">
-            <Button type="submit" w="160px" h="46px" colorScheme="rk" isLoading={isRequesting}>
-              Log in
-            </Button>
-          </Flex>
-        </form>
-        {errorAlert}
-      </Box>
-    </>
+    <Box maxW="360px" w="100%">
+      <form onSubmit={onSubmit}>
+        <FormControl mt={4} id="login_email" isRequired>
+          <FormLabel>Email Address</FormLabel>
+          <FormHelperText color={Colors.textMuted} my={1}>
+            Must be identital to the one registered to your ticket
+          </FormHelperText>
+          <Input {...register("email")} type="email" autoFocus backgroundColor="white" />
+        </FormControl>
+        <FormControl mt={4} id="login_reference" isRequired>
+          <FormLabel>Ticket ID (Reference Code)</FormLabel>
+          <FormHelperText color={Colors.textMuted} my={1}>
+            Code should be shown at{" "}
+            <Link
+              href="https://img.sorah.jp/x/20210827_112054_xnimUYcsKE.png"
+              isExternal
+              target="_blank"
+              textDecoration="underline"
+            >
+              the upper right of a confirmation email
+            </Link>{" "}
+            you received.
+          </FormHelperText>
+          <Input
+            {...register("reference")}
+            type="password"
+            placeholder="e.g. ABCD-1, XY1N-10, ..."
+            backgroundColor="white"
+          />
+        </FormControl>
+        <Flex direction="row" justifyContent="space-around" w="100%" mt="30px">
+          <Button type="submit" w="160px" h="46px" colorScheme="rk" isLoading={isRequesting}>
+            Log in
+          </Button>
+        </Flex>
+      </form>
+      {errorAlert}
+    </Box>
   );
 };
 export default Login;

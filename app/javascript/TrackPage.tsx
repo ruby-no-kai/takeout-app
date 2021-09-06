@@ -78,47 +78,43 @@ export const TrackPageInner: React.FC = () => {
   };
 
   return (
-    <>
-      <Tabs isLazy index={trackIndex} onChange={onTabChange} variant="rk-tracks">
-        <TabList>
-          {tracks.map((t) => (
-            <Tab key={t.slug}>
-              <span className="rk-tracks-tabs-name">{t.name}</span>
-            </Tab>
-          ))}
-        </TabList>
-        <TabPanels>
-          {tracks.map((t) => {
-            return (
-              <TabPanel key={t.slug}>
-                <React.Suspense fallback={<TrackViewSkeleton />}>
-                  <TrackView track={t} streamOptionsState={streamOptionState} />
-                </React.Suspense>
-              </TabPanel>
-            );
-          })}
-        </TabPanels>
-      </Tabs>
-    </>
+    <Tabs isLazy index={trackIndex} onChange={onTabChange} variant="rk-tracks">
+      <TabList>
+        {tracks.map((t) => (
+          <Tab key={t.slug}>
+            <span className="rk-tracks-tabs-name">{t.name}</span>
+          </Tab>
+        ))}
+      </TabList>
+      <TabPanels>
+        {tracks.map((t) => {
+          return (
+            <TabPanel key={t.slug}>
+              <React.Suspense fallback={<TrackViewSkeleton />}>
+                <TrackView track={t} streamOptionsState={streamOptionState} />
+              </React.Suspense>
+            </TabPanel>
+          );
+        })}
+      </TabPanels>
+    </Tabs>
   );
 };
 
 const TrackPageSkeleton: React.FC = () => {
   return (
-    <>
-      <Tabs>
-        <TabList>
-          <Tab>
-            <Skeleton w="240px" h="25px" />
-          </Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <TrackViewSkeleton />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </>
+    <Tabs>
+      <TabList>
+        <Tab>
+          <Skeleton w="240px" h="25px" />
+        </Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          <TrackViewSkeleton />
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   );
 };
 

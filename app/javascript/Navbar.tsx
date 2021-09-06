@@ -16,31 +16,29 @@ export const Navbar: React.FC = () => {
   // TODO: bgImage...
 
   return (
-    <>
-      <Flex as="nav" justify="space-between" alignItems="center" w="100%" h="56px" px="18px" bgColor={Colors.bg}>
-        <Heading as="h1" size="lg" fontSize="22px" css={{ "& svg": { height: "22px", width: "auto" } }}>
-          {conferenceData?.conference ? (
-            <Link as={RouterLink} to={`/tracks/${conferenceData.conference.default_track}`} color={Colors.main}>
-              <VisuallyHidden>RubyKaigi Takeout 2021</VisuallyHidden>
-              <Logo />
-            </Link>
-          ) : (
-            <Text as="span" color={Colors.main}>
-              <VisuallyHidden>RubyKaigi Takeout 2021</VisuallyHidden>
-              <Logo />
-            </Text>
-          )}
-        </Heading>
-        <HStack spacing="14px">
-          <Link href="https://rubykaigi.org/2021-takeout/schedule" isExternal>
-            <EventNoteIcon boxSize="20px" color={Colors.defaultAvatarBg} />
+    <Flex as="nav" justify="space-between" alignItems="center" w="100%" h="56px" px="18px" bgColor={Colors.bg}>
+      <Heading as="h1" size="lg" fontSize="22px" css={{ "& svg": { height: "22px", width: "auto" } }}>
+        {conferenceData?.conference ? (
+          <Link as={RouterLink} to={`/tracks/${conferenceData.conference.default_track}`} color={Colors.main}>
+            <VisuallyHidden>RubyKaigi Takeout 2021</VisuallyHidden>
+            <Logo />
           </Link>
-          <Link as={RouterLink} to="/attendee">
-            <AccountCircleIcon boxSize="20px" color={Colors.defaultAvatarBg} />
-          </Link>
-        </HStack>
-      </Flex>
-    </>
+        ) : (
+          <Text as="span" color={Colors.main}>
+            <VisuallyHidden>RubyKaigi Takeout 2021</VisuallyHidden>
+            <Logo />
+          </Text>
+        )}
+      </Heading>
+      <HStack spacing="14px">
+        <Link href="https://rubykaigi.org/2021-takeout/schedule" isExternal>
+          <EventNoteIcon boxSize="20px" color={Colors.defaultAvatarBg} />
+        </Link>
+        <Link as={RouterLink} to="/attendee">
+          <AccountCircleIcon boxSize="20px" color={Colors.defaultAvatarBg} />
+        </Link>
+      </HStack>
+    </Flex>
   );
 };
 export default Navbar;

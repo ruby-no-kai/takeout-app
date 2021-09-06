@@ -20,29 +20,32 @@ import {
 
 import Api from "./Api";
 import { Colors } from "./theme";
+import { Logo } from "./Logo";
 import { StreamingLogo } from "./StreamingLogo";
 import { ErrorAlert } from "./ErrorAlert";
 
 export const Login: React.FC = () => {
   return (
     <Box w="100%" h="100%" minH="100vh" bgColor={Colors.bg} pt={["20px", "20px", "20px", "165px"]}>
-      <Container maxW={["auto", "auto", "auto", "760px"]}>
-        <Flex direction={["column", "column", "column", "row"]} justifyContent="space-between" alignItems="top">
+      <Container maxW={["auto", "auto", "auto", "780px"]} w="100%">
+        <Flex direction={["column", "column", "column", "row"]} justifyContent="space-around" alignItems="top">
           <Box maxW="331px" w="100%">
             <picture>
               <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
-              <Image src="/assets/hero_hamburger.svg" />
+              <Image src="/assets/hero_hamburger.svg" w="100%" />
             </picture>
           </Box>
           <Box>
             <VStack>
               <Box>
-                <Heading as="h1" size="lg" fontSize="33px" color={Colors.main}>
-                  RubyKaigi Takeout 2021
-                  <VisuallyHidden> Streaming Login</VisuallyHidden>
+                <Heading as="h1" w="360px" h="auto" color={Colors.main}>
+                  <Logo />
+                  <VisuallyHidden>RubyKaigi Takeout 2021 Streaming Login</VisuallyHidden>
                 </Heading>
                 <Flex direction="row-reverse">
-                  <StreamingLogo />
+                  <Box mr="-10px">
+                    <StreamingLogo />
+                  </Box>
                 </Flex>
               </Box>
               <LoginForm />
@@ -93,15 +96,14 @@ export const LoginForm: React.FC = () => {
   // TODO: link to registration page and support email
   return (
     <>
-      {errorAlert}
-      <Container maxW="360px" w="100%">
+      <Box maxW="360px" w="100%">
         <form onSubmit={onSubmit}>
           <FormControl mt={4} id="login_email" isRequired>
             <FormLabel>Email Address</FormLabel>
             <FormHelperText color={Colors.textMuted} my={1}>
               Must be identital to the one registered to your ticket
             </FormHelperText>
-            <Input {...register("email")} type="email" autoFocus />
+            <Input {...register("email")} type="email" autoFocus backgroundColor="white" />
           </FormControl>
           <FormControl mt={4} id="login_reference" isRequired>
             <FormLabel>Ticket ID (Reference Code)</FormLabel>
@@ -117,7 +119,12 @@ export const LoginForm: React.FC = () => {
               </Link>{" "}
               you received.
             </FormHelperText>
-            <Input {...register("reference")} type="password" placeholder="e.g. ABCD-1, XY1N-10, ..." />
+            <Input
+              {...register("reference")}
+              type="password"
+              placeholder="e.g. ABCD-1, XY1N-10, ..."
+              backgroundColor="white"
+            />
           </FormControl>
           <Flex direction="row" justifyContent="space-around" w="100%" mt="30px">
             <Button type="submit" w="160px" h="46px" colorScheme="rk" isLoading={isRequesting}>
@@ -125,7 +132,8 @@ export const LoginForm: React.FC = () => {
             </Button>
           </Flex>
         </form>
-      </Container>
+        {errorAlert}
+      </Box>
     </>
   );
 };

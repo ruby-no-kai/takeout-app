@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Flex, VStack, HStack, Stack, Box, Button, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
+import { Flex, VStack, HStack, Stack, Box, Button, Skeleton } from "@chakra-ui/react";
 
 import type { Track, ChatMessage } from "./Api";
 
@@ -60,7 +60,7 @@ export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessag
   if (loading) {
     return (
       <Flex h="100%" overflowY="hidden" direction="column-reverse">
-        <SkeletonText noOfLines={18} spacing="4" />
+        <Skeleton w="100%" h="100%" />
       </Flex>
     );
   }

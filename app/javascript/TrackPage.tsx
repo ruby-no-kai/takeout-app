@@ -130,6 +130,12 @@ const TrackViewSkeleton: React.FC = () => {
 
         <Box maxW={["auto", "auto", "auto", "400px"]} minH="400px" w="100%" ml="30px"></Box>
       </Flex>
+      <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]} mt="12px">
+        <Box w="100%">
+          <Skeleton w="100%" h="100px" />
+        </Box>
+        <Box maxW={["auto", "auto", "auto", "400px"]} w="100%" ml="30px" />
+      </Flex>
     </Container>
   );
 };

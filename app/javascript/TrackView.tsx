@@ -71,7 +71,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
 
       <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]} mt="12px">
         <Box w="100%">
-          <React.Suspense fallback={<Skeleton w="100%" h="20px" />}>
+          <React.Suspense fallback={<Skeleton w="100%" h="100px" />}>
             <TrackCardView card={track.card} nav={trackOptionsSelector} />
           </React.Suspense>
         </Box>

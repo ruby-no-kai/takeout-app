@@ -6,10 +6,10 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import { theme } from "./theme";
 
-const Navbar = loadable(() => import("./Navbar"));
+const Navbar = loadable(() => import(/* webpackPrefetch: true */ "./Navbar"));
 const Login = loadable(() => import("./Login"));
 const AttendeeEdit = loadable(() => import("./AttendeeEdit"));
-const TrackPage = loadable(() => import("./TrackPage"));
+const TrackPage = loadable(() => import(/* webpackPrefetch: true */ "./TrackPage"));
 
 const ControlRoot = loadable(() => import("./ControlRoot"));
 const ControlLogin = loadable(() => import("./ControlLogin"));
@@ -28,12 +28,19 @@ export const App: React.FC<Props> = (_props) => {
             <Redirect to="/tracks/a" />
           </Route>
           <Route exact path="/session/new">
+            {(() => {
+              AttendeeEdit.preload();
+              TrackPage.preload();
+            })()}
             <Login />
           </Route>
 
           <>
             <Navbar />
             <Route exact path="/attendee">
+              {(() => {
+                TrackPage.preload();
+              })()}
               <AttendeeEdit />
             </Route>
             <Route exact path="/tracks/:slug">

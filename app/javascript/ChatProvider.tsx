@@ -3,7 +3,7 @@ import loadable from "@loadable/component";
 
 import type { ChatProviderContextData } from "./ChatProviderTypes";
 
-const ChatProviderEngine = loadable(() => import("./ChatProviderEngine"));
+const ChatProviderEngine = loadable(() => import(/* webpackPrefetch: true */ "./ChatProviderEngine"));
 
 const ChatProviderContext = React.createContext<ChatProviderContextData>({});
 

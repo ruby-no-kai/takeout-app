@@ -11,7 +11,7 @@ import Api from "./Api";
 import { ErrorAlert } from "./ErrorAlert";
 
 import { ChatProvider } from "./ChatProvider";
-const TrackView = lazy(() => import("./TrackView"));
+const TrackView = lazy(() => import(/* webpackPrefetch: true */ "./TrackView"));
 
 export const TrackPage: React.FC = () => {
   return (

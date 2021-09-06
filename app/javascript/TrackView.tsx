@@ -6,10 +6,10 @@ import { AspectRatio, Skeleton } from "@chakra-ui/react";
 
 import { Track, TrackStreamOptionsState } from "./Api";
 
-const TrackStreamOptionsSelector = loadable(() => import("./TrackStreamOptionsSelector"));
-const TrackCardView = lazy(() => import("./TrackCardView"));
-const TrackVideo = lazy(() => import("./TrackVideo"));
-const TrackChat = lazy(() => import("./TrackChat"));
+const TrackStreamOptionsSelector = loadable(() => import(/* webpackPrefetch: true */ "./TrackStreamOptionsSelector"));
+const TrackCardView = lazy(() => import(/* webpackPrefetch: true */ "./TrackCardView"));
+const TrackVideo = lazy(() => import(/* webpackPrefetch: true */ "./TrackVideo"));
+const TrackChat = lazy(() => import(/* webpackPrefetch: true */ "./TrackChat"));
 const TrackCaption = lazy(() => import("./TrackCaption"));
 
 export interface Props {

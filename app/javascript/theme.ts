@@ -13,6 +13,8 @@ export const Colors = {
   linkHover: "#0092D8",
   lightGray: "#BFC6C9",
 
+  bg: "#EBE0CE",
+
   secondary: "#7C757D",
 
   dark: "#343A40",

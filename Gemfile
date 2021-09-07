@@ -23,6 +23,7 @@ gem 'aws-sdk-transcribestreamingservice'
 
 gem "sentry-ruby"
 gem "sentry-rails"
+gem "barnes"
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

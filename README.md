@@ -68,7 +68,7 @@
 - [x] Switch にもツールチップ
 - [ ] 音量
 - [ ] たぶがりんくであってほしい
-- [ ] autofocus やっぱモバイルでうっとおしい
+- [x] autofocus やっぱモバイルでうっとおしい
 - [ ] deleteChannelMembership も自分じゃできないらしい
 - [ ] send ボタンが attendee でずれる
 - [ ] offline でもうかたほうにリダイレクトしたい

@@ -84,7 +84,6 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
               {...register("message")}
               size="sm"
               placeholder={asAdmin ? "SAY SOMETHING AS ADMIN..." : "Send a message"}
-              autoFocus
               isRequired
               isDisabled={shouldDisable}
               autoComplete="off"

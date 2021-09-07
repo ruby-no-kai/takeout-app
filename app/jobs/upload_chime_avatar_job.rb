@@ -1,7 +1,7 @@
 require 'open-uri'
 
 class UploadChimeAvatarJob < ApplicationJob
-  def perform(attendee)
+  def perform(attendee, update_user: false)
     chime_user = attendee.chime_user
     raise "no chime_user for attendee=#{attendee.id}" unless chime_user
 
@@ -15,5 +15,7 @@ class UploadChimeAvatarJob < ApplicationJob
         body: io,
       )
     end
+
+    UpdateChimeUserJob.perform_now(attendee) if update_user
   end
 end

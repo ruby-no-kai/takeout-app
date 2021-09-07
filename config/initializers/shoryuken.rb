@@ -5,7 +5,7 @@ module Shoryuken
         def call(worker_instance, queue, sqs_msg, body)
           #tags = {}
           #context = { message: body }
-          Sentry.with_scope do
+          Sentry.with_scope do |scope|
             scope.set_transaction_name(body['job_class'])
             scope.set_tags( job: body['job_class'], queue: queue )
             begin

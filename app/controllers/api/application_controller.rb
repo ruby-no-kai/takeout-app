@@ -3,6 +3,12 @@ class Api::ApplicationController < ::ApplicationController
     if !current_attendee || current_attendee.voided?
       raise Error::Unauthorized
     end
+
+    if Rails.application.config.x.staff_only
+      unless current_attendee&.staff?
+        raise Error::Forbidden, "currently in staff only mode"
+      end
+    end
   end
 
   def require_control

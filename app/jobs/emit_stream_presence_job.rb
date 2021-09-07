@@ -1,10 +1,8 @@
 class EmitStreamPresenceJob < ApplicationJob
   def perform(presence:, was_online: nil)
     @presence = presence
-    if !was_online.nil? && !was_online
-      emit_to_chat()
-    end
 
+    emit_to_chat()
     EmitIvsMetadataJob.perform_now(items: [presence])
   end
 

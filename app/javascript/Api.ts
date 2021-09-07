@@ -492,8 +492,9 @@ export const Api = {
       `/api/streams/${slug}?interpretation=${interpretation ? "1" : "0"}`,
       swrFetcher,
       {
-        revalidateOnFocus: false,
+        revalidateOnFocus: true,
         revalidateOnReconnect: true,
+        focusThrottleInterval: 60 * 15 * 1000,
         compare(knownData, newData) {
           // Accept new data only if expired
           if (!knownData || !newData) return false;

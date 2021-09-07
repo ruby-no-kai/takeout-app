@@ -15,16 +15,37 @@ export interface Props {
 }
 
 export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
+  const [isPlaying, setIsPlaying] = React.useState(true);
+  const streamKind = determineStreamKind(track, streamOptions.interpretation);
+
   // TODO: handle error
-  const { data: streamInfo } = Api.useStream(track.slug, streamOptions.interpretation && track.interpretation);
+  const { data: streamInfo, mutate: streamMutate } = Api.useStream(track.slug, streamKind === "interpretation");
 
   const now = dayjs().unix() + 180;
   const streamInfoReady = streamInfo && now < streamInfo.stream.expiry;
 
+  React.useEffect(() => {
+    if (streamInfo && streamInfo.stream.expiry <= now) {
+      console.log("TrackVideo: request streamData renew");
+      streamMutate();
+    }
+  }, [track.slug, now, streamKind, streamInfo?.stream?.expiry]);
+
+  console.log("TrackVideo: render", {
+    track: track.slug,
+    interpretationPreference: streamOptions.interpretation,
+    streamKind,
+  });
+
   if (streamInfoReady) {
     if (!streamInfo) throw "wut";
     return (
-      <StreamView key={`${streamInfo.stream.slug}/${streamInfo.stream.type}`} playbackUrl={streamInfo.stream.url} />
+      <StreamView
+        key={`${streamInfo.stream.slug}/${streamInfo.stream.type}`}
+        playbackUrl={streamInfo.stream.url}
+        shouldStartPlayback={isPlaying}
+        onPlayOrStop={setIsPlaying}
+      />
     );
   } else {
     return (
@@ -37,6 +58,8 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
 
 export interface StreamViewProps {
   playbackUrl: string;
+  shouldStartPlayback: boolean;
+  onPlayOrStop: (playing: boolean) => void;
 }
 
 export interface StreamPlaybackSession {
@@ -45,13 +68,13 @@ export interface StreamPlaybackSession {
   root: HTMLDivElement;
 }
 
-const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
+const StreamView: React.FC<StreamViewProps> = ({ playbackUrl, shouldStartPlayback, onPlayOrStop }) => {
   const [_session, setSession] = React.useState<StreamPlaybackSession | null>(null);
   const elem = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (!elem.current) return; // TODO: これほんとにだいじょうぶ?? でも elem.current を dep にいれると2回 useEffect 発火するんだよな
-    console.log("useEffect", playbackUrl, elem.current);
+    console.log("StreamView: initializing", playbackUrl, elem.current);
 
     const root = document.createElement("div");
     root.dataset.vjsPlayer = "true";
@@ -65,7 +88,7 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
       video,
       {
         techOrder: ["AmazonIVS"],
-        autoplay: true,
+        autoplay: shouldStartPlayback,
         controls: true,
         fill: true,
       },
@@ -76,6 +99,13 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
 
     player.enableIVSQualityPlugin();
     player.src(playbackUrl);
+
+    player.on("play", () => {
+      onPlayOrStop(true);
+    });
+    player.on("pause", () => {
+      onPlayOrStop(false);
+    });
 
     const events: VideoJSIVSEvents = player.getIVSEvents();
     const ivsPlayer = player.getIVSPlayer();
@@ -100,10 +130,8 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
       root,
     });
 
-    console.log("useEffect2", playbackUrl, elem.current);
-
     return () => {
-      console.log("dispose...");
+      console.log("StreamView: dispose", playbackUrl);
       player.dispose();
       root.remove();
     };
@@ -115,4 +143,27 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl }) => {
     </AspectRatio>
   );
 };
+
+function determineStreamKind(track: Track, userPreference: boolean): "main" | "interpretation" {
+  // When user doesn't prefer intepret
+  if (!userPreference) {
+    return "main";
+  }
+
+  // Track doesn't have an interpretation stream
+  if (!track.interpretation) {
+    return "main";
+  }
+
+  // TrackVideo don't care current program provides interpretation (track.card.interpretation)
+  // (as long as it is online, connect to interpretation stream for a stability)
+
+  // if interpretation is offline
+  if (!track.presences["interpretation"]) {
+    return "main";
+  }
+
+  return "interpretation";
+}
+
 export default TrackVideo;

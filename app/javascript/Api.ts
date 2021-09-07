@@ -113,11 +113,13 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
         if (item.p) {
           const presence = item.p;
           const track = known.conference.tracks[presence.track];
-          const was = track.presences[presence.kind];
-          track.presences[presence.kind] = presence.online;
-          if (was !== presence.online) {
-            console.log("Updating stream presence", presence);
-            updated = true;
+          if (track) {
+            const was = track.presences[presence.kind];
+            track.presences[presence.kind] = presence.online;
+            if (was !== presence.online) {
+              console.log("Updating stream presence", presence);
+              updated = true;
+            }
           }
         }
       });

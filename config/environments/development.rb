@@ -14,6 +14,7 @@ Rails.application.configure do
   config.x.sentry.dsn = ENV['SENTRY_DSN']
   config.x.release_meta.commit = ''
   config.x.release_meta.version = ''
+  config.x.release_meta.chat_cache_key = ENV['TAKEOUT_CHAT_CACHE_KEY']
 
   config.x.control.password = ENV['TAKEOUT_CONTROL_PASSWORD']
 

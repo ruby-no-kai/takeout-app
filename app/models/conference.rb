@@ -10,6 +10,7 @@ class Conference
   end
 
   def self.as_json(t: Time.zone.now)
+    presences = StreamPresence.as_json
     {
       default_track: data.fetch(:default_track),
       track_order: data.fetch(:track_order),
@@ -21,6 +22,7 @@ class Conference
           card: TrackCard.current_for(track.fetch(:slug), t: t)&.as_json,
           card_candidate: TrackCard.candidate_for(track.fetch(:slug), t: t)&.as_json,
           spotlights: ChatSpotlight.where(track: track.fetch(:slug)).order(starts_at: :asc).map(&:as_json),
+          presences: presences.fetch(track.fetch(:slug), {}),
         )
       end,
     }

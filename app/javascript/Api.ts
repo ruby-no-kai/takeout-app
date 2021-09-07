@@ -2,7 +2,6 @@ import useSWR from "swr";
 import { mutate } from "swr";
 import * as Rails from "@rails/ujs";
 import dayjs from "dayjs";
-import type { Dayjs } from "dayjs";
 
 import { useState, useEffect } from "react";
 
@@ -85,21 +84,35 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
     "/api/conference",
     (known: GetConferenceResponse) => {
       let updated = false;
-      metadata.cards?.forEach((cardUpdate) => {
-        const card_key = cardUpdate.candidate ? "card_candidate" : "card";
+      metadata.i?.forEach((item) => {
+        if (item.c) {
+          const cardUpdate = item.c;
+          const card_key = cardUpdate.candidate ? "card_candidate" : "card";
 
-        if (cardUpdate.clear) {
-          const track = known.conference.tracks[cardUpdate.clear];
-          if (track?.[card_key]) {
-            console.log("Clearing card", { key: card_key, cardUpdate });
-            track[card_key] = null;
-            updated = true;
+          if (cardUpdate.clear) {
+            const track = known.conference.tracks[cardUpdate.clear];
+            if (track?.[card_key]) {
+              console.log("Clearing card", { key: card_key, cardUpdate });
+              track[card_key] = null;
+              updated = true;
+            }
+          } else if (cardUpdate.card) {
+            const track = known.conference.tracks[cardUpdate.card.track];
+            if (track) {
+              console.log("Updating card", { key: card_key, cardUpdate });
+              track[card_key] = cardUpdate.card;
+              updated = true;
+            }
           }
-        } else if (cardUpdate.card) {
-          const track = known.conference.tracks[cardUpdate.card.track];
-          if (track) {
-            console.log("Updating card", { key: card_key, cardUpdate });
-            track[card_key] = cardUpdate.card;
+        }
+
+        if (item.p) {
+          const presence = item.p;
+          const track = known.conference.tracks[presence.track];
+          const was = track.presences[presence.kind];
+          track.presences[presence.kind] = presence.online;
+          if (was !== presence.online) {
+            console.log("Updating stream presence", presence);
             updated = true;
           }
         }
@@ -135,6 +148,23 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
           }
         });
         return { ...known };
+      },
+      false,
+    );
+  }
+  if (adminControl.presences) {
+    const presences = adminControl.presences;
+    mutate(
+      "/api/conference",
+      (known: GetConferenceResponse) => {
+        presences.forEach((presence) => {
+          const track = known.conference.tracks[presence.track];
+          const was = track.presences[presence.kind];
+          track.presences[presence.kind] = presence.online;
+          if (was !== presence.online) {
+            console.log("Updating stream presence (chat)", presence);
+          }
+        });
       },
       false,
     );
@@ -196,6 +226,7 @@ export interface Track {
   card: TrackCard | null;
   card_candidate: TrackCard | null;
   spotlights: ChatSpotlight[];
+  presences: { [key: string]: boolean };
 }
 
 export interface TrackCard extends TrackCardHeader, TrackCardContent {}
@@ -314,6 +345,7 @@ export interface ChatAdminControl {
   pin?: ChatMessagePin;
   caption?: ChatCaption;
   spotlights?: ChatSpotlight[];
+  presences?: StreamPresence[];
 }
 
 export interface ChatCaption {
@@ -346,13 +378,23 @@ export interface ChatMessagePin {
 }
 
 export interface IvsMetadata {
-  cards: IvsCardUpdate[];
+  i: IvsMetadataItem[];
+}
+export interface IvsMetadataItem {
+  c?: IvsCardUpdate;
+  p?: StreamPresence;
 }
 
 export interface IvsCardUpdate {
   candidate?: boolean;
   clear?: TrackSlug;
   card: TrackCard | null;
+}
+
+export interface StreamPresence {
+  track: TrackSlug;
+  kind: "main" | "interpretation";
+  online: boolean;
 }
 
 export const Api = {

@@ -126,8 +126,6 @@ const TrackTabContent: React.FC<{ track: Track; selected: boolean }> = ({ track,
     }
   }, [topicTitle, shouldShowTopic, isHovered]);
 
-  console.log({ shouldShowTopic });
-
   const topic = track.card?.topic;
 
   return (

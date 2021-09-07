@@ -15,7 +15,10 @@
   - [x] デザイン
   - [x] 現スピーカーのみのハイライト
   - [ ] ChatAdminControl ここから以前を隠すフラグ
-  - [ ] chat mod action
+  - [ ] __IMPORTANT__ chat mod action
+    - [ ] delete
+    - [ ] lookup
+    - [ ] ban 
   - [x] isAdmin white 背景
   - [x] 自動リンク
 - [ ] be: チャットログ回収
@@ -32,12 +35,11 @@
 - [x] Interpret/Caption preference の保存
   - [ ] Interpret がない場合でもわざわざ stream の切り替えをする必要はないぞ
   - [ ] でも切り替えしたいことがあることがわかったので強制ストリーム変更をリクエストできる機能をつける…
-- [ ] fe: ストリーム停止時の挙動 (playlist 404になる)
+- [ ] __IMPORTANT__ fe: ストリーム停止時の挙動 (playlist 404になる)
 - [x] fe: ストリーム読み込み中のプレースホルダ
   - [x] video の minH
 - [x] fe: asset を S3 に
 - [ ] fe: ローディング画面
-- [ ] CloudFront
 - [ ] control: nav
 - [x] control: Attendee の編集
 - [x] control: TrackCard の作成と保存
@@ -47,7 +49,7 @@
 - [ ] shoryuken
 - [ ] 幕間画面
 - [ ] next talks カード
-- [ ] mobile view
+- [x] mobile view
 - [ ] sponsor promo rotate
 - [ ] periodic metadata republish 
   - [ ] ivs cards
@@ -59,6 +61,7 @@
 - [ ] なんか TrackCardTopic のテキスト長で動画の width 変わるんですけど＞＜
 - [ ] スクロールバー有無でレイアウトずれる (padding せますぎたぶん)
 - [ ] production
+  - [ ] CloudFront
   - [ ] IVS
   - [ ] MediaLive
   - [ ] Chime

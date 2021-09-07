@@ -10,24 +10,29 @@ class EmitIvsMetadataJob < ApplicationJob
       !!candidate
     end
 
-    def as_json
+    def as_ivs_metadata_item
       h = {card: card.as_json}
       h[:candidate] = candidate if candidate
       h[:clear] = clear if clear
-      h
+      {c: h}
     end
   end
 
   Candidate = Struct.new(:track, :card)
 
-  def perform
+  def perform(items: nil)
     @ivs = Aws::IVS::Client.new(region: Conference.data.fetch(:ivs).fetch(:region), logger: Rails.logger)
     @t = Time.zone.now
 
-    candidate_updates, cards = candidate_cards()
-    current_updates = current_cards()
+    cards = []
+    updates = if items
+      items
+    else
+      candidate_updates, cards = candidate_cards()
+      current_updates = current_cards()
 
-    updates = candidate_updates + current_updates
+      StreamPresence.all.to_a + candidate_updates + current_updates
+    end
 
     updates.each do |u|
       Rails.logger.debug(u.inspect)
@@ -72,9 +77,16 @@ class EmitIvsMetadataJob < ApplicationJob
     ths = channel_arn_with_tracks.map do |arn_track|
       Thread.new(arn_track) do |(arn,track)|
         sorted_updates = updates.sort_by do |u|
-          [u.track == track ? 0 : 1, u.candidate? ? 0 : 1, u.clear ? 1: 0]
+          case u
+          when StreamPresence
+            [0, u.track == track ? 0 : 1, 0, 0]
+          when IvsCardUpdate
+            [1, u.track == track ? 0 : 1, u.candidate? ? 0 : 1, u.clear ? 1: 0]
+          end
         end
+
         chunks = make_card_update_chunks(sorted_updates)
+
         chunks.each do |payload|
           @ivs.put_metadata(channel_arn: arn, metadata: payload)
         end
@@ -88,7 +100,7 @@ class EmitIvsMetadataJob < ApplicationJob
 
   # Note: IVS metadata payload has 1KB limit. So we may need to split...
   private def make_card_update_chunks(updates)
-    update_objects = updates.map(&:as_json)
+    update_objects = updates.map(&:as_ivs_metadata_item)
     chunks = []
 
     cur = []
@@ -96,7 +108,7 @@ class EmitIvsMetadataJob < ApplicationJob
     update_objects.each do |u|
       cur.push u
 
-      j = {cards: cur}.to_json
+      j = {i: cur}.to_json
       if j.bytesize >= 1000
         raise CardUpdateTooLarge, "cannot emit card update over 1KB" if cur.size == 1
         cur = [u]
@@ -105,7 +117,7 @@ class EmitIvsMetadataJob < ApplicationJob
 
       last = j
     end
-    chunks.push({cards: cur}.to_json) unless cur.empty?
+    chunks.push({i: cur}.to_json) unless cur.empty?
 
     chunks
   end

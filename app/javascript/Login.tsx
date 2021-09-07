@@ -128,12 +128,7 @@ export const LoginForm: React.FC = () => {
           <FormLabel>Ticket ID (Reference Code)</FormLabel>
           <FormHelperText color={Colors.textMuted} my={1}>
             Code should be shown at{" "}
-            <Link
-              href="https://img.sorah.jp/x/20210827_112054_xnimUYcsKE.png"
-              isExternal
-              target="_blank"
-              textDecoration="underline"
-            >
+            <Link href="/assets/ticket-email.png" isExternal target="_blank" textDecoration="underline">
               the upper right of a confirmation email
             </Link>{" "}
             you received.

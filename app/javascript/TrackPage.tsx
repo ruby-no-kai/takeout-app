@@ -3,6 +3,7 @@ import React from "react";
 import dayjs from "dayjs";
 import { lazy } from "@loadable/component";
 import { Redirect, useParams, useHistory } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import { HStack, Box, AspectRatio, Container, Skeleton, Flex } from "@chakra-ui/react";
@@ -73,9 +74,11 @@ export const TrackPageInner: React.FC = () => {
   const tracks = conference.track_order
     .filter((k) => conference.tracks.hasOwnProperty(k))
     .map((k) => conference.tracks[k]);
-  const onTabChange = (index: number) => {
-    const slug = conference.track_order[index];
-    history.push(`/tracks/${slug}`);
+
+  const onTabChange = (_index: number) => {
+    // Do nothing (RouterLink does all)
+    // const slug = conference.track_order[index];
+    //history.push(`/tracks/${slug}`);
   };
 
   return (
@@ -85,7 +88,7 @@ export const TrackPageInner: React.FC = () => {
       ) : null}
       <TabList>
         {tracks.map((t) => (
-          <Tab key={t.slug}>
+          <Tab as={RouterLink} to={`/tracks/${encodeURIComponent(t.slug)}`} key={t.slug}>
             <TrackTabContent track={t} selected={t.slug === trackSlug} />
           </Tab>
         ))}

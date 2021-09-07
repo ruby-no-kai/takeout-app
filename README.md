@@ -67,7 +67,7 @@
 - [ ] __IMPORTANT__ stream presence まきもどっちゃう
 - [x] Switch にもツールチップ
 - [x] 音量おぼえてほしい
-- [ ] たぶがりんくであってほしい
+- [x] たぶがりんくであってほしい
 - [x] autofocus やっぱモバイルでうっとおしい
 - [ ] deleteChannelMembership も自分じゃできないらしい
 - [ ] send ボタンが attendee でずれる

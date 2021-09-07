@@ -47,7 +47,7 @@ Rails.application.routes.draw do
       resources :chat_messages, only: %i(create)
       resource :chat_message_pin, only: %i(show)
       resource :chat_admin_message_pin, only: %i(update)
-      resource :caption_chat_membership, only: %i(create)
+      resource :caption_chat_membership, only: %i(create destroy)
     end
 
     scope path: 'control', module: 'control' do

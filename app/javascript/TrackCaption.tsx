@@ -75,7 +75,7 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
       console.log("unsubscribing", captionChannel);
       unsubscribeMessage();
       console.log("deleteMembership caption", captionChannel);
-      chat.session?.deleteChannelMembership(captionChannel);
+      Api.deleteCaptionChatMembership(track.slug);
     };
   }, [chat.session, captionChannel]);
 

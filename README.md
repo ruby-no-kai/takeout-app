@@ -69,7 +69,7 @@
 - [x] 音量おぼえてほしい
 - [x] たぶがりんくであってほしい
 - [x] autofocus やっぱモバイルでうっとおしい
-- [ ] deleteChannelMembership も自分じゃできないらしい
+- [x] deleteChannelMembership も自分じゃできないらしい
 - [x] send ボタンが attendee でずれる
 - [ ] offline でもうかたほうにリダイレクトしたい
 

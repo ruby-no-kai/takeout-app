@@ -563,6 +563,11 @@ export const Api = {
     const resp = await request(`/api/tracks/${encodeURIComponent(track)}/caption_chat_membership`, "POST", null, {});
     return resp.json();
   },
+
+  async deleteCaptionChatMembership(track: TrackSlug) {
+    const resp = await request(`/api/tracks/${encodeURIComponent(track)}/caption_chat_membership`, "DELETE", null, {});
+    return resp.json();
+  },
 };
 
 export default Api;

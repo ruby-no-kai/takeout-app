@@ -28,8 +28,13 @@ export const Login: React.FC = () => {
   return (
     <Box w="100%" h="100%" minH="100vh" bgColor={Colors.bg} pt={["20px", "20px", "20px", "165px"]}>
       <Container maxW={["auto", "auto", "auto", "780px"]} w="100%">
-        <Flex direction={["column", "column", "column", "row"]} justifyContent="space-around" alignItems="top">
-          <Box maxW="331px" w="100%">
+        <Flex
+          direction={["column", "column", "column", "row"]}
+          justifyContent="space-around"
+          alignItems="top"
+          mx="15px"
+        >
+          <Box maxW="331px" w="100%" mb="15px">
             <picture>
               <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
               <Image src="/assets/hero_hamburger.svg" w="100%" />
@@ -38,7 +43,13 @@ export const Login: React.FC = () => {
           <Box>
             <VStack>
               <Box>
-                <Heading as="h1" w="360px" h="auto" color={Colors.main}>
+                <Heading
+                  as="h1"
+                  w={["100%", "100%", "360px", "360px"]}
+                  h="auto"
+                  color={Colors.main}
+                  css={{ "& svg": { maxWidth: "100%", height: "auto" } }}
+                >
                   <Logo />
                   <VisuallyHidden>RubyKaigi Takeout 2021 Streaming Login</VisuallyHidden>
                 </Heading>

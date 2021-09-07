@@ -19,7 +19,9 @@ export interface Props {
 
 export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
   const [streamOptions, setStreamOptions] = streamOptionsState;
-  const trackOptionsSelector = <TrackStreamOptionsSelector track={track} streamOptionsState={streamOptionsState} />;
+  const trackOptionsSelector = () => (
+    <TrackStreamOptionsSelector track={track} streamOptionsState={streamOptionsState} />
+  );
 
   // Preload candidate speaker images
   React.useEffect(() => {
@@ -58,10 +60,19 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
               />
             </React.Suspense>
           ) : null}
+
+          <Box display={["flex", "flex", "none", "none"]} justifyContent="end" my={2}>
+            <Box w="150px">{trackOptionsSelector()}</Box>
+          </Box>
         </Box>
 
         {streamOptions.chat && track.chat ? (
-          <Box maxW={["auto", "auto", "auto", "400px"]} minH={["600px", "600px", "600px", "auto"]} w="100%" ml="30px">
+          <Box
+            maxW={["auto", "auto", "auto", "400px"]}
+            h={["480px", "480px", "480px", "auto"]}
+            w="100%"
+            ml={["0", "0", "0", "30px"]}
+          >
             <React.Suspense fallback={<Skeleton w="100%" h="100%" />}>
               <TrackChat track={track} />
             </React.Suspense>
@@ -72,7 +83,10 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
       <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]} mt="12px">
         <Box w="100%">
           <React.Suspense fallback={<Skeleton w="100%" h="100px" />}>
-            <TrackCardView card={track.card} nav={trackOptionsSelector} />
+            <TrackCardView
+              card={track.card}
+              nav={<Box display={["none", "none", "block", "block"]}>{trackOptionsSelector()}</Box>}
+            />
           </React.Suspense>
         </Box>
         <Box maxW={["auto", "auto", "auto", "400px"]} w="100%" ml="30px" />

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, VStack, Icon, Switch, FormLabel, FormControl, Tooltip } from "@chakra-ui/react";
+import { Box, Stack, Switch, FormLabel, FormControl, Tooltip } from "@chakra-ui/react";
 
 import { ClosedCaptionIcon } from "./ClosedCaptionIcon";
 import { TranslateIcon } from "./TranslateIcon";
@@ -21,7 +21,7 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptio
   };
   return (
     <Box>
-      <VStack spacing={0}>
+      <Stack direction={["row", "row", "row", "column"]} spacing={0}>
         <FormControl display="flex" alignItems="center" h="30px">
           <FormLabel htmlFor="TrackStreamOptions__CC" aria-hidden="true" m={0} mr={1}>
             <Tooltip label="Caption (English only)">
@@ -51,7 +51,7 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptio
             />
           </FormControl>
         ) : null}
-      </VStack>
+      </Stack>
     </Box>
   );
 };

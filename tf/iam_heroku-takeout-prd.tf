@@ -2,7 +2,7 @@ resource "aws_iam_user" "heroku-takeout-prd" {
   name = "heroku-takeout-prd"
 }
 
-data "aws_iam_policy_document" "heroku-takeout-prd" {
+data "aws_iam_policy_document" "takeout-prd" {
   statement {
     effect = "Allow"
     actions = [
@@ -70,6 +70,7 @@ data "aws_iam_policy_document" "heroku-takeout-prd" {
 
     resources = [
       "arn:aws:chime:us-east-1:${local.aws_account_id}:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/*", #dev
+      "arn:aws:chime:us-east-1:005216166247:app-instance/11029a8c-c09e-47c2-aff6-db9515482395/*",            #prd
     ]
   }
 
@@ -79,7 +80,11 @@ data "aws_iam_policy_document" "heroku-takeout-prd" {
       "ivs:PutMetadata",
     ]
     resources = [
-      "arn:aws:ivs:us-west-2:005216166247:channel/oTssPyKzhjoS",
+      "arn:aws:ivs:us-west-2:005216166247:channel/oTssPyKzhjoS", # dev
+
+      "arn:aws:ivs:us-west-2:005216166247:channel/VvM44QACk0cP", # prd a
+      "arn:aws:ivs:us-west-2:005216166247:channel/lxVf1pHuVdbU", # prd b
+      "arn:aws:ivs:us-west-2:005216166247:channel/BqJ6JEV7iJUt", # prd interpret
     ]
   }
 
@@ -105,7 +110,12 @@ data "aws_iam_policy_document" "heroku-takeout-prd" {
 
 }
 
-resource "aws_iam_user_policy" "heroku-takeout-prd" {
-  user   = aws_iam_user.heroku-takeout-prd.name
-  policy = data.aws_iam_policy_document.heroku-takeout-prd.json
+resource "aws_iam_policy" "heroku-takeout-prd" {
+  name   = "takeout-prd"
+  policy = data.aws_iam_policy_document.takeout-prd.json
+}
+
+resource "aws_iam_user_policy_attachment" "heroku-takeout-prd" {
+  user       = aws_iam_user.heroku-takeout-prd.name
+  policy_arn = aws_iam_policy.heroku-takeout-prd.arn
 }

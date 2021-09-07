@@ -66,7 +66,7 @@
   - [x] IAM
 - [ ] __IMPORTANT__ stream presence まきもどっちゃう
 - [x] Switch にもツールチップ
-- [ ] 音量
+- [x] 音量おぼえてほしい
 - [ ] たぶがりんくであってほしい
 - [x] autofocus やっぱモバイルでうっとおしい
 - [ ] deleteChannelMembership も自分じゃできないらしい

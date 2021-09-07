@@ -78,6 +78,16 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl, shouldStartPlaybac
   const [_session, setSession] = React.useState<StreamPlaybackSession | null>(null);
   const elem = React.useRef<HTMLDivElement>(null);
 
+  const volumeStorageKey = "rk-takeout-app--DefaultVolume";
+  const { volume: defaultVolume, muted: defaultMuted } = ((): { volume: number; muted: boolean } => {
+    try {
+      return JSON.parse(window.localStorage?.getItem(volumeStorageKey) || '{"volume": 0.5, "muted": false}');
+    } catch (e) {
+      console.warn(e);
+      return { volume: 0.5, muted: false };
+    }
+  })();
+
   React.useEffect(() => {
     if (!elem.current) return; // TODO: これほんとにだいじょうぶ?? でも elem.current を dep にいれると2回 useEffect 発火するんだよな
     console.log("StreamView: initializing", playbackUrl, elem.current);
@@ -107,11 +117,24 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl, shouldStartPlaybac
     player.enableIVSQualityPlugin();
     player.src(playbackUrl);
 
+    player.volume(defaultVolume);
+    player.muted(!!defaultMuted);
+
     player.on("play", () => {
       onPlayOrStop(true);
     });
     player.on("pause", () => {
       onPlayOrStop(false);
+    });
+
+    player.on("volumechange", () => {
+      const volume = player.volume();
+      const muted = player.muted();
+      try {
+        window.localStorage?.setItem(volumeStorageKey, JSON.stringify({ volume, muted }));
+      } catch (e) {
+        console.warn(e);
+      }
     });
 
     const events: VideoJSIVSEvents = player.getIVSEvents();

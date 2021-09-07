@@ -37,7 +37,7 @@ export const ChatMessageView: React.FC<Props> = (props) => {
     <Flex
       w="100%"
       direction="row"
-      alignItems="center"
+      alignItems="flex-start"
       bg={pinned ? Colors.baseLight : message.sender.isAdmin ? "#ffffff" : Colors.backgroundColor}
       py={pinned ? "10px" : "4px"}
       px="15px"

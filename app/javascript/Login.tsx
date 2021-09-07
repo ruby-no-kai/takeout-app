@@ -27,7 +27,7 @@ import { ErrorAlert } from "./ErrorAlert";
 
 export const Login: React.FC = () => {
   return (
-    <Box w="100%" h="100%" minH="100vh" bgColor={Colors.bg} pt={["20px", "20px", "20px", "165px"]}>
+    <Box w="100%" h="100%" minH="100vh" bgColor={Colors.bg} py={["20px", "20px", "20px", "165px"]}>
       <Container maxW={["auto", "auto", "auto", "780px"]} w="100%">
         <Flex
           direction={["column", "column", "column", "row"]}

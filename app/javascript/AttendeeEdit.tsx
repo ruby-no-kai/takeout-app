@@ -112,13 +112,13 @@ export const AttendeeEdit: React.FC = () => {
           <VStack justify="start" alignItems="start" spacing="30px">
             <FormControl id="login_reference" isRequired>
               <FormLabel>Name</FormLabel>
-              <FormHelperText>Feel free to use nicknames, usernames, or handles :)</FormHelperText>
+              <FormHelperText my={1}>Feel free to use nicknames, usernames, or handles :)</FormHelperText>
               <Input {...register("name")} maxW="460px" autoFocus />
             </FormControl>
 
             <FormControl id="login_email">
               <FormLabel>Gravatar Email Address</FormLabel>
-              <FormHelperText>
+              <FormHelperText my={1}>
                 We use avatar images registered on{" "}
                 <Link href="https://www.gravatar.com" isExternal textDecoration="underline">
                   Gravatar

@@ -15,6 +15,9 @@ gem 'aws-sdk-chimesdkidentity'
 gem 'aws-sdk-chimesdkmessaging'
 gem 'aws-sdk-ivs'
 
+gem 'shoryuken'
+gem 'aws-sdk-sqs'
+
 gem 'simpacker'
 gem 's3_assets_uploader'
 

@@ -1,0 +1,4 @@
+concurrency: <%= ENV.fetch('RAILS_MAX_THREADS', 10) %>
+# ActiveJob prefixes queue name, the default delimiter is `_`
+queues:
+  - [<%= ENV.fetch('TAKEOUT_SHORYUKEN_QUEUE') %>, 1]

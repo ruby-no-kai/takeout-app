@@ -82,6 +82,27 @@ data "aws_iam_policy_document" "heroku-takeout-prd" {
       "arn:aws:ivs:us-west-2:005216166247:channel/oTssPyKzhjoS",
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:ChangeMessageVisibility",
+      "sqs:ChangeMessageVisibilityBatch",
+      "sqs:DeleteMessage",
+      "sqs:DeleteMessageBatch",
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:ReceiveMessage",
+      "sqs:SendMessage",
+      "sqs:SendMessageBatch",
+      "sqs:ListQueues",
+    ]
+    resources = [
+      aws_sqs_queue.activejob-prd.arn,
+      aws_sqs_queue.activejob-dlq-prd.arn,
+    ]
+  }
+
 }
 
 resource "aws_iam_user_policy" "heroku-takeout-prd" {

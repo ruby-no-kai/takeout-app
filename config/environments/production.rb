@@ -17,9 +17,11 @@ Rails.application.configure do
     config.x.s3.public_region = ENV.fetch('TAKEOUT_S3_REGION')
 
     config.x.control.password = ENV.fetch('TAKEOUT_CONTROL_PASSWORD')
+
+    config.x.sentry.dsn = ENV['SENTRY_DSN']
   end
 
-  config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :inline : :shoryuken
+  config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :shoryuken : :inline
 
   # Code is not reloaded between requests.
   config.cache_classes = true

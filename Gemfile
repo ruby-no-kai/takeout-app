@@ -21,6 +21,9 @@ gem 's3_assets_uploader'
 gem 'http-2'
 gem 'aws-sdk-transcribestreamingservice'
 
+gem "sentry-ruby"
+gem "sentry-rails"
+
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end

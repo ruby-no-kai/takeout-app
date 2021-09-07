@@ -10,6 +10,8 @@ import {
   Identity,
 } from "@aws-sdk/client-chime";
 
+import * as Sentry from "@sentry/react";
+
 //import * as Chime from "aws-sdk/clients/chime";
 //import * as AWS from "aws-sdk/global";
 
@@ -270,8 +272,8 @@ export class ChatSession {
           console.log(`Ignoring messageType=${messageType}`);
       }
     } catch (e) {
-      // TODO: raven
       console.error("Error while handling message", e);
+      Sentry.captureException(e);
     }
   }
 

@@ -2,7 +2,7 @@ local interpret_ivs = { arn: 'arn:aws:ivs:us-west-2:005216166247:channel/BqJ6JEV
 
 {
   default_track: 'a',
-  track_order: ['a'],  //, 'b'],
+  track_order: ['a', 'b'],
   tracks: {
     a: {
       name: '#rubykaigiA',

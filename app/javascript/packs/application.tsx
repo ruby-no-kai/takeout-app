@@ -20,6 +20,7 @@ import * as Rails from "@rails/ujs";
 Rails.start();
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("SENTRY_DSN", SENTRY_DSN);
   ReactDOM.render(
     <Sentry.ErrorBoundary fallback={<p>An critical error has occured...</p>}>
       <App />

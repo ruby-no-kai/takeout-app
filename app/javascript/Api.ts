@@ -344,6 +344,7 @@ export interface ChatMessage {
 }
 
 export interface ChatAdminControl {
+  flush?: boolean;
   pin?: ChatMessagePin;
   caption?: ChatCaption;
   spotlights?: ChatSpotlight[];

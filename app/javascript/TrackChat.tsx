@@ -36,8 +36,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
   const [chatHistory, setChatHistory] = React.useState<ChatMessage[]>([]);
   const trackChannel = track.chat ? chat.tracks?.[track.slug]?.channel_arn ?? null : null;
 
-  // XXX: たまたま中で同じ配列を破壊しながら進んでいるので助かっているだけ1
-  const [chatCallbacks, _setChatCallbacks] = React.useState({
+  const chatCallbacks = {
     onStatusChange(status: ChatStatus, error: Error | null) {
       console.log("onStatusChange", status, error);
       setChatSessionStatusTuple([status, error]);
@@ -52,7 +51,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
         consumeChatAdminControl(adminControl);
       }
     },
-  });
+  };
 
   React.useEffect(() => {
     if (!chat.session) return;
@@ -140,7 +139,14 @@ function mergeChatHistory(existingHistory: ChatMessage[], newHistory: ChatMessag
     if (!knownIDs.has(v.id)) newHistory.push(v);
   });
   existingHistory.sort(sortChatHistoryNewestFirst);
-  return existingHistory.slice(0, HISTORY_LENGTH);
+
+  const mergedTrimedHistory = existingHistory.slice(0, HISTORY_LENGTH);
+  const flushIndex = mergedTrimedHistory.findIndex((v) => v.adminControl?.flush);
+  if (flushIndex === -1) {
+    return mergedTrimedHistory;
+  } else {
+    return mergedTrimedHistory.slice(0, flushIndex);
+  }
 }
 
 // TODO: 元の配列を保持しつづけてるのでメモリリーク

@@ -99,7 +99,17 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
               css={{ resize: "none" }}
             />
           </Box>
-          <Flex w="100%">
+          <Flex w="100%" alignItems="flex-end" direction="row-reverse" justifyContent="space-between">
+            <IconButton
+              icon={<SendIcon boxSize="14px" />}
+              minW="30px"
+              w="30px"
+              h="30px"
+              aria-label="Send"
+              type="submit"
+              isLoading={isRequesting}
+              isDisabled={shouldDisable}
+            />
             {isStaff ? (
               <FormControl display="flex" alignSelf="center" h="30px">
                 <FormLabel htmlFor="ChatForm__asAdmin" aria-hidden="true" m={0} mr={1}>
@@ -117,16 +127,6 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
                 />
               </FormControl>
             ) : null}
-            <IconButton
-              icon={<SendIcon boxSize="14px" />}
-              minW="30px"
-              w="30px"
-              h="30px"
-              aria-label="Send"
-              type="submit"
-              isLoading={isRequesting}
-              isDisabled={shouldDisable}
-            />
           </Flex>
         </VStack>
       </form>

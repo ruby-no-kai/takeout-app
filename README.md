@@ -70,7 +70,7 @@
 - [x] たぶがりんくであってほしい
 - [x] autofocus やっぱモバイルでうっとおしい
 - [ ] deleteChannelMembership も自分じゃできないらしい
-- [ ] send ボタンが attendee でずれる
+- [x] send ボタンが attendee でずれる
 - [ ] offline でもうかたほうにリダイレクトしたい
 
 ## Setup

@@ -32,7 +32,7 @@ if ENV['TAKEOUT_SHORYUKEN_QUEUE']
       chain.add Shoryuken::Middleware::Server::RavenReporter
     end
 
-    config.sqs_client = Aws::SQS::Client.new(region: ENV.fetch('TAKEOUT_SHORUKEN_AWS_REGION'), logger: Rails.logger)
+    config.sqs_client = Aws::SQS::Client.new(region: ENV.fetch('TAKEOUT_SHORYUKEN_AWS_REGION'), logger: Rails.logger)
     # see also config/shoryuken.yml
     config.sqs_client_receive_message_opts = { wait_time_seconds: 20 } 
   end

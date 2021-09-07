@@ -2,10 +2,10 @@ require 'yaml'
 require 'open-uri'
 
 class SyncConferenceDataJob < ApplicationJob
-  def perform
+  def perform(speakers_url_add: [], presentations_url_add: [])
     ApplicationRecord.transaction do
-      sync_speakers
-      sync_presentations
+      sync_speakers(url_add: speakers_url_add)
+      sync_presentations(url_add: presentations_url_add)
 
       validate_data
     end
@@ -13,40 +13,46 @@ class SyncConferenceDataJob < ApplicationJob
     upload_speaker_avatars
   end
 
-  def sync_speakers
-    data = YAML.safe_load(URI.open('https://rubykaigi.org/2021-takeout/data/speakers.yml', 'r', &:read))
+  def sync_speakers(url_add: [])
+    dataset = ['https://rubykaigi.org/2021-takeout/data/speakers.yml', *url_add].map { |url|  YAML.safe_load(URI.open(url, 'r', &:read)) }
 
     known_slugs = []
-    data.fetch('keynotes', {}).merge(data.fetch('speakers', {})).each do |slug, info|
-      known_slugs << slug
-      s = ConferenceSpeaker.find_or_initialize_by(slug: slug)
-      s.update!(
-        name: info.fetch('name'),
-        bio: info.fetch('bio', ''),
-        github_id: info.fetch('github_id', nil),
-        twitter_id: info.fetch('twitter_id', nil),
-        gravatar_hash: info.fetch('gravatar_hash', nil),
-      )
+    dataset.each do |data|
+      data.fetch('keynotes', {}).merge(data.fetch('speakers', {})).each do |slug, info|
+        known_slugs << slug
+        s = ConferenceSpeaker.find_or_initialize_by(slug: slug)
+        s.update!(
+          name: info.fetch('name'),
+          bio: info.fetch('bio', ''),
+          github_id: info.fetch('github_id', nil),
+          twitter_id: info.fetch('twitter_id', nil),
+          gravatar_hash: info.fetch('gravatar_hash', nil),
+        )
+      end
     end
 
     ConferenceSpeaker.where.not(slug: known_slugs).each(&:destroy!)
   end
 
-  def sync_presentations
-    data = YAML.safe_load(URI.open('https://rubykaigi.org/2021-takeout/data/presentations.yml', 'r', &:read))
+  def sync_presentations(url_add: [])
+    dataset = ['https://rubykaigi.org/2021-takeout/data/presentations.yml', *url_add].map { |url|  YAML.safe_load(URI.open(url, 'r', &:read)) }
 
-    data.each do |slug, info|
-      s = ConferencePresentation.find_or_initialize_by(slug: slug)
-      s.update!(
-        title: info.fetch('title'),
-        kind: info.fetch('type', 'presentation'),
-        language: info.fetch('language', '?'),
-        description: info.fetch('description', ''),
-        speaker_slugs: info.fetch('speakers', []).map { |_| _.fetch('id') }.compact,
-      )
+    known_slugs = []
+    dataset.each do |data|
+      data.each do |slug, info|
+        known_slugs << slug
+        s = ConferencePresentation.find_or_initialize_by(slug: slug)
+        s.update!(
+          title: info.fetch('title'),
+          kind: info.fetch('type', 'presentation'),
+          language: info.fetch('language', '?'),
+          description: info.fetch('description', ''),
+          speaker_slugs: info.fetch('speakers', []).map { |_| _.fetch('id') }.compact,
+        )
+      end
     end
 
-    ConferencePresentation.where.not(slug: data.keys).each(&:destroy!)
+    ConferencePresentation.where.not(slug: known_slugs).each(&:destroy!)
   end
 
   def validate_data

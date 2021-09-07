@@ -85,6 +85,7 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl, shouldStartPlaybac
     const root = document.createElement("div");
     root.dataset.vjsPlayer = "true";
     const video = document.createElement("video");
+    video.playsInline = true;
     video.classList.add("video-js");
 
     root.appendChild(video);

@@ -16,6 +16,7 @@ import {
   Input,
   Image,
   VisuallyHidden,
+  Text,
 } from "@chakra-ui/react";
 
 import Api from "./Api";
@@ -34,7 +35,7 @@ export const Login: React.FC = () => {
           alignItems="top"
           mx="15px"
         >
-          <Box maxW="331px" w="100%" mb="15px">
+          <Box maxW="331px" w="100%" mb="15px" display="flex" direction="row" alignItems="center">
             <picture>
               <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
               <Image src="/assets/hero_hamburger.svg" w="100%" />
@@ -58,6 +59,14 @@ export const Login: React.FC = () => {
                     <StreamingLogo />
                   </Box>
                 </Flex>
+              </Box>
+              <Box textAlign="center" pt="30px">
+                <Text>
+                  A paid ticket is required to access this virtual conference.{" "}
+                  <Link isExternal href="https://ti.to/rubykaigi/takeout-2021" textDecoration="underline">
+                    Register now.
+                  </Link>
+                </Text>
               </Box>
               <LoginForm />
             </VStack>

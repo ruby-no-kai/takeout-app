@@ -12,6 +12,8 @@ Rails.application.configure do
   config.x.s3.public_prefix = ENV['TAKEOUT_S3_PREFIX'] || 'dev/'
   config.x.s3.public_region = ENV['TAKEOUT_S3_REGION'] || 'ap-northeast-1'
   config.x.sentry.dsn = ENV['SENTRY_DSN']
+  config.x.release_meta.commit = ''
+  config.x.release_meta.version = ''
 
   config.x.control.password = ENV['TAKEOUT_CONTROL_PASSWORD']
 

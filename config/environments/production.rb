@@ -19,6 +19,8 @@ Rails.application.configure do
     config.x.control.password = ENV.fetch('TAKEOUT_CONTROL_PASSWORD')
 
     config.x.sentry.dsn = ENV['SENTRY_DSN']
+    config.x.release_meta.commit = ENV['HEROKU_SLUG_COMMIT']
+    config.x.release_meta.version = ENV['HEROKU_RELEASE_VERSION']
   end
 
   config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :shoryuken : :inline

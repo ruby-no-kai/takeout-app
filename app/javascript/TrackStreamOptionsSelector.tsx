@@ -19,37 +19,39 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptio
       setOptions(newOptions);
     };
   };
+  const enAndJa = (track.card?.topic?.labels?.indexOf("EN & JA") ?? -1) !== -1;
+  const interpretationLabel = enAndJa ? "English track" : "Japanese to English interpretation";
   return (
     <Box>
       <Stack direction={["row", "row", "row", "column"]} spacing={0}>
-        <FormControl display="flex" alignItems="center" h="30px">
-          <FormLabel htmlFor="TrackStreamOptions__CC" aria-hidden="true" m={0} mr={1}>
-            <Tooltip label="Caption (English only)">
-              <ClosedCaptionIcon w="24px" h="24px" />
-            </Tooltip>
-          </FormLabel>
-          <Switch
-            aria-label="Closed Caption"
-            id="TrackStreamOptions__CC"
-            isChecked={options.caption}
-            onChange={handleOnChange("caption")}
-          />
-        </FormControl>
-
-        {track.interpretation && track.card?.interpretation ? (
+        <Tooltip label="Caption (English only)">
           <FormControl display="flex" alignItems="center" h="30px">
-            <FormLabel htmlFor="TrackStreamOptions__interpret" aria-hidden="true" m={0} mr={1}>
-              <Tooltip label="Interpretation (Japanese to English only)">
-                <TranslateIcon w="24px" h="24px" />
-              </Tooltip>
+            <FormLabel htmlFor="TrackStreamOptions__CC" aria-hidden="true" m={0} mr={1}>
+              <ClosedCaptionIcon w="24px" h="24px" />
             </FormLabel>
             <Switch
-              aria-label="Japanese to English Interpretation"
-              id="TrackStreamOptions__interpret"
-              isChecked={options.interpretation}
-              onChange={handleOnChange("interpretation")}
+              aria-label="Closed Caption"
+              id="TrackStreamOptions__CC"
+              isChecked={options.caption}
+              onChange={handleOnChange("caption")}
             />
           </FormControl>
+        </Tooltip>
+
+        {track.interpretation && track.card?.interpretation ? (
+          <Tooltip label={interpretationLabel}>
+            <FormControl display="flex" alignItems="center" h="30px">
+              <FormLabel htmlFor="TrackStreamOptions__interpret" aria-hidden="true" m={0} mr={1}>
+                <TranslateIcon w="24px" h="24px" />
+              </FormLabel>
+              <Switch
+                aria-label={interpretationLabel}
+                id="TrackStreamOptions__interpret"
+                isChecked={options.interpretation}
+                onChange={handleOnChange("interpretation")}
+              />
+            </FormControl>
+          </Tooltip>
         ) : null}
       </Stack>
     </Box>

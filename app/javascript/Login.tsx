@@ -129,7 +129,7 @@ export const LoginForm: React.FC = () => {
           <FormHelperText color={Colors.textMuted} my={1}>
             Code should be shown at{" "}
             <Link href="/assets/ticket-email.png" isExternal target="_blank" textDecoration="underline">
-              the upper right of a confirmation email
+              the upper right of the confirmation email
             </Link>{" "}
             you received.
           </FormHelperText>

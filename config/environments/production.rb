@@ -21,7 +21,7 @@ Rails.application.configure do
     config.x.sentry.dsn = ENV['SENTRY_DSN']
     config.x.release_meta.commit = ENV['HEROKU_SLUG_COMMIT']
     config.x.release_meta.version = ENV['HEROKU_RELEASE_VERSION']
-    config.x.release_meta.chat_cache_key = ENV['TAKEOUT_CHAT_CACHE_KEY']
+    config.x.release_meta.cache_buster = ENV['TAKEOUT_CACHE_BUSTER']
   end
 
   config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :shoryuken : :inline

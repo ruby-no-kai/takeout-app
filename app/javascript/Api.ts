@@ -3,9 +3,11 @@ import { mutate } from "swr";
 import * as Rails from "@rails/ujs";
 import dayjs from "dayjs";
 
-import { CHAT_CACHE_KEY } from "./meta";
+import { CACHE_BUSTER } from "./meta";
 
 import { useState, useEffect } from "react";
+
+const API_CONFERENCE = `/api/conference?p=${CACHE_BUSTER}`;
 
 export class ApiError extends Error {
   public localError: Error;
@@ -83,7 +85,7 @@ function determineEarliestCandidateActivationAt(data: GetConferenceResponse) {
 
 export function consumeIvsMetadata(metadata: IvsMetadata) {
   mutate(
-    "/api/conference",
+    API_CONFERENCE,
     (known: GetConferenceResponse) => {
       let updated = false;
       metadata.i?.forEach((item) => {
@@ -137,7 +139,7 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
   if (adminControl.spotlights) {
     const spotlights = adminControl.spotlights;
     mutate(
-      "/api/conference",
+      API_CONFERENCE,
       (known: GetConferenceResponse) => {
         spotlights.forEach((spotlight) => {
           const track = known.conference.tracks[spotlight.track];
@@ -157,7 +159,7 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
   if (adminControl.presences) {
     const presences = adminControl.presences;
     mutate(
-      "/api/conference",
+      API_CONFERENCE,
       (known: GetConferenceResponse) => {
         presences.forEach((presence) => {
           const track = known.conference.tracks[presence.track];
@@ -191,7 +193,7 @@ function activateCandidateTrackCard(data: GetConferenceResponse) {
   }
   if (updated) {
     console.log("Mutating /api/conference due to candidate TrackCard activation");
-    mutate("/api/conference", { ...data }, false);
+    mutate(API_CONFERENCE, { ...data }, false);
   }
 }
 
@@ -408,7 +410,7 @@ export const Api = {
 
   useConference() {
     // TODO: Error handling
-    const swr = useSWR<GetConferenceResponse, ApiError>("/api/conference", swrFetcher, {
+    const swr = useSWR<GetConferenceResponse, ApiError>(API_CONFERENCE, swrFetcher, {
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
       //focusThrottleInterval: 15 * 1000, // TODO:
@@ -511,7 +513,7 @@ export const Api = {
   useChatSession(attendeeId: number | undefined) {
     // attendeeId for cache buster
     return useSWR<GetChatSessionResponse, ApiError>(
-      attendeeId ? `/api/chat_session?i=${attendeeId}&p=${CHAT_CACHE_KEY}` : null,
+      attendeeId ? `/api/chat_session?i=${attendeeId}&p=${CACHE_BUSTER}` : null,
       swrFetcher,
       {
         revalidateOnFocus: true,

@@ -5,9 +5,10 @@ import videojs from "video.js";
 import { VideoJSEvents as VideoJSIVSEvents, VideoJSIVSTech, VideoJSQualityPlugin } from "amazon-ivs-player";
 import "./videojs";
 
-import { AspectRatio, Box, Skeleton } from "@chakra-ui/react";
+import { AspectRatio, Box, Center, VStack, Skeleton, Image, Heading } from "@chakra-ui/react";
 
 import { Api, IvsMetadata, Track, TrackStreamOptions, consumeIvsMetadata } from "./Api";
+import { Colors } from "./theme";
 
 export interface Props {
   track: Track;
@@ -17,6 +18,7 @@ export interface Props {
 export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
   const [isPlaying, setIsPlaying] = React.useState(true);
   const streamKind = determineStreamKind(track, streamOptions.interpretation);
+  const streamPresence = track.presences[streamKind];
 
   // TODO: handle error
   const { data: streamInfo, mutate: streamMutate } = Api.useStream(track.slug, streamKind === "interpretation");
@@ -36,6 +38,10 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
     interpretationPreference: streamOptions.interpretation,
     streamKind,
   });
+
+  if (!streamPresence) {
+    return <TrackOfflineView />;
+  }
 
   if (streamInfoReady) {
     if (!streamInfo) throw "wut";
@@ -140,6 +146,26 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl, shouldStartPlaybac
   return (
     <AspectRatio ratio={16 / 9}>
       <Box w="100%" h="100%" ref={elem} />
+    </AspectRatio>
+  );
+};
+
+const TrackOfflineView: React.FC = () => {
+  return (
+    <AspectRatio ratio={16 / 9}>
+      <Center w="100%" h="100%">
+        <VStack>
+          <Box h="30%" maxW="300px" w="30%" css={{ filter: "grayscale(1)" }}>
+            <picture>
+              <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
+              <Image src="/assets/hero_hamburger.svg" w="100%" />
+            </picture>
+          </Box>
+          <Heading as="div" color={Colors.textMuted}>
+            Offline...
+          </Heading>
+        </VStack>
+      </Center>
     </AspectRatio>
   );
 };

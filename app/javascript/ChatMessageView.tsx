@@ -202,7 +202,7 @@ const ChatMessageText: React.FC<{ content: string }> = ({ content }) => {
     result.push(<React.Fragment key={`${i}a`}>{content.substring(lastIndex, m.getOffset())}</React.Fragment>);
     if (m instanceof UrlMatch) {
       result.push(
-        <Link key={`${i}b`} textDecoration="underline" rel="nofollow" href={m.getUrl()} isExternal>
+        <Link key={`${i}b`} textDecoration="underline" rel="nofollow" href={m.getUrl()}>
           {truncateSmart(m.getAnchorText(), 30, "…")}
         </Link>,
       );

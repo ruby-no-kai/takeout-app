@@ -25,7 +25,7 @@
 - [x] be: スケジュール情報の保存と発出 + IVS
 - [x] 字幕考える
   - [x] 字幕きったときに他窓でも hide されないと混乱する
-- [ ] __IMPORTANT__ control: cue
+- [ ] control: cue
   - [ ] TrackCard
   - [ ] MediaLive スケジューリング
   - [ ] ChatSpotlight
@@ -35,7 +35,7 @@
 - [x] Interpret/Caption preference の保存
   - [x] Interpret がない場合でもわざわざ stream の切り替えをする必要はないぞ
   - [x] でも切り替えしたいことがあることがわかったので強制ストリーム変更をリクエストできる機能をつける…
-- [ ] fe: ストリーム停止時の挙動 (playlist 404になる)
+- [ ] __IMPORTANT__ fe: ストリーム停止時の挙動 (playlist 404になる)
 - [x] fe: ストリーム読み込み中のプレースホルダ
   - [x] video の minH
 - [x] fe: asset を S3 に
@@ -46,12 +46,12 @@
   - [ ] かしこいエディタ
 - [x] チャットで絵文字いれてもしなないようにする
 - [ ] 言語フィルタ
-- [x] shoryuken
+- [ ] shoryuken
 - [ ] 幕間画面
 - [ ] next talks カード
 - [x] mobile view
-- [ ] __IMPORTANT__ sponsor promo rotate
-- [ ] __IMPORTANT__ periodic metadata republish 
+- [ ] sponsor promo rotate
+- [ ] periodic metadata republish 
   - [ ] ivs cards
   - [ ] chime pins
   - [ ] chime spotlights
@@ -61,13 +61,11 @@
 - [ ] なんか TrackCardTopic のテキスト長で動画の width 変わるんですけど＞＜
 - [ ] スクロールバー有無でレイアウトずれる (padding せますぎたぶん)
 - [ ] production
-  - [x] CloudFront
-  - [x] IVS
+  - [ ] CloudFront
+  - [ ] IVS
   - [ ] MediaLive
-  - [x] Chime
-  - [x] IAM
-- [ ] __IMPORTANT__ stream presence まきもどっちゃう
-- [ ] Switch にもツールチップ
+  - [ ] Chime
+  - [ ] IAM
 
 ## Setup
 
@@ -82,10 +80,6 @@ aws chime create-app-instance-admin --app-instance-arn "arn:aws:chime:us-east-1:
 ```
 
 ### IVS
-
-```
-aws ivs create-channel --region us-west-2 --latency-mode LOW --type STANDARD --authorized --recording-configuration-arn ... --name ...
-```
 
 ### MediaLive
 

@@ -88,7 +88,7 @@ function generateTrackCardFromPresentation(
   const presentation = controlConferenceData.presentations[slug]!;
 
   return {
-    interpretation: true, // TODO:
+    interpretation: presentation.language !== "EN", // TODO:
     topic: {
       title: presentation.title,
       author: presentation.speaker_slugs.join(", "),

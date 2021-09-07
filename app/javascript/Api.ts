@@ -449,7 +449,7 @@ export const Api = {
     const browserStateKey = "rk-takeout-app--TrackStreamOption";
     let options: TrackStreamOptions = { interpretation: false, caption: false, chat: true };
 
-    const browserState = window.localStorage.getItem(browserStateKey);
+    const browserState = window.localStorage?.getItem(browserStateKey);
     if (browserState) {
       try {
         options = JSON.parse(browserState);
@@ -460,7 +460,7 @@ export const Api = {
         options.chat = true;
       }
     } else {
-      const acceptJapanese = navigator.languages.map((v) => v.match(/^ja($|-)/) !== null).indexOf(true) !== -1;
+      const acceptJapanese = navigator.languages.findIndex((v) => /^ja($|-)/.test(v)) !== -1;
       options.interpretation = !acceptJapanese;
     }
 
@@ -469,7 +469,11 @@ export const Api = {
     return [
       state,
       (x: TrackStreamOptions) => {
-        window.localStorage.setItem(browserStateKey, JSON.stringify(x));
+        try {
+          window.localStorage?.setItem(browserStateKey, JSON.stringify(x));
+        } catch (e) {
+          console.warn(e);
+        }
         setState(x);
       },
     ];

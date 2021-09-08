@@ -69,6 +69,8 @@ class TranscribeEngine
       media_encoding: "pcm",
       media_sample_rate_hertz: 16000,
 
+      vocabulary_name: ENV.fetch('TRANSCRIBE_VOCABULARY_NAME', 'rk_2021_words'),
+
       input_event_stream_handler: @input_stream,
       output_event_stream_handler: @output_stream,
     )

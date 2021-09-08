@@ -17,7 +17,7 @@
   - [x] ChatAdminControl ここから以前を隠すフラグ
   - [ ] __IMPORTANT__ chat mod action
     - [ ] delete
-    - [ ] lookup
+    - [x] lookup
     - [ ] ban 
   - [x] isAdmin white 背景
   - [x] 自動リンク

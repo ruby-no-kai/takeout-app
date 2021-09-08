@@ -30,6 +30,10 @@ Rails.application.routes.draw do
 
   resources :avatars, only: %i(show), param: :handle
 
+  scope path: 'control', module: 'control' do
+    get 'chime_users/:handle' => 'chime_users#lookup'
+  end
+
   scope path: 'api', module: 'api' do
     resource :session, only: %i(show create destroy) do
       post :take_control

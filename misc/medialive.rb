@@ -68,15 +68,15 @@ pp @ml.batch_update_schedule(
           },
         },
         schedule_action_settings: {
-          #input_switch_settings: { input_attachment_name_reference: "takeout-app" },
-          input_switch_settings: {
-            input_attachment_name_reference: "takeout-mp4",
-            input_clipping_settings: {
-              input_timecode_source: "ZEROBASED",
-              start_timecode: {timecode: "00:00:00;00"}, #HHMMSSFF
-            },
-            url_path: ["2021/edited/day3/schneems.mp4"],
-          },
+          input_switch_settings: { input_attachment_name_reference: "takeout-app" },
+          #input_switch_settings: {
+          #  input_attachment_name_reference: "takeout-mp4",
+          #  input_clipping_settings: {
+          #    input_timecode_source: "ZEROBASED",
+          #    start_timecode: {timecode: "00:00:00;00"}, #HHMMSSFF
+          #  },
+          #  url_path: ["2021/edited/day3/schneems.mp4"],
+          #},
         },
       },
       {

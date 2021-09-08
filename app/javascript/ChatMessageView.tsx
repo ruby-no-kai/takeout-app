@@ -174,6 +174,11 @@ const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ track, message, pinne
       <MenuButton>Menu</MenuButton>
       <Portal>
         <MenuList zIndex="1501">
+          <MenuItem
+            onClick={() => window.open(`/control/chime_users/${encodeURIComponent(message.sender.handle)}`, "_blank")}
+          >
+            Lookup Attendee
+          </MenuItem>
           {pinned ? (
             <MenuItem onClick={() => Api.pinChatMessage(track.slug, null)}>Unpin</MenuItem>
           ) : (

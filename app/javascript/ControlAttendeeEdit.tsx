@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useRouteMatch } from "react-router-dom";
 import { Box, Container, Button, FormControl, FormLabel, Input, Checkbox } from "@chakra-ui/react";
+import { Link, Text } from "@chakra-ui/react";
 
 import { ControlApi, ControlUpdateAttendeeRequestAttendee } from "./ControlApi";
 import { ErrorAlert } from "./ErrorAlert";
@@ -52,7 +53,11 @@ export const ControlAttendeeEdit: React.FC<Props> = () => {
       {errorAlert}
       <Container mt="20px">
         <form onSubmit={onSubmit}>
-          <p>{data.ticket.reference}</p>
+          <Text>
+            <Link href={data.ticket.admin_url} isExternal textDecoration="underline">
+              {data.ticket.reference}
+            </Link>
+          </Text>
           <FormControl mt={4} id="attendee__name" isRequired>
             <FormLabel>Name</FormLabel>
             <Input {...register("name")} />

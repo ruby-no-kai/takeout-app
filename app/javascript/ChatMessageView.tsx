@@ -171,6 +171,8 @@ interface ChatMessageMenuProps extends Props {
 const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ track, message, pinned, onOpen, onClose }) => {
   const chat = useChat();
 
+  const real = !pinned && !message.adminControl?.promo;
+
   return (
     <Menu onOpen={onOpen} onClose={onClose}>
       <MenuButton>Menu</MenuButton>
@@ -186,7 +188,9 @@ const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ track, message, pinne
           ) : (
             <MenuItem onClick={() => Api.pinChatMessage(track.slug, message)}>Pin</MenuItem>
           )}
-          <MenuItem onClick={() => chat.session!.redactMessage(message.channel, message.id)}>Redact</MenuItem>
+          {real ? (
+            <MenuItem onClick={() => chat.session!.redactMessage(message.channel, message.id)}>Redact</MenuItem>
+          ) : null}
         </MenuList>
       </Portal>
     </Menu>

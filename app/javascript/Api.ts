@@ -360,6 +360,7 @@ export interface ChatAdminControl {
   caption?: ChatCaption;
   spotlights?: ChatSpotlight[];
   presences?: StreamPresence[];
+  promo?: boolean;
 }
 
 export interface ChatCaption {

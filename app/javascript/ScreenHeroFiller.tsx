@@ -5,13 +5,11 @@ import { Logo } from "./Logo";
 
 export const ScreenHeroFiller: React.FC = () => {
   return (
-    <Box w="100%" h="100%">
-      <Center>
-        <VStack spacing="3vw">
-          <Image src="/assets/hero_hamburger.webp" w="100%" />
-          <Logo />
-        </VStack>
-      </Center>
-    </Box>
+    <Center w="100%" h="100%">
+      <VStack spacing="3vw" css={{ "& svg": { height: "auto", width: "100%" } }}>
+        <Image src="/assets/hero_hamburger.webp" h="30vw" />
+        <Logo />
+      </VStack>
+    </Center>
   );
 };

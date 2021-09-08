@@ -40,7 +40,7 @@ class ChimeUser < ApplicationRecord
   end
 
   # https://docs.aws.amazon.com/chime/latest/APIReference/API_identity-chime_CreateAppInstanceUser.html#API_identity-chime_CreateAppInstanceUser_RequestSyntax
-  CHIME_USER_ID_PATTERN = /[A-Za-z0-9]([A-Za-z0-9\:\-\_\.\@]{0,62}[A-Za-z0-9])?/
+  CHIME_USER_ID_PATTERN = /^[A-Za-z0-9]([A-Za-z0-9\:\-\_\.\@]{0,62}[A-Za-z0-9])?$/
 
   private def ensure_handle
     if self.handle.blank? || !(self.handle || "").match?(CHIME_USER_ID_PATTERN)

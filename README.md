@@ -48,7 +48,7 @@
 - [ ] 言語フィルタ
 - [x] shoryuken
 - [ ] __IMPORTANT__ 幕間画面
-- [ ] next talks カード
+  - [ ] next talks カード
 - [x] mobile view
 - [ ] __IMPORTANT__ sponsor promo rotate
 - [ ] __IMPORTANT__ periodic metadata republish 
@@ -72,6 +72,8 @@
 - [x] deleteChannelMembership も自分じゃできないらしい
 - [x] send ボタンが attendee でずれる
 - [ ] offline でもうかたほうにリダイレクトしたい
+- [ ] __IMPORTANT__ なんか chat session expiry の判定あやしいかも
+- [ ] 幕間 hls pull のディレイへらす
 
 ## Setup
 

@@ -1,0 +1,26 @@
+---
+testdrive_a:
+  title: 'Test Drive 🍔'
+  type: presentation
+  language: JA
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lectus arcu bibendum at varius. Odio facilisis mauris sit amet massa vitae tortor. Mattis nunc sed blandit libero. Consectetur lorem donec massa sapien faucibus et molestie ac feugiat. Bibendum enim facilisis gravida neque convallis. Sapien eget mi proin sed. Aliquam nulla facilisi cras fermentum odio eu feugiat pretium.'
+  speakers:
+  - id: testdrive_a
+
+testdrive_b:
+  title: 'Test Drive 🍔🍔'
+  type: presentation
+  language: EN
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut tristique et egestas quis ipsum. Aliquet sagittis id consectetur purus ut faucibus pulvinar elementum integer. Mollis nunc sed id semper risus in. Dictum at tempor commodo ullamcorper a lacus vestibulum sed. Eget lorem dolor sed viverra ipsum nunc. Nunc faucibus a pellentesque sit amet. '
+  speakers:
+  - id: testdrive_b
+
+testdrive_c:
+  title: 'Test Drive 🍔🍔🍔'
+  type: presentation
+  language: 'EN & JA'
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu vitae elementum curabitur vitae. Nunc scelerisque viverra mauris in aliquam sem fringilla ut morbi. Eget felis eget nunc lobortis mattis aliquam faucibus purus. Ultricies lacus sed turpis tincidunt. In fermentum et sollicitudin ac orci. Senectus et netus et malesuada fames. '
+  speakers:
+  - id: testdrive_c
+  - id: testdrive_d
+

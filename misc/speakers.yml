@@ -1,0 +1,30 @@
+---
+speakers:
+  testdrive_a:
+    id: testdrive_a
+    name: Driver 1
+    bio: Driver 1
+    github_id: ruby-no-kai
+    gravatar_hash: 3a1808b0c108386d3a26d7b6c319f8a2
+
+  testdrive_b:
+    id: testdrive_b
+    name: Driver 2
+    bio: Driver 2
+    github_id: ruby-no-kai
+    gravatar_hash: 3a1808b0c108386d3a26d7b6c319f8a2
+
+  testdrive_c:
+    id: testdrive_c
+    name: Driver 3
+    bio: Driver 3
+    github_id: ruby-no-kai
+    gravatar_hash: 3a1808b0c108386d3a26d7b6c319f8a2
+
+  testdrive_d:
+    id: testdrive_c
+    name: Driver 4
+    bio: Driver 4
+    github_id: ruby-no-kai
+    gravatar_hash: 3a1808b0c108386d3a26d7b6c319f8a2
+

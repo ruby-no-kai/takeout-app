@@ -14,6 +14,7 @@ gem 'aws-sdk-s3'
 gem 'aws-sdk-chimesdkidentity'
 gem 'aws-sdk-chimesdkmessaging'
 gem 'aws-sdk-ivs'
+gem 'aws-sdk-medialive'
 
 gem 'shoryuken'
 gem 'aws-sdk-sqs'

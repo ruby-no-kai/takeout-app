@@ -69,8 +69,11 @@ export async function request(path: string, method: string, query: object | null
 }
 
 function determineConferenceDataUpdatedAt(data: GetConferenceResponse) {
-  const timestamps = data.conference.track_order.map((slug) => data.conference.tracks[slug]?.card?.at || 0);
-  return Math.max(...timestamps);
+  const cardTimestamps = data.conference.track_order.map((slug) => data.conference.tracks[slug]?.card?.at || 0);
+  const presenceTimestamps = data.conference.track_order.flatMap((slug) => {
+    return Object.entries(data.conference.tracks[slug]?.presences ?? {}).map(([, pr]) => pr.at || 0);
+  });
+  return Math.max(data.requested_at, ...cardTimestamps, ...presenceTimestamps);
 }
 
 function determineEarliestCandidateActivationAt(data: GetConferenceResponse) {
@@ -424,7 +427,7 @@ export const Api = {
         if (!knownData || !newData) return false;
         const knownTimestamp = determineConferenceDataUpdatedAt(knownData);
         const newTimestamp = determineConferenceDataUpdatedAt(newData);
-        return knownTimestamp > newTimestamp;
+        return !(knownTimestamp <= newTimestamp);
       },
     });
 

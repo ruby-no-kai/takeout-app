@@ -64,7 +64,7 @@
   - [ ] MediaLive
   - [x] Chime
   - [x] IAM
-- [ ] __IMPORTANT__ stream presence まきもどっちゃう
+- [x] __IMPORTANT__ stream presence まきもどっちゃう
 - [x] Switch にもツールチップ
 - [x] 音量おぼえてほしい
 - [x] たぶがりんくであってほしい

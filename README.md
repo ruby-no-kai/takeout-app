@@ -14,7 +14,7 @@
   - [ ] fe: チャットのオートスクロールもうすこし賢くする
   - [x] デザイン
   - [x] 現スピーカーのみのハイライト
-  - [ ] ChatAdminControl ここから以前を隠すフラグ
+  - [x] ChatAdminControl ここから以前を隠すフラグ
   - [ ] __IMPORTANT__ chat mod action
     - [ ] delete
     - [ ] lookup

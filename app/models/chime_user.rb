@@ -39,10 +39,14 @@ class ChimeUser < ApplicationRecord
     update_name unless self.name
   end
 
+  # https://docs.aws.amazon.com/chime/latest/APIReference/API_identity-chime_CreateAppInstanceUser.html#API_identity-chime_CreateAppInstanceUser_RequestSyntax
+  CHIME_USER_ID_PATTERN = /[A-Za-z0-9]([A-Za-z0-9\:\-\_\.\@]{0,62}[A-Za-z0-9])?/
+
   private def ensure_handle
-    unless self.handle
+    if self.handle.blank? || !(self.handle || "").match?(CHIME_USER_ID_PATTERN)
       loop do
         self.handle = "u_#{SecureRandom.urlsafe_base64(9)}"
+        next unless self.handle.match?(CHIME_USER_ID_PATTERN)
         break unless self.class.where(handle: self.handle).exists?
         sleep 0.1
       end

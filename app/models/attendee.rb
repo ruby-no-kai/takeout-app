@@ -1,5 +1,5 @@
 class Attendee < ApplicationRecord
-  validates :name, presence: true # TODO: length
+  validates :name, presence: true, length: { maximum: 25 }
   validates :gravatar_hash, presence: true
 
   belongs_to :ticket

@@ -1,3 +1,5 @@
+/// <reference lib="esnext"/>
+
 const weakrefAvailable = (() => {
   try {
     const obj = {};

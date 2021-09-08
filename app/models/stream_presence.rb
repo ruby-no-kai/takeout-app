@@ -18,6 +18,7 @@ class StreamPresence < ApplicationRecord
       track: track,
       kind: kind,
       online: online,
+      at: updated_at&.to_i || 0,
     }
   end
 
@@ -26,6 +27,6 @@ class StreamPresence < ApplicationRecord
   end
 
   def self.as_json
-    self.all.to_a.group_by(&:track).transform_values { |vs| vs.map { |_| [_.kind, _.online] }.to_h }
+    self.all.to_a.group_by(&:track).transform_values { |vs| vs.map { |_| [_.kind, _.as_json] }.to_h }
   end
 end

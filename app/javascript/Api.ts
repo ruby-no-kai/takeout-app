@@ -91,20 +91,20 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
       metadata.i?.forEach((item) => {
         if (item.c) {
           const cardUpdate = item.c;
-          const card_key = cardUpdate.candidate ? "card_candidate" : "card";
+          const cardKey = cardUpdate.candidate ? "card_candidate" : "card";
 
           if (cardUpdate.clear) {
             const track = known.conference.tracks[cardUpdate.clear];
-            if (track?.[card_key]) {
-              console.log("Clearing card", { key: card_key, cardUpdate });
-              track[card_key] = null;
+            if (track?.[cardKey]) {
+              console.log("Clearing card", { key: cardKey, cardUpdate });
+              track[cardKey] = null;
               updated = true;
             }
           } else if (cardUpdate.card) {
             const track = known.conference.tracks[cardUpdate.card.track];
             if (track) {
-              console.log("Updating card", { key: card_key, cardUpdate });
-              track[card_key] = cardUpdate.card;
+              console.log("Updating card", { key: cardKey, cardUpdate });
+              track[cardKey] = cardUpdate.card;
               updated = true;
             }
           }
@@ -114,9 +114,9 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
           const presence = item.p;
           const track = known.conference.tracks[presence.track];
           if (track) {
-            const was = track.presences[presence.kind];
-            track.presences[presence.kind] = presence.online;
-            if (was !== presence.online) {
+            const was = track.presences[presence.kind]?.at ?? 0;
+            track.presences[presence.kind] = presence;
+            if (was < presence.at) {
               console.log("Updating stream presence", presence);
               updated = true;
             }
@@ -165,12 +165,15 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
       (known: GetConferenceResponse) => {
         presences.forEach((presence) => {
           const track = known.conference.tracks[presence.track];
-          const was = track.presences[presence.kind];
-          track.presences[presence.kind] = presence.online;
-          if (was !== presence.online) {
-            console.log("Updating stream presence (chat)", presence);
+          if (track) {
+            const was = track.presences[presence.kind]?.at ?? 0;
+            track.presences[presence.kind] = presence;
+            if (was < presence.at) {
+              console.log("Updating stream presence (chat)", presence);
+            }
           }
         });
+        return { ...known };
       },
       false,
     );
@@ -232,7 +235,7 @@ export interface Track {
   card: TrackCard | null;
   card_candidate: TrackCard | null;
   spotlights: ChatSpotlight[];
-  presences: { [key: string]: boolean };
+  presences: { [key: string]: StreamPresence }; // key:kind
 }
 
 export interface TrackCard extends TrackCardHeader, TrackCardContent {}
@@ -401,6 +404,7 @@ export interface StreamPresence {
   track: TrackSlug;
   kind: "main" | "interpretation";
   online: boolean;
+  at: number;
 }
 
 export const Api = {

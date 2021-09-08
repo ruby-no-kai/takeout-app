@@ -39,7 +39,7 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
     streamKind,
   });
 
-  if (!streamPresence) {
+  if (!streamPresence?.online) {
     return <TrackOfflineView />;
   }
 

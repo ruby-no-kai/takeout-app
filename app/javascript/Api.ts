@@ -335,7 +335,7 @@ export interface UpdateAttendeeResponse {
 }
 
 export interface GetStreamResponse {
-  stream: StreamInfo;
+  stream?: StreamInfo;
 }
 
 export interface GetChatMessagePinResponse {
@@ -516,7 +516,7 @@ export const Api = {
         focusThrottleInterval: 60 * 15 * 1000,
         compare(knownData, newData) {
           // Accept new data only if expired
-          if (!knownData || !newData) return false;
+          if (!knownData?.stream || !newData?.stream) return false;
           const now = dayjs().unix() + 180;
 
           return !(knownData.stream.expiry < newData.stream.expiry && knownData.stream.expiry <= now);

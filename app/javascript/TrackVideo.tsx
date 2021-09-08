@@ -24,10 +24,9 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
   const { data: streamInfo, mutate: streamMutate } = Api.useStream(track.slug, streamKind === "interpretation");
 
   const now = dayjs().unix() + 180;
-  const streamInfoReady = streamInfo && now < streamInfo.stream.expiry;
 
   React.useEffect(() => {
-    if (streamInfo && streamInfo.stream.expiry <= now) {
+    if (streamInfo?.stream && streamInfo.stream.expiry <= now) {
       console.log("TrackVideo: request streamData renew");
       streamMutate();
     }
@@ -43,7 +42,11 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
     return <TrackOfflineView />;
   }
 
-  if (streamInfoReady) {
+  if (streamInfo && !streamInfo.stream) {
+    return <TrackOfflineView />;
+  }
+
+  if (streamInfo?.stream && now < streamInfo.stream.expiry) {
     if (!streamInfo) throw "wut";
     return (
       <StreamView

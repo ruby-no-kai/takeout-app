@@ -10,6 +10,11 @@ class Api::StreamsController < Api::ApplicationController
     stream_info = track.fetch(:ivs)[stream_type]
     raise Api::ApplicationController::Error::NotFound, "stream type not offered" unless stream_info
 
+    if Rails.application.config.x.staff_only_stream && !current_attendee.is_staff?
+      expires_in 15.seconds, public: false
+      return render(json: {stream: nil})
+    end
+
     lifetime = 3600
     grace = 3600
 

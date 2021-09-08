@@ -21,7 +21,7 @@ Rails.start();
 
 document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
-    <Sentry.ErrorBoundary fallback={<p>An critical error has occured...</p>}>
+    <Sentry.ErrorBoundary fallback={<p>A critical error has occured...</p>}>
       <App />
     </Sentry.ErrorBoundary>,
     document.querySelector("#app"),

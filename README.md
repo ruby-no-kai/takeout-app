@@ -47,7 +47,7 @@
 - [x] チャットで絵文字いれてもしなないようにする
 - [ ] 言語フィルタ
 - [x] shoryuken
-- [ ] 幕間画面
+- [ ] __IMPORTANT__ 幕間画面
 - [ ] next talks カード
 - [x] mobile view
 - [ ] __IMPORTANT__ sponsor promo rotate

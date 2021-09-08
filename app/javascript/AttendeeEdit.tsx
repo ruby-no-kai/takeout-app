@@ -44,7 +44,7 @@ export const AttendeeEdit: React.FC = () => {
   }, [session?.attendee]);
 
   const onSubmit = handleSubmit(async (data) => {
-    const wasReady = session!.attendee?.is_ready;
+    //const wasReady = session!.attendee?.is_ready;
 
     if (isRequesting) return;
     setIsRequesting(true);

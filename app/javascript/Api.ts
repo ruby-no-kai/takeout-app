@@ -134,6 +134,7 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
 }
 
 export function consumeChatAdminControl(adminControl: ChatAdminControl) {
+  console.log("consumeChatAdminControl", adminControl);
   if (adminControl.pin) {
     mutate(
       `/api/tracks/${encodeURIComponent(adminControl.pin.track)}/chat_message_pin`,
@@ -354,6 +355,7 @@ export interface ChatMessage {
 }
 
 export interface ChatAdminControl {
+  flush?: boolean;
   pin?: ChatMessagePin;
   caption?: ChatCaption;
   spotlights?: ChatSpotlight[];

@@ -52,14 +52,10 @@ export const AttendeeEdit: React.FC = () => {
       await Api.updateAttendee(data.name, data.gravatar_email);
       setErrorAlert(null);
 
-      if (wasReady) {
-        // TODO: notice saved message
+      if (conferenceData) {
+        history.push(`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`);
       } else {
-        if (conferenceData) {
-          history.push(`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`);
-        } else {
-          location.href = "/";
-        }
+        location.href = "/";
       }
     } catch (e) {
       setErrorAlert(

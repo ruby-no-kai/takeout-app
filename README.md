@@ -57,7 +57,7 @@
   - [ ] chime spotlights
 - [x] fe: 裏番組の表示
 - [ ] fe: 字幕 テキストエリアは width せまいほうがいいかも
-- [ ] !attendee.is_ready で警告
+- [x] !attendee.is_ready で警告
 - [ ] production
   - [x] CloudFront
   - [x] IVS

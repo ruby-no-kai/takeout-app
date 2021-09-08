@@ -1,7 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Box, IconButton, Link, FormControl, FormLabel, Switch, Input, Textarea } from "@chakra-ui/react";
-import { Tooltip, VStack, Flex } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
+import { Box, IconButton, Text, Link, FormControl, FormLabel, Switch, Input, Textarea } from "@chakra-ui/react";
+import { Alert, AlertIcon, Tooltip, VStack, Flex } from "@chakra-ui/react";
 
 import TextareaAutoSize from "react-textarea-autosize";
 
@@ -78,6 +79,20 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
       {errorAlert}
       <form onSubmit={onSubmit}>
         <VStack w="100%">
+          {session && !session.attendee?.is_ready ? (
+            <Box w="100%">
+              <Alert status="warning">
+                <AlertIcon />
+                <Text as="span">
+                  Set your name at{" "}
+                  <Link as={RouterLink} to="/attendee" textDecoration="underline">
+                    Settings
+                  </Link>{" "}
+                  page
+                </Text>
+              </Alert>
+            </Box>
+          ) : null}
           <Box w="100%">
             <Textarea
               as={TextareaAutoSize}

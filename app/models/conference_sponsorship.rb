@@ -1,0 +1,2 @@
+class ConferenceSponsorship < ApplicationRecord
+end

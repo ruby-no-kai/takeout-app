@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_07_031535) do
+ActiveRecord::Schema.define(version: 2021_09_08_132516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,17 @@ ActiveRecord::Schema.define(version: 2021_09_07_031535) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["slug"], name: "index_conference_speakers_on_slug", unique: true
+  end
+
+  create_table "conference_sponsorships", force: :cascade do |t|
+    t.string "sponsor_app_id", null: false
+    t.string "avatar_url", null: false
+    t.string "name", null: false
+    t.boolean "large_display", default: false, null: false
+    t.text "promo"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sponsor_app_id"], name: "index_conference_sponsorships_on_sponsor_app_id", unique: true
   end
 
   create_table "stream_presences", force: :cascade do |t|

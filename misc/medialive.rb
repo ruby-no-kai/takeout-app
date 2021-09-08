@@ -11,7 +11,12 @@ end
 
 @ml = Aws::MediaLive::Client.new(logger: Logger.new($stdout))
 
-CHANNEL_ID = '1920989'
+CHANNEL_ID = {
+ a: '2178162',
+ b: '4086414',
+ intepret: '8137967',
+ dev: '1920989',
+}.fetch(:intepret)
 
 target_time = Time.now.round + 19#Time.new(2021, 9, 8, 12, 18, 30)
 effect_prefix_sec = 3.2
@@ -68,7 +73,7 @@ pp @ml.batch_update_schedule(
           },
         },
         schedule_action_settings: {
-          input_switch_settings: { input_attachment_name_reference: "takeout-app" },
+          input_switch_settings: { input_attachment_name_reference: "takeout-rtmp" },
           #input_switch_settings: {
           #  input_attachment_name_reference: "takeout-mp4",
           #  input_clipping_settings: {

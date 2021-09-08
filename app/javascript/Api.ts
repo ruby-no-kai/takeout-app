@@ -413,6 +413,19 @@ export interface StreamPresence {
   at: number;
 }
 
+export interface GetConferenceSponsorshipsResponse {
+  conference_sponsorships: ConferenceSponsorship[];
+}
+
+export interface ConferenceSponsorship {
+  id: number;
+  sponsor_app_id: string;
+  avatar_url: string;
+  name: string;
+  large_display: boolean;
+  promo: string | null;
+}
+
 export const Api = {
   useSession() {
     return useSWR<GetSessionResponse, ApiError>("/api/session", swrFetcher, {
@@ -577,6 +590,13 @@ export const Api = {
   async deleteCaptionChatMembership(track: TrackSlug) {
     const resp = await request(`/api/tracks/${encodeURIComponent(track)}/caption_chat_membership`, "DELETE", null, {});
     return resp.json();
+  },
+
+  useConferenceSponsorships() {
+    return useSWR<GetConferenceSponsorshipsResponse, ApiError>(
+      `/api/conference_sponsorships?p=${CACHE_BUSTER}`,
+      swrFetcher,
+    );
   },
 };
 

@@ -3,6 +3,17 @@ class ConferenceSponsorship < ApplicationRecord
     "ps_#{sponsor_app_id}"
   end
 
+  def as_json
+    {
+      id: id,
+      sponsor_app_id: sponsor_app_id,
+      avatar_url: "/avatars/p_#{sponsor_app_id}",
+      name: name,
+      large_display: large_display,
+      promo: promo,
+    }
+  end
+
   def as_chat_message 
     promo.present? ? {
       channel: "PROMO",

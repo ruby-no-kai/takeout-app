@@ -17,6 +17,8 @@ const ControlTrackCardsPage = loadable(() => import("./ControlTrackCardsPage"));
 const ControlAttendeesPage = loadable(() => import("./ControlAttendeesPage"));
 const ControlAttendeeEdit = loadable(() => import("./ControlAttendeeEdit"));
 
+const IntermissionScreen = loadable(() => import("./IntermissionScreen"));
+
 export interface Props {}
 
 export const App: React.FC<Props> = (_props) => {
@@ -27,12 +29,17 @@ export const App: React.FC<Props> = (_props) => {
           <Route exact path="/">
             <Redirect to="/tracks/a" />
           </Route>
+
           <Route exact path="/session/new">
             {(() => {
               AttendeeEdit.preload();
               TrackPage.preload();
             })()}
             <Login />
+          </Route>
+
+          <Route exact path="/screen">
+            <IntermissionScreen />
           </Route>
 
           <>

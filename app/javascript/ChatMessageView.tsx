@@ -12,6 +12,7 @@ import { Portal, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 
 import type { Track, ChatMessage, ChatSender } from "./Api";
 import { Api, ChatSpotlight, ChatHandle } from "./Api";
+import { useChat } from "./ChatProvider";
 
 import { Colors } from "./theme";
 import { MicIcon } from "./MicIcon";
@@ -52,10 +53,9 @@ export const ChatMessageView: React.FC<Props> = (props) => {
       <Box ml="8px" flexGrow={1} flexShrink={0} flexBasis={0}>
         <ChatMessageAuthor author={message.sender} pinned={pinned} highlight={hasSpotlight} />
         <Text p={0} m={0} ml={1} fontSize="sm" as="span">
-          {message.redacted ? (
-            <i>[message removed]</i>
-          ) : (
-            React.useMemo(() => <ChatMessageText content={message.content || ""} />, [message.content])
+          {React.useMemo(
+            () => (message.redacted ? <i>[message removed]</i> : <ChatMessageText content={message.content || ""} />),
+            [message.redacted, message.content],
           )}
         </Text>
       </Box>
@@ -169,6 +169,8 @@ interface ChatMessageMenuProps extends Props {
 }
 
 const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ track, message, pinned, onOpen, onClose }) => {
+  const chat = useChat();
+
   return (
     <Menu onOpen={onOpen} onClose={onClose}>
       <MenuButton>Menu</MenuButton>
@@ -184,6 +186,7 @@ const ChatMessageMenu: React.FC<ChatMessageMenuProps> = ({ track, message, pinne
           ) : (
             <MenuItem onClick={() => Api.pinChatMessage(track.slug, message)}>Pin</MenuItem>
           )}
+          <MenuItem onClick={() => chat.session!.redactMessage(message.channel, message.id)}>Redact</MenuItem>
         </MenuList>
       </Portal>
     </Menu>

@@ -16,7 +16,7 @@
   - [x] 現スピーカーのみのハイライト
   - [x] ChatAdminControl ここから以前を隠すフラグ
   - [ ] __IMPORTANT__ chat mod action
-    - [ ] delete
+    - [x] delete
     - [x] lookup
     - [ ] ban 
   - [x] isAdmin white 背景

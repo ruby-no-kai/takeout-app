@@ -3,6 +3,7 @@ import {
   ChimeClient,
   ListChannelMessagesCommand,
   SendChannelMessageCommand,
+  RedactChannelMessageCommand,
   GetMessagingSessionEndpointCommand,
   ChannelMessageSummary,
   ChannelMembership,
@@ -149,6 +150,20 @@ export class ChatSession {
     return resp.MessageId;
   }
 
+  public async redactMessage(channel: ChannelArn, id: string) {
+    if (!this.chime) throw "cannot perform without session data";
+    if (!this.sessionData) throw "cannot perofmr without session data";
+
+    await this.chime.send(
+      new RedactChannelMessageCommand({
+        ChimeBearer: this.sessionData.user_arn,
+        ChannelArn: channel,
+        MessageId: id,
+      }),
+    );
+    return true;
+  }
+
   // Returns promise that is resolved after connection attempt has been initiated
   public async connect() {
     if (!this.sessionData || !this.chime) throw "cannot initiate connection without session data";
@@ -293,7 +308,7 @@ export class ChatSession {
       console.warn("message missing ID", channel, message);
       return null;
     }
-    if (!message.Content) {
+    if (!message.Content && !message.Redacted) {
       console.warn("message missing content", channel, message);
       return null;
     }
@@ -301,6 +316,8 @@ export class ChatSession {
       console.warn("message missing sender", channel, message);
       return null;
     }
+
+    const origContent = message.Content || "";
 
     const isAdmin = message.Sender.Arn == this.adminArn;
     const { name, version, flags } = isAdmin
@@ -314,7 +331,7 @@ export class ChatSession {
       ...flags,
     };
 
-    const [content, adminControl] = isAdmin ? parseAdminMessage(message.Content) : [message.Content, null];
+    const [content, adminControl] = isAdmin ? parseAdminMessage(origContent) : [origContent, null];
 
     const update: ChatMessage = {
       channel,

@@ -51,7 +51,9 @@ export class ChatLog {
       case "REDACT_CHANNEL_MESSAGE":
       case "UPDATE_CHANNEL_MESSAGE":
         this.messages.forEach((v, i) => {
-          if (v.id === message.id) this.messages[i] = v;
+          if (v.id === message.id) {
+            this.messages[i] = message;
+          }
         });
         break;
       default:

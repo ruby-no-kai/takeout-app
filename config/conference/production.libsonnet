@@ -27,7 +27,7 @@ local interpret_ivs = { arn: 'arn:aws:ivs:us-west-2:005216166247:channel/BqJ6JEV
           arn: 'arn:aws:ivs:us-west-2:005216166247:channel/lxVf1pHuVdbU',
           url: 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/video/v1/us-west-2.005216166247.channel.lxVf1pHuVdbU.m3u8',
         },
-        // interpretation: interpret_ivs,
+        interpretation: interpret_ivs,
       },
       chime: {
         channel_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/11029a8c-c09e-47c2-aff6-db9515482395/channel/d9542baf3d0c8a6aa3a045ca710f1a301bdbdb82dd456f8f84c7f9166a84db9b',

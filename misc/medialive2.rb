@@ -156,6 +156,17 @@ def actions_immediate_interm()
   ]
 end
 
+def actions_immediate_live()
+  @target_time = Time.now + 20
+  [
+    activate_motion('001-eff_a'),
+    activate_still('002-eff_still'),
+    switch_live('003-switch', t: @target_time),
+    remove_still('004-eff_rmstill'),
+  ]
+end
+
+
 def actions_schedule_prerec(key,m,s)
   a = [
     activate_motion('001-eff_a'),
@@ -193,10 +204,11 @@ CHANNEL_ID = {
 #target_time = Time.now + 20
 @target_time = Time.new(2021, 9, 9, 11, 45, 15)
 tt = @target_time
-@ch_names = %i(a)
+@ch_names = %i(a b interpret)
 @channels = @ch_names.map { |_| CHANNEL_ID.fetch(_) }
 
-actions = actions_immediate_interm()
+#actions = actions_immediate_interm()
+actions = actions_immediate_live()
 # actions = actions_schedule_live('2021/edited/CM/ruby-cm-day1.mp4')
 
 #actions = actions_schedule_prerec('2021/edited/day1/jeremyevans.mp4', 25, 44)

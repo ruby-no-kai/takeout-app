@@ -249,9 +249,12 @@ export interface TrackCardHeader {
   at: number;
 }
 export interface TrackCardContent {
-  interpretation: boolean;
-  topic: Topic | null;
-  speakers: Speaker[] | null;
+  interpretation?: boolean;
+  topic?: Topic | null;
+  speakers?: Speaker[] | null;
+
+  screen?: ScreenControl;
+  //upcoming_topic?: UpcomingTopic;
 }
 
 export interface Topic {
@@ -266,6 +269,19 @@ export interface Speaker {
   github_id: string | null;
   twitter_id: string | null;
   avatar_url: string;
+}
+
+export interface ScreenControl {
+  filler?: boolean;
+  heading?: string;
+  next_schedule?: ScreenNextSchedule;
+  footer?: string;
+}
+
+export interface ScreenNextSchedule {
+  at: number;
+  title: string;
+  absolute_only?: boolean;
 }
 
 export interface ChatSpotlight {

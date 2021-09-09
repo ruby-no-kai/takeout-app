@@ -24,7 +24,18 @@ class Conference
           spotlights: ChatSpotlight.where(track: track.fetch(:slug)).order(starts_at: :asc).map(&:as_json),
           presences: presences.fetch(track.fetch(:slug), {}),
         )
-      end,
+      end.merge(
+        _screen: { # Pseudo track for /screen
+          slug: '_screen',
+          name: '',
+          interpretation: false,
+          chat: false,
+          card: TrackCard.current_for('_screen', t: t)&.as_json,
+          card_candidate: TrackCard.candidate_for('_screen', t: t)&.as_json,
+          sptslights: [],
+          presences: {},
+        },
+      ),
     }
   end
 

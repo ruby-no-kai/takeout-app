@@ -38,6 +38,7 @@ class TrackCard < ApplicationRecord
   end
 
   private def validate_track
+    return if track == '_screen'
     errors.add :track, 'should be defined' unless Conference.data.fetch(:tracks).has_key?(track)
   end
 

@@ -9,6 +9,7 @@ import { Logo } from "./Logo";
 
 import { ScreenSponsorRotation } from "./ScreenSponsorRotation";
 import { ScreenHeroFiller } from "./ScreenHeroFiller";
+import { ScreenAnnounceView } from "./ScreenAnnounceView";
 
 export const IntermissionScreen: React.FC = () => {
   return (
@@ -25,8 +26,8 @@ export const IntermissionScreen: React.FC = () => {
 export const IntermissionScreenInner: React.FC = () => {
   return (
     <Flex h="100%" w="100%" justify="space-between" column="row">
-      <Box w="45vw" h="100%" p="3vw">
-        <ScreenHeroFiller />
+      <Box h="100%">
+        <ScreenAnnounceView />
       </Box>
       <Box h="100%">
         <ScreenSponsorRotation />

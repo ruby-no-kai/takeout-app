@@ -254,7 +254,7 @@ export interface TrackCardContent {
   speakers?: Speaker[] | null;
 
   screen?: ScreenControl;
-  //upcoming_topic?: UpcomingTopic;
+  upcoming_topics?: UpcomingTopic[];
 }
 
 export interface Topic {
@@ -282,6 +282,13 @@ export interface ScreenNextSchedule {
   at: number;
   title: string;
   absolute_only?: boolean;
+}
+
+export interface UpcomingTopic {
+  track: TrackSlug;
+  at: number;
+  topic?: Topic | null;
+  speakers: Speaker[] | null;
 }
 
 export interface ChatSpotlight {

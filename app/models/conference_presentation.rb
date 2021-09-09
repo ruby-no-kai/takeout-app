@@ -10,6 +10,27 @@ class ConferencePresentation < ApplicationRecord
     }
   end
 
+  def as_track_card
+    presentation = self
+    {
+      interpretation: presentation.language != "EN",
+      topic: {
+        title: presentation.title,
+        author: presentation.speaker_slugs.join(", "),
+        description: presentation.description,
+        labels: [presentation.kind, presentation.language],
+      },
+      speakers: presentation.speakers.map { |speaker|
+        {
+          name: speaker.name,
+          github_id: speaker.github_id,
+          twitter_id: speaker.twitter_id,
+          avatar_url: speaker.avatar_url,
+        }
+      },
+    }
+  end
+
   def speakers
     slugs = (speaker_slugs || []).compact
     records = ConferenceSpeaker.where(slug: slugs).to_a

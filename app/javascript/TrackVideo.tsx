@@ -212,7 +212,8 @@ function determineStreamKind(track: Track, userPreference: boolean): "main" | "i
   // (as long as it is online, connect to interpretation stream for a stability)
 
   // if interpretation is offline
-  if (!track.presences["interpretation"].online) {
+  const presence = track.presences["interpretation"];
+  if (!presence?.online) {
     return "main";
   }
 

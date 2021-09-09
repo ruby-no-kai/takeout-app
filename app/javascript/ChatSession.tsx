@@ -387,8 +387,13 @@ function parseChimeName(chimeName: string): { name: string; version: string; fla
 }
 
 function parseAdminMessage(message: string): [string | null, ChatAdminControl | null] {
-  const adminMessage: AdminMessage = JSON.parse(message);
-  return [adminMessage.message ?? null, adminMessage.control ?? null];
+  try {
+    const adminMessage: AdminMessage = JSON.parse(message);
+    return [adminMessage.message ?? null, adminMessage.control ?? null];
+  } catch (e) {
+    console.warn("invalid admin message", e, message);
+    return [null, null];
+  }
 }
 
 export default ChatSession;

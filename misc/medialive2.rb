@@ -113,7 +113,8 @@ def switch_intermission(tag, t: @target_time)
             },
           },
           schedule_action_settings: {
-            input_switch_settings: { input_attachment_name_reference: "takeout-intermission" },
+            #input_switch_settings: { input_attachment_name_reference: "takeout-intermission" },
+            input_switch_settings: { input_attachment_name_reference: "takeout-rtmp" },
           },
         }
 end
@@ -130,7 +131,8 @@ def prep_intermission(tag, t: @target_time + 90)
             },
           },
           schedule_action_settings: {
-            input_prepare_settings: { input_attachment_name_reference: "takeout-intermission" },
+            input_prepare_settings: { input_attachment_name_reference: "takeout-rtmp" },
+            #input_prepare_settings: { input_attachment_name_reference: "takeout-intermission" },
           },
         }
 end
@@ -197,23 +199,26 @@ CHANNEL_ID = {
 @effect_prefix_sec = 3.2
 @still_prefix_sec = @effect_prefix_sec - 0.25
 
-@live_cm_size = 60
 @name = gen_name
 
 
-#target_time = Time.now + 20
-@target_time = Time.new(2021, 9, 9, 11, 45, 15)
-tt = @target_time
-@ch_names = %i(a b interpret)
+# @target_time = Time.now + 20
+
+tt = @target_time = Time.new(2021, 9, 9, 16, 5, 0)
+@ch_names = %i(a )
 @channels = @ch_names.map { |_| CHANNEL_ID.fetch(_) }
 
 #actions = actions_immediate_interm()
-actions = actions_immediate_live()
-# actions = actions_schedule_live('2021/edited/CM/ruby-cm-day1.mp4')
+#actions = actions_immediate_live()
+@live_cm_size = 65
+actions = actions_schedule_live('2021/edited/CM/platinum-cm-1.mp4')
 
-#actions = actions_schedule_prerec('2021/edited/day1/jeremyevans.mp4', 25, 44)
-#actions = actions_schedule_prerec('2021/edited/day1/koic-en.mp4', 28, 29+2)
+#actions = actions_schedule_prerec('2021/edited/day1/vinistock.mp4', 26, 57)
+#actions = actions_schedule_prerec('2021/edited/day1/shioimm-en.mp4', 23, 41)
+#actions = actions_schedule_prerec('2021/edited/day1/koic-ja.mp4', 28-20, 29+2)
 
+pp actions
+$stdin.gets
 
 @channels.each do |chid|
   pp @ml.batch_update_schedule(

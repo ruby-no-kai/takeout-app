@@ -16,6 +16,7 @@ export interface Props {
 }
 
 export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
+  const [streamTokenNotExpired, setStreamTokenNotExpired] = React.useState(true);
   const [isPlaying, setIsPlaying] = React.useState(true);
   const streamKind = determineStreamKind(track, streamOptions.interpretation);
   const streamPresence = track.presences[streamKind];
@@ -23,14 +24,21 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
   // TODO: handle error
   const { data: streamInfo, mutate: streamMutate } = Api.useStream(track.slug, streamKind === "interpretation");
 
-  const now = dayjs().unix() + 180;
-
   React.useEffect(() => {
+    const now = dayjs().unix() + 180;
     if (streamInfo?.stream && streamInfo.stream.expiry <= now) {
+      setStreamTokenNotExpired(false);
       console.log("TrackVideo: request streamData renew");
-      streamMutate();
+
+      const timer = setInterval(() => {
+        console.log("Requesting streamData due to expiration");
+        streamMutate();
+      }, 1000);
+      return () => clearInterval(timer);
+    } else {
+      setStreamTokenNotExpired(true);
     }
-  }, [track.slug, now, streamKind, streamInfo?.stream?.expiry]);
+  }, [track.slug, streamKind, streamInfo?.stream?.expiry]);
 
   console.log("TrackVideo: render", {
     track: track.slug,
@@ -46,7 +54,7 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
     return <TrackOfflineView />;
   }
 
-  if (streamInfo?.stream && now < streamInfo.stream.expiry) {
+  if (streamInfo?.stream && streamTokenNotExpired) {
     if (!streamInfo) throw "wut";
     return (
       <StreamView

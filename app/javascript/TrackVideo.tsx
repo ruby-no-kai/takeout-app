@@ -183,12 +183,14 @@ const TrackOfflineView: React.FC = () => {
   return (
     <AspectRatio ratio={16 / 9}>
       <Center w="100%" h="100%">
-        <VStack>
+        <VStack h="40%">
           <Box h="30%" maxW="300px" w="30%" css={{ filter: "grayscale(1)" }}>
-            <picture>
-              <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
-              <Image src="/assets/hero_hamburger.svg" w="100%" />
-            </picture>
+            <AspectRatio ratio={1 / 1}>
+              <picture>
+                <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
+                <Image src="/assets/hero_hamburger.svg" w="100%" h="100%" alt="" />
+              </picture>
+            </AspectRatio>
           </Box>
           <Heading as="div" color={Colors.textMuted}>
             Offline...

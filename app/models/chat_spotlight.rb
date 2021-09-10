@@ -19,6 +19,7 @@ class ChatSpotlight < ApplicationRecord
       starts_at: starts_at.to_i,
       ends_at: ends_at&.to_i,
       handles: handles,
+      updated_at: updated_at&.to_i,
     }
   end
 end

@@ -32,7 +32,7 @@ class Conference
           chat: false,
           card: TrackCard.current_for('_screen', t: t)&.as_json,
           card_candidate: TrackCard.candidate_for('_screen', t: t)&.as_json,
-          sptslights: [],
+          spotlights: [],
           presences: {},
         },
       ),

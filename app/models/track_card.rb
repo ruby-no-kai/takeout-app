@@ -22,6 +22,7 @@ class TrackCard < ApplicationRecord
     content.merge(
       at: self.activation_at.to_i,
       track: track,
+      ut: self.updated_at.to_i,
     )
   end
 

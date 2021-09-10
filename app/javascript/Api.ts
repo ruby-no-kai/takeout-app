@@ -2,6 +2,7 @@ import useSWR from "swr";
 import { mutate } from "swr";
 import * as Rails from "@rails/ujs";
 import dayjs from "dayjs";
+import { dequal } from "dequal";
 
 import { CACHE_BUSTER } from "./meta";
 
@@ -68,12 +69,55 @@ export async function request(path: string, method: string, query: object | null
   return resp;
 }
 
-function determineConferenceDataUpdatedAt(data: GetConferenceResponse) {
-  const cardTimestamps = data.conference.track_order.map((slug) => data.conference.tracks[slug]?.card?.at || 0);
-  const presenceTimestamps = data.conference.track_order.flatMap((slug) => {
-    return Object.entries(data.conference.tracks[slug]?.presences ?? {}).map(([, pr]) => pr.at || 0);
+function mergeConferenceData(target: GetConferenceResponse, other: GetConferenceResponse) {
+  Object.entries(other.conference.tracks).forEach(([trackSlug, otherTrack]) => {
+    //console.log(`mergeConferenceData: track ${trackSlug}`);
+    if (!target.conference.tracks[trackSlug]) return;
+
+    const mergeCard = (key: "card" | "card_candidate") => {
+      const targetCard: TrackCard | null = otherTrack[key];
+      const otherCard: TrackCard | null = otherTrack[key];
+      if (!otherCard) return;
+
+      if (
+        !targetCard ||
+        targetCard.at < otherCard.at ||
+        (targetCard.at == otherCard.at && targetCard.ut < otherCard.ut)
+      ) {
+        target.conference.tracks[trackSlug][key] = otherCard;
+      }
+    };
+    mergeCard("card");
+    mergeCard("card_candidate");
+    //console.log("mergeConferenceData: merged cards");
+
+    const mergeSpotlight = () => {
+      const targetSpotlights = new Map(target.conference.tracks[trackSlug].spotlights.map((s) => [s.id, s]));
+      const otherSpotlights = target.conference.tracks[trackSlug].spotlights;
+      target.conference.tracks[trackSlug].spotlights = otherSpotlights.map((otherSpotlight) => {
+        const targetSpotlight = targetSpotlights.get(otherSpotlight.id);
+
+        if (targetSpotlight && targetSpotlight.updated_at > otherSpotlight.updated_at) {
+          return targetSpotlight;
+        } else {
+          return otherSpotlight;
+        }
+      });
+    };
+    mergeSpotlight();
+    //console.log("mergeConferenceData: merged spotlights");
+
+    const mergePresence = () => {
+      Object.entries(otherTrack.presences).forEach(([, otherPresence]) => {
+        const targetPresence = target.conference.tracks[trackSlug].presences[otherPresence.kind];
+        if (targetPresence && targetPresence.at < otherPresence.at) {
+          target.conference.tracks[trackSlug].presences[otherPresence.kind] = otherPresence;
+        }
+      });
+    };
+    mergePresence();
+    //console.log("mergeConferenceData: merged presences");
   });
-  return Math.max(data.requested_at, ...cardTimestamps, ...presenceTimestamps);
 }
 
 function determineEarliestCandidateActivationAt(data: GetConferenceResponse) {
@@ -92,6 +136,7 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
     (known: GetConferenceResponse) => {
       let updated = false;
       metadata.i?.forEach((item) => {
+        console.log(item);
         if (item.c) {
           const cardUpdate = item.c;
           const cardKey = cardUpdate.candidate ? "card_candidate" : "card";
@@ -118,11 +163,9 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
           const track = known.conference.tracks[presence.track];
           if (track) {
             const was = track.presences[presence.kind]?.at ?? 0;
+            console.log("Updating stream presence", { presence, was });
             track.presences[presence.kind] = presence;
-            if (was < presence.at) {
-              console.log("Updating stream presence", presence);
-              updated = true;
-            }
+            updated = true;
           }
         }
       });
@@ -247,6 +290,7 @@ export interface TrackCard extends TrackCardHeader, TrackCardContent {}
 export interface TrackCardHeader {
   track: TrackSlug;
   at: number;
+  ut: number;
 }
 export interface TrackCardContent {
   interpretation?: boolean;
@@ -297,6 +341,7 @@ export interface ChatSpotlight {
   starts_at: number;
   ends_at: number;
   handles: ChatHandle[];
+  updated_at: number;
 }
 
 export interface TrackStreamOptions {
@@ -479,9 +524,14 @@ export const Api = {
       //focusThrottleInterval: 15 * 1000, // TODO:
       compare(knownData, newData) {
         if (!knownData || !newData) return false;
-        const knownTimestamp = determineConferenceDataUpdatedAt(knownData);
-        const newTimestamp = determineConferenceDataUpdatedAt(newData);
-        return !(knownTimestamp <= newTimestamp);
+
+        try {
+          mergeConferenceData(newData, knownData);
+        } catch (e) {
+          console.warn(e);
+          throw e;
+        }
+        return dequal(newData, knownData);
       },
     });
 

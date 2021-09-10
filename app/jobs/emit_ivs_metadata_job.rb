@@ -11,9 +11,18 @@ class EmitIvsMetadataJob < ApplicationJob
     end
 
     def as_ivs_metadata_item
-      h = {card: card.as_json}
+      h = ActiveSupport::HashWithIndifferentAccess.new({card: card.as_json})
       h[:candidate] = candidate if candidate
       h[:clear] = clear if clear
+      if h.dig(:card, :topic, :description)
+        desc = h.dig(:card, :topic, :description)
+        limit = 800
+        while {c: h}.to_json.bytesize > 800 && limit > 0
+          p h
+          h[:card][:topic][:description] = "#{desc[0,480]} …" if desc.size > limit
+          limit -= 10
+        end
+      end
       {c: h}
     end
   end

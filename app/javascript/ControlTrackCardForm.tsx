@@ -37,6 +37,7 @@ export const ControlTrackCardForm: React.FC<Props> = ({ track }) => {
       const card: TrackCard = {
         track: track.slug,
         at: dayjs().add(data.inSeconds, "seconds").unix(),
+        ut: 0,
         ...generateTrackCardFromPresentation(controlConferenceData, data.slug),
       };
       console.log(card);

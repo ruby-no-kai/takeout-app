@@ -70,6 +70,7 @@ export async function request(path: string, method: string, query: object | null
 }
 
 function mergeConferenceData(target: GetConferenceResponse, other: GetConferenceResponse) {
+  //console.log("mergeConferenceData", JSON.parse(JSON.stringify({ target, other })));
   Object.entries(other.conference.tracks).forEach(([trackSlug, otherTrack]) => {
     //console.log(`mergeConferenceData: track ${trackSlug}`);
     if (!target.conference.tracks[trackSlug]) return;
@@ -79,12 +80,11 @@ function mergeConferenceData(target: GetConferenceResponse, other: GetConference
       const otherCard: TrackCard | null = otherTrack[key];
       if (!otherCard) return;
 
-      if (
-        !targetCard ||
-        targetCard.at < otherCard.at ||
-        (targetCard.at == otherCard.at && targetCard.ut < otherCard.ut)
-      ) {
+      if (!targetCard || targetCard.ut < otherCard.ut) {
+        //console.log("mergeConferenceData/mergeCard: otherCard", { trackSlug, key, targetCard, otherCard });
         target.conference.tracks[trackSlug][key] = otherCard;
+      } else {
+        //console.log("mergeConferenceData/mergeCard: targetCard", { trackSlug, key, targetCard, otherCard });
       }
     };
     mergeCard("card");
@@ -92,17 +92,31 @@ function mergeConferenceData(target: GetConferenceResponse, other: GetConference
     //console.log("mergeConferenceData: merged cards");
 
     const mergeSpotlight = () => {
-      const targetSpotlights = new Map(target.conference.tracks[trackSlug].spotlights.map((s) => [s.id, s]));
-      const otherSpotlights = target.conference.tracks[trackSlug].spotlights;
-      target.conference.tracks[trackSlug].spotlights = otherSpotlights.map((otherSpotlight) => {
-        const targetSpotlight = targetSpotlights.get(otherSpotlight.id);
+      const knownSpotlights = new Map<number, ChatSpotlight>();
 
-        if (targetSpotlight && targetSpotlight.updated_at > otherSpotlight.updated_at) {
-          return targetSpotlight;
-        } else {
-          return otherSpotlight;
-        }
+      const targetSpotlights = new Map(target.conference.tracks[trackSlug].spotlights.map((s) => [s.id, s]));
+      const otherSpotlights = new Map(target.conference.tracks[trackSlug].spotlights.map((s) => [s.id, s]));
+
+      [
+        [targetSpotlights, otherSpotlights],
+        [otherSpotlights, targetSpotlights],
+      ].forEach(([a, b]) => {
+        a.forEach((sA, id) => {
+          if (knownSpotlights.has(id)) return;
+          const sB = b.get(id);
+          if (!sB) return;
+
+          knownSpotlights.set(id, sA.updated_at < sB.updated_at ? sB : sA);
+        });
       });
+
+      [targetSpotlights, otherSpotlights].forEach((ss) => {
+        ss.forEach((s, id) => {
+          if (!knownSpotlights.has(id)) knownSpotlights.set(id, s);
+        });
+      });
+
+      target.conference.tracks[trackSlug].spotlights = Array.from(knownSpotlights.values());
     };
     mergeSpotlight();
     //console.log("mergeConferenceData: merged spotlights");
@@ -134,6 +148,7 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
   mutate(
     API_CONFERENCE,
     (known: GetConferenceResponse) => {
+      known = JSON.parse(JSON.stringify(known));
       let updated = false;
       metadata.i?.forEach((item) => {
         console.log(item);
@@ -170,7 +185,7 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
         }
       });
       if (updated) known.requested_at = 0;
-      return { ...known }; // NOTE: returning the same reference doesn't update cache
+      return known;
     },
     false,
   );
@@ -190,6 +205,7 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
     mutate(
       API_CONFERENCE,
       (known: GetConferenceResponse) => {
+        known = JSON.parse(JSON.stringify(known));
         spotlights.forEach((spotlight) => {
           const track = known.conference.tracks[spotlight.track];
           if (!track) return;
@@ -200,7 +216,7 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
             track.spotlights.push(spotlight);
           }
         });
-        return { ...known };
+        return known;
       },
       false,
     );
@@ -210,6 +226,7 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
     mutate(
       API_CONFERENCE,
       (known: GetConferenceResponse) => {
+        known = JSON.parse(JSON.stringify(known));
         presences.forEach((presence) => {
           const track = known.conference.tracks[presence.track];
           if (track) {
@@ -220,7 +237,7 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
             }
           }
         });
-        return { ...known };
+        return known;
       },
       false,
     );
@@ -531,7 +548,8 @@ export const Api = {
           console.warn(e);
           throw e;
         }
-        return dequal(newData, knownData);
+        const res = dequal(newData, knownData);
+        return res;
       },
     });
 

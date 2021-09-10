@@ -77,15 +77,16 @@ class TrackCard < ApplicationRecord
   end
 
   def self.create_dummy!(track, at: Time.zone.now)
+    words = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(/ +/).shuffle
     create!(
       track: track,
       activation_at: at,
       content: {
         interpretation: true,
         topic: {
-          title: "Topic (#{track})",
+          title: words.sample(5).join(' '),
           author: "Author (#{track})",
-          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(/ +/).shuffle.join(' '),
+          description: words.join(' '),
           labels: %w(ja en foobar),
         },
         speakers: [

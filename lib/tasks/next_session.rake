@@ -10,8 +10,8 @@ namespace :takeout do
     ChatSpotlight.where(starts_at: t - 300).each(&:destroy!)
     TrackCard.where(activation_at: t).each(&:destroy!)
 
-    ChatSpotlight.set('a', presentation_a.speaker_chime_handles, t: t, start_t: t - 300)
-    ChatSpotlight.set('b', presentation_b.speaker_chime_handles, t: t, start_t: t - 300)
+    ChatSpotlight.set('a', presentation_a.speaker_chime_handles, t: t, start_t: t - 300) if presentation_a
+    ChatSpotlight.set('b', presentation_b.speaker_chime_handles, t: t, start_t: t - 300) if presentation_b
 
 
     screen = TrackCard.create!(

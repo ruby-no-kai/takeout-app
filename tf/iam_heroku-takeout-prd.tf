@@ -78,6 +78,7 @@ data "aws_iam_policy_document" "takeout-prd" {
     effect = "Allow"
     actions = [
       "ivs:PutMetadata",
+      "ivs:GetStream",
     ]
     resources = [
       "arn:aws:ivs:us-west-2:005216166247:channel/oTssPyKzhjoS", # dev

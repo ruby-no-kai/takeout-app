@@ -40,12 +40,6 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
     }
   }, [track.slug, streamKind, streamInfo?.stream?.expiry]);
 
-  console.log("TrackVideo: render", {
-    track: track.slug,
-    interpretationPreference: streamOptions.interpretation,
-    streamKind,
-  });
-
   if (!streamPresence?.online) {
     return <TrackOfflineView />;
   }

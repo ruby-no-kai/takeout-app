@@ -2,7 +2,7 @@ import React from "react";
 import loadable, { lazy } from "@loadable/component";
 
 import { Flex, Box, Container } from "@chakra-ui/react";
-import { AspectRatio, Skeleton } from "@chakra-ui/react";
+import { AspectRatio, Skeleton, HStack } from "@chakra-ui/react";
 
 import { Track, TrackStreamOptionsState } from "./Api";
 
@@ -10,7 +10,8 @@ const TrackStreamOptionsSelector = loadable(() => import(/* webpackPrefetch: tru
 const TrackCardView = lazy(() => import(/* webpackPrefetch: true */ "./TrackCardView"));
 const TrackVideo = lazy(() => import(/* webpackPrefetch: true */ "./TrackVideo"));
 const TrackChat = lazy(() => import(/* webpackPrefetch: true */ "./TrackChat"));
-const TrackCaption = lazy(() => import("./TrackCaption"));
+const TrackCaption = loadable(() => import("./TrackCaption"));
+const TrackViewerCount = lazy(() => import(/* webpackPrefetch: true */ "./TrackViewerCount"));
 
 export interface Props {
   track: Track;
@@ -85,7 +86,12 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
           <React.Suspense fallback={<Skeleton w="100%" h="100px" />}>
             <TrackCardView
               card={track.card}
-              nav={<Box display={["none", "none", "block", "block"]}>{trackOptionsSelector()}</Box>}
+              nav={
+                <HStack alignItems="flex-start" spacing="20px">
+                  {track.viewerCount ? <TrackViewerCount count={track.viewerCount} /> : null}
+                  <Box display={["none", "none", "block", "block"]}>{trackOptionsSelector()}</Box>
+                </HStack>
+              }
             />
           </React.Suspense>
         </Box>

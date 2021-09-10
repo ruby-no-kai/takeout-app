@@ -16,8 +16,6 @@ export interface Props {
 export const TrackCardView: React.FC<Props> = ({ card, nav }) => {
   const { data: appVersion } = Api.useAppVersion();
 
-  console.log({ COMMIT, appVersion });
-
   return (
     <Box>
       <TrackTopic card={card} topicNav={nav} />

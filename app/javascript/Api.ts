@@ -131,6 +131,13 @@ function mergeConferenceData(target: GetConferenceResponse, other: GetConference
     };
     mergePresence();
     //console.log("mergeConferenceData: merged presences");
+    //
+    const mergeViewerCount = () => {
+      if (otherTrack.viewerCount && !target.conference.tracks[trackSlug].viewerCount) {
+        target.conference.tracks[trackSlug].viewerCount = otherTrack.viewerCount;
+      }
+    };
+    mergeViewerCount();
   });
 }
 
@@ -180,6 +187,15 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
             const was = track.presences[presence.kind]?.at ?? 0;
             console.log("Updating stream presence", { presence, was });
             track.presences[presence.kind] = presence;
+            updated = true;
+          }
+        }
+
+        if (item.n) {
+          const track = known.conference.tracks[item.n.track];
+          if (track) {
+            console.log("Updating viewerCount", item.n);
+            track.viewerCount = item.n;
             updated = true;
           }
         }
@@ -300,6 +316,7 @@ export interface Track {
   card_candidate: TrackCard | null;
   spotlights: ChatSpotlight[];
   presences: { [key: string]: StreamPresence }; // key:kind
+  viewerCount?: ViewerCount;
 }
 
 export interface TrackCard extends TrackCardHeader, TrackCardContent {}
@@ -489,6 +506,7 @@ export interface IvsMetadata {
 export interface IvsMetadataItem {
   c?: IvsCardUpdate;
   p?: StreamPresence;
+  n?: ViewerCount;
 }
 
 export interface IvsCardUpdate {
@@ -502,6 +520,12 @@ export interface StreamPresence {
   kind: "main" | "interpretation";
   online: boolean;
   at: number;
+}
+
+export interface ViewerCount {
+  track: TrackSlug;
+  count: number;
+  expiry: number;
 }
 
 export interface GetConferenceSponsorshipsResponse {

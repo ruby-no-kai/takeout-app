@@ -18,6 +18,15 @@ class TrackCard < ApplicationRecord
     self.candidate(t).where(track: track).last
   end
 
+  def self.set(track, content, t: Time.zone.now, emit: true)
+    self.create!(
+      track: track,
+      content: content,
+      activation_at: t,
+    )
+    EmitIvsMetadataJob.perform_later if emit
+  end
+
   def as_json
     content.merge(
       at: self.activation_at.to_i,

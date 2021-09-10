@@ -17,9 +17,8 @@ class EmitIvsMetadataJob < ApplicationJob
       if h.dig(:card, :topic, :description)
         desc = h.dig(:card, :topic, :description)
         limit = 800
-        while {c: h}.to_json.bytesize > 800 && limit > 0
-          p h
-          h[:card][:topic][:description] = "#{desc[0,480]} …" if desc.size > limit
+        while {c: h}.to_json.bytesize > 600 && limit > 0
+          h[:card][:topic][:description] = "#{desc[0,limit]} …" if desc.size > limit
           limit -= 10
         end
       end
@@ -57,8 +56,9 @@ class EmitIvsMetadataJob < ApplicationJob
 
   private def current_cards
     Conference.track_slugs.map do |track|
-      IvsCardUpdate.new(card: TrackCard.current_for(track, t: @t))
-    end
+      card = TrackCard.current_for(track, t: @t)
+      card && IvsCardUpdate.new(card: card)
+    end.compact
   end
 
   private def candidate_cards

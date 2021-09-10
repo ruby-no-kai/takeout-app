@@ -126,7 +126,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
               isDisabled={shouldDisable}
             />
             {isStaff ? (
-              <Tooltip label="Send as an official announcement">
+              <Tooltip label="Send as an official announcement" aria-label="">
                 <FormControl display="flex" alignSelf="center" h="30px">
                   <FormLabel htmlFor="ChatForm__asAdmin" aria-hidden="true" m={0} mr={1}>
                     <CampaignIcon w="24px" h="24px" />

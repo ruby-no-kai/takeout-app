@@ -18,7 +18,7 @@ class ConferencePresentation < ApplicationRecord
         title: presentation.title,
         author: presentation.speaker_slugs.join(", "),
         description: presentation.description,
-        labels: [presentation.kind, presentation.language],
+        labels: [presentation.kind, presentation.language, presentation.live? ? 'Live' : 'Pre-recorded'],
       },
       speakers: presentation.speakers.map { |speaker|
         {

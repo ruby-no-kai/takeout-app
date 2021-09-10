@@ -1,5 +1,5 @@
 class ChatSpotlight < ApplicationRecord
-  def self.set(track, handles, t: Time.zone.now, emit: true)
+  def self.set(track, handles, t: Time.zone.now, start_t: t, emit: true)
     last = ChatSpotlight.where(track: track, ends_at: nil).order(starts_at: :asc).last
     if last && !last.ends_at
       last.ends_at = t
@@ -11,6 +11,7 @@ class ChatSpotlight < ApplicationRecord
     end
     spotlight
   end
+
   def as_json
     {
       id: id,

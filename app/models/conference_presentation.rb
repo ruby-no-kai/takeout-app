@@ -36,4 +36,12 @@ class ConferencePresentation < ApplicationRecord
     records = ConferenceSpeaker.where(slug: slugs).to_a
     slugs.map { |slug| records.find { |r| r.slug == slug } }.compact
   end
+
+  def speaker_chime_handles
+    Attendee.joins(:chime_user)
+      .where(':slug = ANY(presentation_slugs)', slug: slug)
+      .map(&:chime_user)
+      .compact
+      .map(&:handle)
+  end
 end

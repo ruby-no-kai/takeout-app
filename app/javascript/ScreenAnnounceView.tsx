@@ -209,7 +209,7 @@ const AnnounceUpcomingTopic: React.FC<{ upcoming: UpcomingTopic }> = ({ upcoming
             {topic.title}
           </Heading>
           {speakers && speakers.length > 0 ? (
-            <Box mt="0.7vw">
+            <Box>
               {speakers.map((s) => (
                 <ScreenTopicSpeaker key={s.avatar_url} speaker={s} />
               ))}
@@ -234,7 +234,7 @@ const ScreenTopicSpeaker: React.FC<{ speaker: Speaker }> = ({ speaker }) => {
       fontSize="1.6vw"
       h="20px"
       lineHeight="2vw"
-      mt="0.1vw"
+      mt="0.7vw"
       color={Colors.main}
     >
       <Text as="span">{speaker.name}</Text>

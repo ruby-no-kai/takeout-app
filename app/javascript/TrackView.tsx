@@ -23,8 +23,8 @@ export interface Props {
 
 export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
   const [streamOptions, setStreamOptions] = streamOptionsState;
-  const trackOptionsSelector = () => (
-    <TrackStreamOptionsSelector track={track} streamOptionsState={streamOptionsState} />
+  const trackOptionsSelector = (instance: string) => (
+    <TrackStreamOptionsSelector track={track} streamOptionsState={streamOptionsState} instance={instance} />
   );
 
   // Preload candidate speaker images
@@ -66,7 +66,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
           ) : null}
 
           <Box display={["flex", "flex", "none", "none"]} justifyContent="end" my={2}>
-            <Box w="150px">{trackOptionsSelector()}</Box>
+            <Box w="150px">{trackOptionsSelector("1")}</Box>
           </Box>
         </Box>
 
@@ -91,7 +91,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
             nav={
               <HStack alignItems="flex-start" spacing="20px">
                 {track.viewerCount ? <TrackViewerCount count={track.viewerCount} /> : null}
-                <Box display={["none", "none", "block", "block"]}>{trackOptionsSelector()}</Box>
+                <Box display={["none", "none", "block", "block"]}>{trackOptionsSelector("2")}</Box>
               </HStack>
             }
           />

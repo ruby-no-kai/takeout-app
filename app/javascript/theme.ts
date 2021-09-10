@@ -16,12 +16,13 @@ export const Colors = {
   bg: "#EBE0CE",
 
   secondary: "#7C757D",
+  secondaryText: "#767077",
 
   dark: "#343A40",
 
   textDefault: "#212529",
   textAccent: accent,
-  textMuted: "#828282",
+  textMuted: "#727272",
 
   backgroundColor: "#F9F9F9",
 

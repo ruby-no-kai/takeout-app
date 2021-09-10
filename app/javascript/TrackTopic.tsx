@@ -2,6 +2,7 @@ import React from "react";
 
 import { Flex, Box, Heading, Text, Link } from "@chakra-ui/react";
 import { Tag, HStack, VStack } from "@chakra-ui/react";
+import { VisuallyHidden } from "@chakra-ui/react";
 
 import type { TrackCard, Speaker } from "./Api";
 
@@ -41,7 +42,13 @@ export const TrackTopic: React.FC<Props> = ({ card, topicNav }) => {
             </Heading>
             <Box mt="2px">
               {topic.labels.map((v, i) => (
-                <Tag key={i} variant="solid" colorscheme="gray" size="sm" mr={1}>
+                <Tag
+                  key={i}
+                  variant="solid"
+                  size="sm"
+                  mr={1}
+                  css={{ backgroundColor: Colors.textMuted, color: "#ffffff" }}
+                >
                   {v}
                 </Tag>
               ))}
@@ -65,10 +72,25 @@ export const TrackTopic: React.FC<Props> = ({ card, topicNav }) => {
 };
 
 const TrackTopicSpeaker: React.FC<{ speaker: Speaker }> = ({ speaker }) => {
-  const primaryAlias = speaker.github_id || speaker.twitter_id;
-  const primaryLink =
-    (speaker.github_id && `https://github.com/${speaker.github_id}`) ||
-    (speaker.twitter_id && `https://twitter.com/${speaker.twitter_id}`);
+  const socialLinks = [
+    speaker.github_id
+      ? {
+          service: "GitHub",
+          name: speaker.github_id,
+          link: `https://github.com/${speaker.github_id}`,
+          icon: <GitHubIcon boxSize="16px" />,
+        }
+      : null,
+    speaker.twitter_id
+      ? {
+          service: "Twitter",
+          name: speaker.twitter_id,
+          link: `https://twitter.com/${speaker.twitter_id}`,
+          icon: <TwitterIcon boxSize="16px" />,
+        }
+      : null,
+  ].filter((v) => !!v);
+
   return (
     <HStack
       as="p"
@@ -78,22 +100,24 @@ const TrackTopicSpeaker: React.FC<{ speaker: Speaker }> = ({ speaker }) => {
       h="20px"
       lineHeight="24px"
       mt="3px"
-      color={Colors.secondary}
+      color={Colors.secondaryText}
     >
       <Text as="span">{speaker.name}</Text>
-      {primaryAlias && primaryLink ? (
-        <Link isExternal href={primaryLink} m={0}>
-          @{primaryAlias}
+      {socialLinks[0] ? (
+        <Link isExternal href={socialLinks[0].link} m={0}>
+          <VisuallyHidden>{socialLinks[0].service} </VisuallyHidden>
+          <Text as="span" mr={2}>
+            @{socialLinks[0].name}
+          </Text>
+          {socialLinks[0].icon}
         </Link>
       ) : null}
-      {speaker.github_id ? (
-        <Link isExternal href={`https://github.com/${speaker.github_id}`} m={0}>
-          <GitHubIcon boxSize="16px" />
-        </Link>
-      ) : null}
-      {speaker.twitter_id ? (
-        <Link isExternal href={`https://twitter.com/${speaker.twitter_id}`} m={0}>
-          <TwitterIcon boxSize="16px" />
+      {socialLinks[1] ? (
+        <Link isExternal href={socialLinks[1].link} m={0}>
+          <VisuallyHidden>
+            {socialLinks[1].service} @{socialLinks[1].name}
+          </VisuallyHidden>
+          {socialLinks[1].icon}
         </Link>
       ) : null}
     </HStack>

@@ -10,9 +10,14 @@ import { Track, TrackStreamOptionsState } from "./Api";
 export interface Props {
   track: Track;
   streamOptionsState: TrackStreamOptionsState;
+  instance: string;
 }
 
-export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptionsState: [options, setOptions] }) => {
+export const TrackStreamOptionsSelector: React.FC<Props> = ({
+  track,
+  streamOptionsState: [options, setOptions],
+  instance,
+}) => {
   const handleOnChange = (key: "caption" | "interpretation") => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
       const newOptions = { ...options, [`${key}`]: e.target.checked };
@@ -24,14 +29,14 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptio
   return (
     <Box>
       <Stack direction={["row", "row", "row", "column"]} spacing={0}>
-        <Tooltip label="Caption (English only)">
+        <Tooltip label="Caption (English only)" aria-label="">
           <FormControl display="flex" alignItems="center" h="30px">
-            <FormLabel htmlFor="TrackStreamOptions__CC" aria-hidden="true" m={0} mr={1}>
+            <FormLabel htmlFor={`TrackStreamOptions_${instance}__CC`} aria-hidden="true" m={0} mr={1}>
               <ClosedCaptionIcon w="24px" h="24px" />
             </FormLabel>
             <Switch
               aria-label="Closed Caption"
-              id="TrackStreamOptions__CC"
+              id={`TrackStreamOptions_${instance}__CC`}
               isChecked={options.caption}
               onChange={handleOnChange("caption")}
             />
@@ -39,14 +44,14 @@ export const TrackStreamOptionsSelector: React.FC<Props> = ({ track, streamOptio
         </Tooltip>
 
         {track.interpretation && track.card?.interpretation ? (
-          <Tooltip label={interpretationLabel}>
+          <Tooltip label={interpretationLabel} aria-label="">
             <FormControl display="flex" alignItems="center" h="30px">
-              <FormLabel htmlFor="TrackStreamOptions__interpret" aria-hidden="true" m={0} mr={1}>
+              <FormLabel htmlFor={`TrackStreamOptions_${instance}__interpret`} aria-hidden="true" m={0} mr={1}>
                 <TranslateIcon w="24px" h="24px" />
               </FormLabel>
               <Switch
                 aria-label={interpretationLabel}
-                id="TrackStreamOptions__interpret"
+                id={`TrackStreamOptions_${instance}__interpret`}
                 isChecked={options.interpretation}
                 onChange={handleOnChange("interpretation")}
               />

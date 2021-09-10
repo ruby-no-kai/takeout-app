@@ -51,8 +51,15 @@ export const ChatStatusView: React.FC<Props> = ({ status, loading, error }) => {
       <Collapse in={!shouldCloseState} animateOpacity>
         <VStack py={1} w="100%" bgColor="#ffffff" borderBottom="1px solid" borderColor={Colors.chatBorder}>
           <HStack>
-            <CircularProgress value={progress} isIndeterminate={progress === -1} size="15px" />
-            <Text fontSize="14px">{statusHuman}</Text>
+            <CircularProgress
+              aria-label={`${statusHuman}`}
+              value={progress}
+              isIndeterminate={progress === -1}
+              size="15px"
+            />
+            <Text aria-hidden="true" fontSize="14px">
+              {statusHuman}
+            </Text>
           </HStack>
         </VStack>
       </Collapse>

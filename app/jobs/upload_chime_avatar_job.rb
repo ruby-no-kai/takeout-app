@@ -11,7 +11,7 @@ class UploadChimeAvatarJob < ApplicationJob
         bucket: Rails.application.config.x.s3.public_bucket,
         key: "#{Rails.application.config.x.s3.public_prefix}avatars/#{chime_user.handle}",
         content_type: io.content_type,
-        cache_control: 'pubilc, max-age=86400, stale-while-revalidate=3600',
+        cache_control: 'pubilc, max-age=31536000, stale-while-revalidate=3600',
         body: io,
       )
     end

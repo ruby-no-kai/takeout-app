@@ -126,21 +126,21 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
               isDisabled={shouldDisable}
             />
             {isStaff ? (
-              <FormControl display="flex" alignSelf="center" h="30px">
-                <FormLabel htmlFor="ChatForm__asAdmin" aria-hidden="true" m={0} mr={1}>
-                  <Tooltip label="Send as an official announcement">
+              <Tooltip label="Send as an official announcement">
+                <FormControl display="flex" alignSelf="center" h="30px">
+                  <FormLabel htmlFor="ChatForm__asAdmin" aria-hidden="true" m={0} mr={1}>
                     <CampaignIcon w="24px" h="24px" />
-                  </Tooltip>
-                </FormLabel>
-                <Switch
-                  aria-label="Send as an official announcement"
-                  id="ChatForm__asAdmin"
-                  size="sm"
-                  isChecked={asAdmin}
-                  isDisabled={shouldDisable}
-                  {...register("asAdmin")}
-                />
-              </FormControl>
+                  </FormLabel>
+                  <Switch
+                    aria-label="Send as an official announcement"
+                    id="ChatForm__asAdmin"
+                    size="sm"
+                    isChecked={asAdmin}
+                    isDisabled={shouldDisable}
+                    {...register("asAdmin")}
+                  />
+                </FormControl>
+              </Tooltip>
             ) : null}
           </Flex>
         </VStack>

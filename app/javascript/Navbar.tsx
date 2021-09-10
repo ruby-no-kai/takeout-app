@@ -32,9 +32,11 @@ export const Navbar: React.FC = () => {
       </Heading>
       <HStack spacing="14px">
         <Link href="https://rubykaigi.org/2021-takeout/schedule" isExternal>
+          <VisuallyHidden>Schedule</VisuallyHidden>
           <EventNoteIcon boxSize="20px" color={Colors.defaultAvatarBg} />
         </Link>
         <Link as={RouterLink} to="/attendee">
+          <VisuallyHidden>Edit your chat profile</VisuallyHidden>
           <AccountCircleIcon boxSize="20px" color={Colors.defaultAvatarBg} />
         </Link>
       </HStack>

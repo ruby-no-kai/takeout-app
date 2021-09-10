@@ -7,8 +7,12 @@ namespace :takeout do
     presentation_a = args[:slug_a].present? ? ConferencePresentation.find_by!(slug: args[:slug_a]) : nil
     presentation_b = args[:slug_b].present? ? ConferencePresentation.find_by!(slug: args[:slug_b]) : nil
 
+    ChatSpotlight.where(starts_at: t - 300).each(&:destroy!)
+    TrackCard.where(activation_at: t).each(&:destroy!)
+
     ChatSpotlight.set('a', presentation_a.speaker_chime_handles, t: t, start_t: t - 300)
     ChatSpotlight.set('b', presentation_b.speaker_chime_handles, t: t, start_t: t - 300)
+
 
     screen = TrackCard.create!(
       track: '_screen',

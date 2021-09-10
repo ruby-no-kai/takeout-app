@@ -5,7 +5,7 @@ class ChatSpotlight < ApplicationRecord
       last.ends_at = t
       last.save!
     end
-    spotlight = ChatSpotlight.create!(track: track, starts_at: t, ends_at: nil, handles: handles)
+    spotlight = ChatSpotlight.create!(track: track, starts_at: start_t, ends_at: nil, handles: handles)
     if emit
       EmitChatSpotlightJob.perform_now(spotlights: [last, spotlight].compact)
     end

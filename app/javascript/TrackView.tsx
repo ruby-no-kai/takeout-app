@@ -6,12 +6,13 @@ import { AspectRatio, Skeleton, HStack } from "@chakra-ui/react";
 
 import { Track, TrackStreamOptionsState } from "./Api";
 
+import TrackCardView from "./TrackCardView";
+
 const TrackStreamOptionsSelector = loadable(() => import(/* webpackPrefetch: true */ "./TrackStreamOptionsSelector"));
-const TrackCardView = lazy(() => import(/* webpackPrefetch: true */ "./TrackCardView"));
 const TrackVideo = lazy(() => import(/* webpackPrefetch: true */ "./TrackVideo"));
 const TrackChat = lazy(() => import(/* webpackPrefetch: true */ "./TrackChat"));
-const TrackCaption = loadable(() => import("./TrackCaption"));
-const TrackViewerCount = lazy(() => import(/* webpackPrefetch: true */ "./TrackViewerCount"));
+const TrackCaption = lazy(() => import("./TrackCaption"));
+const TrackViewerCount = loadable(() => import(/* webpackPrefetch: true */ "./TrackViewerCount"));
 
 export interface Props {
   track: Track;
@@ -83,17 +84,15 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
 
       <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]} mt="12px">
         <Box w="100%">
-          <React.Suspense fallback={<Skeleton w="100%" h="100px" />}>
-            <TrackCardView
-              card={track.card}
-              nav={
-                <HStack alignItems="flex-start" spacing="20px">
-                  {track.viewerCount ? <TrackViewerCount count={track.viewerCount} /> : null}
-                  <Box display={["none", "none", "block", "block"]}>{trackOptionsSelector()}</Box>
-                </HStack>
-              }
-            />
-          </React.Suspense>
+          <TrackCardView
+            card={track.card}
+            nav={
+              <HStack alignItems="flex-start" spacing="20px">
+                {track.viewerCount ? <TrackViewerCount count={track.viewerCount} /> : null}
+                <Box display={["none", "none", "block", "block"]}>{trackOptionsSelector()}</Box>
+              </HStack>
+            }
+          />
         </Box>
         <Box maxW={["auto", "auto", "auto", "400px"]} w="100%" ml="30px" />
       </Flex>

@@ -37,6 +37,8 @@ Rails.application.routes.draw do
   end
 
   scope path: 'api', module: 'api' do
+    resource :app_version, only: %i(show)
+
     resource :session, only: %i(show create destroy) do
       post :take_control
     end

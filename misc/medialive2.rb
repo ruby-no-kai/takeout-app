@@ -204,18 +204,18 @@ CHANNEL_ID = {
 
 # @target_time = Time.now + 20
 
-tt = @target_time = Time.new(2021, 9, 9, 16, 5, 0)
-@ch_names = %i(a )
+tt = @target_time = Time.new(2021, 9, 10, 10,0,0)
+@ch_names = %i(a interpret)
 @channels = @ch_names.map { |_| CHANNEL_ID.fetch(_) }
 
 #actions = actions_immediate_interm()
 #actions = actions_immediate_live()
-@live_cm_size = 65
-actions = actions_schedule_live('2021/edited/CM/platinum-cm-1.mp4')
+#@live_cm_size = 65
+#actions = actions_schedule_live('2021/edited/CM/platinum-cm-1.mp4')
 
-#actions = actions_schedule_prerec('2021/edited/day1/vinistock.mp4', 26, 57)
-#actions = actions_schedule_prerec('2021/edited/day1/shioimm-en.mp4', 23, 41)
-#actions = actions_schedule_prerec('2021/edited/day1/koic-ja.mp4', 28-20, 29+2)
+actions = actions_schedule_prerec('2021/edited/day2/chrisseaton.mp4', 39, 15)
+#actions = actions_schedule_prerec('2021/edited/day2/shioimm-en.mp4', 23, 41)
+#actions = actions_schedule_prerec('2021/edited/day2/koic-ja.mp4', 28-20, 29+2)
 
 pp actions
 $stdin.gets

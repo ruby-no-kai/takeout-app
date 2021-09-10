@@ -331,6 +331,12 @@ export interface GetSessionResponse {
   attendee: Attendee | null;
   control: boolean;
 }
+
+export interface GetAppVersionResponse {
+  commit: string;
+  release: string;
+}
+
 export type ChatSessionTracksBag = { [key: string]: TrackChatInfo | null };
 
 export interface GetChatSessionResponse {
@@ -453,6 +459,15 @@ export const Api = {
   useSession() {
     return useSWR<GetSessionResponse, ApiError>("/api/session", swrFetcher, {
       revalidateOnFocus: false,
+    });
+  },
+
+  useAppVersion() {
+    return useSWR<GetAppVersionResponse, ApiError>("/api/app_version", swrFetcher, {
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      focusThrottleInterval: 60000,
+      refreshInterval: 90 * 1000, // TODO:
     });
   },
 

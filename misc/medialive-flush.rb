@@ -9,8 +9,10 @@ CHANNEL_ID = {
  dev: '1920989',
 }
 
+chslug = ARGV[0]
+
 now = Time.now
-as = CHANNEL_ID.map do |k,id|
+as = CHANNEL_ID.select { |k,_v| !chslug || k.to_s == chslug }.map do |k,id|
  actions = @ml.describe_schedule(channel_id:id).flat_map(&:schedule_actions).select { |_|  s = _.schedule_action_start_settings&.fixed_mode_schedule_action_start_settings&.time;  s && Time.parse(s) > now }
 
    actions.map do |x|
@@ -21,14 +23,14 @@ end
 
 as.flatten.each { |_| p _ }
 puts "ENTER DELETE"
-exit if gets.chomp != "DELETE"
+exit if $stdin.gets.chomp != "DELETE"
 
 as.each do |actions|
   chid =   actions[0].fetch(:channel)[1]
   pp @ml.batch_update_schedule(
     channel_id: chid,
     deletes: {
-      action_names: actions.map {|_| _.fetch(:action_Name) }
+      action_names: actions.map {|_| _.fetch(:action_name) }
     },
   )
 end

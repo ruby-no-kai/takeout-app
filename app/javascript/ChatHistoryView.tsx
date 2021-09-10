@@ -57,13 +57,13 @@ export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessag
     el.scrollTop = el.scrollHeight;
   }, [loading, autoscrollEnabled, box.current, messages]);
 
-  if (loading) {
-    return (
-      <Flex h="100%" overflowY="hidden" direction="column-reverse">
-        <Skeleton w="100%" h="100%" />
-      </Flex>
-    );
-  }
+  //if (loading) {
+  //  return (
+  //    <Flex h="100%" overflowY="hidden" direction="column-reverse">
+  //      <Skeleton w="100%" h="100%" />
+  //    </Flex>
+  //  );
+  //}
 
   return (
     <Box h="100%" overflowX="hidden" overflowY="scroll" wordBreak="break-word" ref={box}>
@@ -73,7 +73,6 @@ export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessag
         </Box>
       ) : null}
       {showScrollButton ? <Button onClick={() => setAutoscrollEnabled(true)}>bottom</Button> : null}
-      {loading ? <p>Loading..</p> : null}
       <VStack w="100%" spacing="2px" my="8px">
         {messageViews}
       </VStack>

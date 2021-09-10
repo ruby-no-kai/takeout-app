@@ -39,7 +39,11 @@ export class ChatLog {
     console.log("updateChatHistory", { existingHistory: this.messages, update });
     switch (update.kind) {
       case "CREATE_CHANNEL_MESSAGE":
-        if (update.message.content !== "") {
+        const present =
+          this.messages.findIndex((v) => {
+            v.id === message.id;
+          }) !== -1;
+        if (!present && update.message.content !== "") {
           this.messages.splice(0, 0, message);
         }
         break;

@@ -76,7 +76,7 @@ function mergeConferenceData(target: GetConferenceResponse, other: GetConference
     if (!target.conference.tracks[trackSlug]) return;
 
     const mergeCard = (key: "card" | "card_candidate") => {
-      const targetCard: TrackCard | null = otherTrack[key];
+      const targetCard: TrackCard | null = target.conference.tracks[trackSlug][key];
       const otherCard: TrackCard | null = otherTrack[key];
       if (!otherCard) return;
 
@@ -566,6 +566,7 @@ export const Api = {
       compare(knownData, newData) {
         if (!knownData || !newData) return false;
 
+        //console.log("useConference#compare", JSON.parse(JSON.stringify({ newData, knownData })));
         try {
           mergeConferenceData(newData, knownData);
         } catch (e) {

@@ -14,6 +14,8 @@ const TrackChat = lazy(() => import(/* webpackPrefetch: true */ "./TrackChat"));
 const TrackCaption = lazy(() => import("./TrackCaption"));
 const TrackViewerCount = loadable(() => import(/* webpackPrefetch: true */ "./TrackViewerCount"));
 
+const AppVersionAlert = loadable(() => import("./AppVersionAlert"));
+
 export interface Props {
   track: Track;
   streamOptionsState: TrackStreamOptionsState;
@@ -94,7 +96,9 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
             }
           />
         </Box>
-        <Box maxW={["auto", "auto", "auto", "400px"]} w="100%" ml="30px" />
+        <Box maxW={["auto", "auto", "auto", "400px"]} w="100%" ml="30px">
+          <AppVersionAlert />
+        </Box>
       </Flex>
     </Container>
   );

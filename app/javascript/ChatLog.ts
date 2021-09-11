@@ -1,7 +1,7 @@
 import type { ChatMessage } from "./Api";
 import type { ChatUpdate } from "./ChatSession";
 
-const HISTORY_LENGTH = 100;
+const HISTORY_LENGTH = 5;
 
 export class ChatLog {
   messages: ChatMessage[];
@@ -66,7 +66,7 @@ export class ChatLog {
     if (update.message?.adminControl?.flush) {
       this.mayFlush();
     } else {
-      this.messages = this.messages.slice(0, HISTORY_LENGTH);
+      this.mayTrim();
     }
     this.inform();
   }
@@ -75,8 +75,19 @@ export class ChatLog {
     this.onUpdate(this.messages);
   }
 
+  mayTrim() {
+    let control_length = 0;
+    this.messages.slice(0, HISTORY_LENGTH).forEach((m) => {
+      if (m.content === undefined || m.content === null) {
+        control_length += 1;
+      }
+    });
+    this.messages = this.messages.slice(0, HISTORY_LENGTH + control_length);
+  }
+
   mayFlush() {
-    const mergedTrimedHistory = this.messages.slice(0, HISTORY_LENGTH);
+    this.mayTrim();
+    const mergedTrimedHistory = this.messages;
     const flushIndex = mergedTrimedHistory.findIndex((v) => v.adminControl?.flush);
 
     if (flushIndex === -1) {

@@ -18,7 +18,16 @@ export interface Props {
 export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessage, loading, showAdminActions }) => {
   const [autoscrollEnabled, setAutoscrollEnabled] = React.useState(true);
   const [showScrollButton, setShowScrollButton] = React.useState(false);
-  const box = React.useRef<HTMLDivElement>(null);
+
+  const [box, setBox] = React.useState<HTMLDivElement | null>(null);
+  const boxRef = React.useRef<HTMLDivElement | null>(null);
+  const boxCb = React.useCallback(
+    (el) => {
+      boxRef.current = el;
+      setBox(el);
+    },
+    [setBox],
+  );
 
   const messageViews = messages
     .filter((v) => v.content !== undefined && v.content !== null)
@@ -29,17 +38,17 @@ export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessag
   const latestMessageAt = messages[0]?.timestamp;
   const lastLatestMessageAt = usePrevious(latestMessageAt);
 
-  React.useEffect(() => {
-    if (!loading) return;
-    if (!box.current) return;
-    const el = box.current;
+  //React.useEffect(() => {
+  //  if (!loading) return;
+  //  if (!box.current) return;
+  //  const el = box.current;
 
-    el.addEventListener("scroll", function () {
-      //const flag = el.scrollTop === el.scrollHeight;
-      //console.log("setAutoscrollEnabled on scroll", flag, el.scrollTop, el.scrollHeight);
-      setAutoscrollEnabled(false);
-    });
-  }, [loading, box.current]);
+  //  el.addEventListener("scroll", function () {
+  //    //const flag = el.scrollTop === el.scrollHeight;
+  //    //console.log("setAutoscrollEnabled on scroll", flag, el.scrollTop, el.scrollHeight);
+  //    setAutoscrollEnabled(false);
+  //  });
+  //}, [loading, box]);
 
   //React.useEffect(() => {
   //  if (autoscrollEnabled) return;
@@ -51,11 +60,10 @@ export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessag
   React.useEffect(() => {
     console.log("autoscroll chance");
     if (!autoscrollEnabled) return;
-    if (!box.current) return;
+    if (!box) return;
     console.log("autoscroll do");
-    const el = box.current;
-    el.scrollTop = el.scrollHeight;
-  }, [loading, autoscrollEnabled, box.current, messages]);
+    box.scrollTop = box.scrollHeight;
+  }, [box, loading, autoscrollEnabled, messages.length, messages[messages.length - 1]?.id]);
 
   //if (loading) {
   //  return (
@@ -66,7 +74,7 @@ export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessag
   //}
 
   return (
-    <Box h="100%" overflowX="hidden" overflowY="scroll" wordBreak="break-word" ref={box}>
+    <Box h="100%" overflowX="hidden" overflowY="scroll" wordBreak="break-word" ref={boxCb}>
       {pinnedMessage ? (
         <Box position="sticky" left="0" top="0" zIndex="1500" w="100%">
           <ChatMessageView track={track} message={pinnedMessage} pinned={true} showAdminActions={showAdminActions} />

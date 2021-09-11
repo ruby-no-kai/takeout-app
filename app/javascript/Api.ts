@@ -124,7 +124,9 @@ function mergeConferenceData(target: GetConferenceResponse, other: GetConference
     const mergePresence = () => {
       Object.entries(otherTrack.presences).forEach(([, otherPresence]) => {
         const targetPresence = target.conference.tracks[trackSlug].presences[otherPresence.kind];
-        if (targetPresence && targetPresence.at < otherPresence.at) {
+        if (!targetPresence) {
+          target.conference.tracks[trackSlug].presences[otherPresence.kind] = otherPresence;
+        } else if (targetPresence && targetPresence.at <= otherPresence.at) {
           target.conference.tracks[trackSlug].presences[otherPresence.kind] = otherPresence;
         }
       });
@@ -241,15 +243,15 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
     const presences = adminControl.presences;
     mutate(
       API_CONFERENCE,
-      (known: GetConferenceResponse) => {
-        known = JSON.parse(JSON.stringify(known));
+      (known2: GetConferenceResponse) => {
+        const known = JSON.parse(JSON.stringify(known2));
         presences.forEach((presence) => {
           const track = known.conference.tracks[presence.track];
           if (track) {
             const was = track.presences[presence.kind]?.at ?? 0;
-            track.presences[presence.kind] = presence;
             if (was < presence.at) {
               console.log("Updating stream presence (chat)", presence);
+              track.presences[presence.kind] = presence;
             }
           }
         });
@@ -566,7 +568,6 @@ export const Api = {
       compare(knownData, newData) {
         if (!knownData || !newData) return false;
 
-        //console.log("useConference#compare", JSON.parse(JSON.stringify({ newData, knownData })));
         try {
           mergeConferenceData(newData, knownData);
         } catch (e) {
@@ -574,7 +575,7 @@ export const Api = {
           throw e;
         }
         const res = dequal(newData, knownData);
-        return res;
+        return false; //res;
       },
     });
 

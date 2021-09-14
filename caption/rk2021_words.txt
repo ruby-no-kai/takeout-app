@@ -1,0 +1,100 @@
+Phrase	IPA	SoundsLike	DisplayAs
+kaigi		khai-gi	Kaigi
+Ruby-Kaigi			RubyKaigi
+ruby-conf			RubyConf
+rails-conf			RailsConf
+EuRuKo		you-ruu-kou	EuRuKo
+Rubyist		ru-bee-ist	Rubyist
+Rubyists		ru-bee-ists	Rubyists
+M.R.I.			MRI
+truffle-ruby			TruffleRuby
+c-ruby		see-ru-bi	CRuby
+j-ruby		jei-ru-bi	JRuby
+rubinius		ru-bi-ni-us	Rubinius
+m-ruby		em-ru-bi	mruby
+GitHub		git-hub	GitHub
+Heroku		he-row-ku	Heroku
+cook-pad			Cookpad
+Asakusa-rb		a-sak-sa-are-bee	Asakusa.rb
+matz			Matz
+matsumoto-san		ma-tsu-mo-to-san	Matsumoto-san
+shugo		shoe-go	Shugo
+shugo-san		shoe-go-san	Shugo-san
+nobu		noh-boo	Nobu
+nakada-san		na-ka-da-san	Nakada-san
+koichi		koh-wee-chee	ko1
+sasada-san		sa-sa-da-san	Sasada-san
+mame-san		ma-me-san	Mame-san
+A.K.R.			akr
+A.K.R.-san			akr-san
+naruse-san		na-ru-se-san	Naruse-san
+shyouhei		show-hey	Shyouhei
+urabe-san		u-ra-be-san	Urabe-san
+kokubun-san		ko-ku-bun-san	k0kubun-san
+yugui-san		yu-gu-i-san	Yugui-san
+eregon		e-re-gon	eregon
+D.H.H.			DHH
+tenderlove		tender-love	tenderlove
+ractor			Ractor
+m-jit		em-jit	MJIT
+I-Seq		ai-sek	ISeq
+A.S.T.			AST
+typeprof			TypeProf
+d-ruby			dRuby
+rbs			RBS
+I.R.B.			irb
+E.R.B.			ERB
+parse-y		parse-dot-wye	parse.y
+optparse		opt-parse	optparse
+rdoc		are-doc	RDoc
+Ruby-Gems			RubyGems
+test-unit			test-unit
+minitest		mini-test	minitest
+YJIT		wye-jit	YJIT
+onigmo		o-nig-mo	Onigmo
+oniguruma		o-ni-gu-ru-ma	Oniguruma
+Rubocop		ru-boh-cop	RuboCop
+Bundler			Bundler
+bundle-install			bundle install
+bye-bug		buy-bug	byebug
+toycol		toy-kol	Toycol
+rucy		ru-see	Rucy
+charty		char-tee	Charty
+nokogiri		knock-oh-gee-ri	Nokogiri
+rbenv		are-bee-env	rbenv
+r-spec			RSpec
+P.R.K.			PRK
+Ruby-on-Rails			Ruby on Rails
+hanami		ha-na-mi	Hanami
+active-support			Active Support
+active-record			Active Record
+Zeitwerk		tsait-verk	Zeitwerk
+jit			JIT
+regex		reh-jeks	Regex
+regexp		reh-jeksp	Regexp
+back-trace			backtrace
+break-point			breakpoint
+D.S.L.			DSL
+G.C.			GC
+syntaxes			syntaxes
+instance-variable			instance variable
+autoload		aw-tow-lowd	autoload
+autoloading		aw-tow-lowding	autoloading
+ivar		eye-var	ivar
+quine		kweye-n	quine
+free-bsd		free-bee-es-dee	FreeBSD
+open-bsd		open-bee-es-dee	OpenBSD
+type-script		type-script	TypeScript
+dot-rb		dot-are-bee	.rb
+I.D.E.			IDE
+L.S.P.			LSP
+rbs-rails		are-bee-es-rails	rbs_rails
+Haml			Haml
+G.C.C.			GCC
+G.D.B.			GDB
+YARV		yarv	YARV
+C-extension		see-extension	C extension
+malloc		ma-lock	malloc
+parser		par-sir	parser
+lexer		lek-sir	lexer
+JIT-compiler		jit-compiler	JIT compiler

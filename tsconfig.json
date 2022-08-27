@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es2019",
+    "target": "esnext",
     "module": "es2020",
     "moduleResolution": "node",
     "sourceMap": true,
     "strict": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "typeRoots": ["./node_modules/@types", "./types"],
     "allowSyntheticDefaultImports": true
   },

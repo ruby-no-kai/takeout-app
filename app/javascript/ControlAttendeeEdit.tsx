@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 import { Box, Container, Button, FormControl, FormLabel, Input, Checkbox } from "@chakra-ui/react";
 import { Link, Text } from "@chakra-ui/react";
 
@@ -10,8 +10,9 @@ import { ErrorAlert } from "./ErrorAlert";
 export interface Props {}
 
 export const ControlAttendeeEdit: React.FC<Props> = () => {
-  const match = useRouteMatch<{ id: string }>();
-  const id = parseInt(match.params.id, 10);
+  const match = useMatch("/control/attendees/:id");
+  if (!match) throw new Error("?"); // XXX:
+  const id = parseInt(match.params.id || "", 10);
   const { data } = ControlApi.useAttendee(id);
   const [errorAlert, setErrorAlert] = React.useState<JSX.Element | null>(null);
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);

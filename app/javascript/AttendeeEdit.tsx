@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   VStack,
   HStack,
@@ -25,7 +25,7 @@ import { ErrorAlert } from "./ErrorAlert";
 export const AttendeeEdit: React.FC = () => {
   const { data: conferenceData } = Api.useConference();
   const { data: session, error: sessionError } = Api.useSession();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [errorAlert, setErrorAlert] = React.useState<JSX.Element | null>(null);
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);
 
@@ -53,7 +53,7 @@ export const AttendeeEdit: React.FC = () => {
       setErrorAlert(null);
 
       if (conferenceData) {
-        history.push(`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`);
+        navigate(`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`);
       } else {
         location.href = "/";
       }

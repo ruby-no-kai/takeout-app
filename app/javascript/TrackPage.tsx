@@ -2,7 +2,7 @@ import React from "react";
 
 import dayjs from "dayjs";
 import { lazy } from "@loadable/component";
-import { Redirect, useParams, useHistory } from "react-router-dom";
+import { Navigate, useParams, useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -24,9 +24,10 @@ export const TrackPage: React.FC = () => {
 };
 
 export const TrackPageInner: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const streamOptionState = Api.useTrackStreamOptions();
-  const { slug: trackSlug } = useParams<{ slug: string }>();
+  const { slug: trackSlug } = useParams();
+  if (!trackSlug) throw new Error("?"); // XXX:
 
   const { data: conferenceData, error: conferenceError, mutate: mutateConferenceData } = Api.useConference();
 
@@ -84,7 +85,7 @@ export const TrackPageInner: React.FC = () => {
   return (
     <Tabs isLazy index={trackIndex} onChange={onTabChange} variant="rk-tracks">
       {trackIndex === -1 ? (
-        <Redirect to={`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`} />
+        <Navigate replace to={`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`} />
       ) : null}
       <TabList>
         {tracks.map((t) => (

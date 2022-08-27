@@ -7,7 +7,7 @@ const ChatProviderEngine = loadable(() => import(/* webpackPrefetch: true */ "./
 
 const ChatProviderContext = React.createContext<ChatProviderContextData>({});
 
-export const ChatProvider: React.FC = ({ children }) => {
+export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [val, set] = React.useState<ChatProviderContextData>({});
 
   return (

@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Container, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
 
 import ControlApi from "./ControlApi";
@@ -9,7 +9,7 @@ import { ErrorAlert } from "./ErrorAlert";
 export interface Props {}
 
 export const ControlLogin: React.FC<Props> = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [errorAlert, setErrorAlert] = React.useState<JSX.Element | null>(null);
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);
   const { register, handleSubmit } = useForm<{
@@ -23,7 +23,7 @@ export const ControlLogin: React.FC<Props> = () => {
       await ControlApi.createControlSession(data.password);
       setErrorAlert(null);
 
-      history.push("/control");
+      navigate("/control");
     } catch (e) {
       setErrorAlert(
         <Box my={2}>

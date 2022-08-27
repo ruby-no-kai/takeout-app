@@ -22,7 +22,7 @@ export const ChatHistoryView: React.FC<Props> = ({ track, messages, pinnedMessag
   const [box, setBox] = React.useState<HTMLDivElement | null>(null);
   const boxRef = React.useRef<HTMLDivElement | null>(null);
   const boxCb = React.useCallback(
-    (el) => {
+    (el: HTMLDivElement) => {
       boxRef.current = el;
       setBox(el);
     },

@@ -189,7 +189,14 @@ export class ChatSession {
       });
 
       this.messagingSession.start();
-    } catch (e) {
+    } catch (err) {
+      let e =
+        err instanceof Error
+          ? err
+          : (() => {
+              console.error("got !(instanceof Error)", err);
+              return new Error(`Unknown Error: ${err}`);
+            })();
       this.updateStatus("CONNECT_ERROR", e);
     }
   }

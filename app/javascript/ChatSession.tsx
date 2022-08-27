@@ -17,14 +17,11 @@ import * as Sentry from "@sentry/react";
 
 import dayjs from "dayjs";
 
-import { ChimeSigV4Null } from "./polyfill/chimesigv4";
-import { ChimeV4MessagingSession } from "./polyfill/chimesession";
-
 import Message from "amazon-chime-sdk-js/build/message/Message";
 import ConsoleLogger from "amazon-chime-sdk-js/build/logger/ConsoleLogger";
 import LogLevel from "amazon-chime-sdk-js/build/logger/LogLevel";
 import MessagingSessionConfiguration from "amazon-chime-sdk-js/build/messagingsession/MessagingSessionConfiguration";
-import type { DefaultMessagingSession } from "amazon-chime-sdk-js";
+import { DefaultMessagingSession } from "amazon-chime-sdk-js";
 
 import { ChannelArn, GetChatSessionResponse, ChatMessage, ChatAdminControl, ChatSender, ChatSenderFlags } from "./Api";
 import { makeWeakCallback } from "./weakcallback";
@@ -180,12 +177,9 @@ export class ChatSession {
         sessionData.user_arn,
         null, // generate session id on SDK
         endpoint.Endpoint!.Url!,
-        null, //new Chime({ region: "us-east-1", credentials: new AWS.Credentials(this.buildAwsCredentials()) }),
-        null, //AWS,
+        this.chime,
       );
-      const sigv4 = new ChimeSigV4Null(this.buildAwsCredentials());
-      this.messagingSession = new ChimeV4MessagingSession(config, logger, undefined, undefined, sigv4);
-      //this.messagingSession = new DefaultMessagingSession(config, logger);
+      this.messagingSession = new DefaultMessagingSession(config, logger);
 
       this.messagingSession.addObserver({
         messagingSessionDidStart: this.onStart.bind(this),

@@ -3,6 +3,8 @@ import wasmBinaryPath from "amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.
 // @ts-ignore
 import wasmWorkerPath from "amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.js";
 
+import { COMMIT, CACHE_BUSTER } from "./meta";
+
 import videojs from "video.js";
 import { registerIVSTech, registerIVSQualityPlugin } from "amazon-ivs-player";
 
@@ -10,8 +12,8 @@ const createAbsolutePath = (assetPath: string) => new URL(assetPath, document.UR
 
 // register the tech with videojs
 registerIVSTech(videojs, {
-  wasmWorker: createAbsolutePath(wasmWorkerPath),
-  wasmBinary: createAbsolutePath(wasmBinaryPath),
+  wasmWorker: `${createAbsolutePath(wasmWorkerPath)}?v=${CACHE_BUSTER}`,
+  wasmBinary: `${createAbsolutePath(wasmBinaryPath)}?v=${CACHE_BUSTER}`,
 });
 
 // register the quality plugin

@@ -1,3 +1,4 @@
+// takeout-dev
 local ivs_arn = 'arn:aws:ivs:us-west-2:005216166247:channel/oTssPyKzhjoS';
 local ivs_url = 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/video/v1/us-west-2.005216166247.channel.oTssPyKzhjoS.m3u8';
 

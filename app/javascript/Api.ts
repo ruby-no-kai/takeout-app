@@ -156,8 +156,12 @@ function determineEarliestCandidateActivationAt(data: GetConferenceResponse) {
 export function consumeIvsMetadata(metadata: IvsMetadata) {
   mutate(
     API_CONFERENCE,
-    (known: GetConferenceResponse) => {
-      known = JSON.parse(JSON.stringify(known));
+    async (known2: GetConferenceResponse | undefined) => {
+      if (!known2) {
+        console.warn("consumeIvsMetadata, known undefined");
+        return known2;
+      }
+      let known: GetConferenceResponse = JSON.parse(JSON.stringify(known2));
       let updated = false;
       metadata.i?.forEach((item) => {
         console.log(item);
@@ -205,7 +209,7 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
       if (updated) known.requested_at = 0;
       return known;
     },
-    false,
+    { revalidate: false },
   );
 }
 
@@ -222,11 +226,15 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
     const spotlights = adminControl.spotlights;
     mutate(
       API_CONFERENCE,
-      (known: GetConferenceResponse) => {
-        known = JSON.parse(JSON.stringify(known));
+      async (known2: GetConferenceResponse | undefined) => {
+        if (!known2) {
+          console.warn("consumeChatAdminControl/2, known undefined");
+          return known2;
+        }
+        let known: GetConferenceResponse = JSON.parse(JSON.stringify(known2));
         spotlights.forEach((spotlight) => {
           const track = known.conference.tracks[spotlight.track];
-          if (!track) return;
+          if (!track) return null;
           const idx = track.spotlights.findIndex((v) => v.id === spotlight.id);
           if (idx !== -1) {
             track.spotlights[idx] = spotlight;
@@ -236,15 +244,19 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
         });
         return known;
       },
-      false,
+      { revalidate: false },
     );
   }
   if (adminControl.presences) {
     const presences = adminControl.presences;
     mutate(
       API_CONFERENCE,
-      (known2: GetConferenceResponse) => {
-        const known = JSON.parse(JSON.stringify(known2));
+      async (known2: GetConferenceResponse | undefined) => {
+        if (!known2) {
+          console.warn("consumeChatAdminControl/2, known undefined");
+          return known2;
+        }
+        const known: GetConferenceResponse = JSON.parse(JSON.stringify(known2));
         presences.forEach((presence) => {
           const track = known.conference.tracks[presence.track];
           if (track) {
@@ -257,7 +269,7 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
         });
         return known;
       },
-      false,
+      { revalidate: false },
     );
   }
 }
@@ -561,6 +573,7 @@ export const Api = {
 
   useConference() {
     // TODO: Error handling
+    console.log("useConference");
     const swr = useSWR<GetConferenceResponse, ApiError>(API_CONFERENCE, swrFetcher, {
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
@@ -575,7 +588,7 @@ export const Api = {
           throw e;
         }
         const res = dequal(newData, knownData);
-        return false; //res;
+        return res;
       },
     });
 
@@ -591,7 +604,6 @@ export const Api = {
           new Date(earliestCandidateActivationAt * 1000),
         ).toISOString()}, in ${timeout / 1000}s`,
       );
-
       const timer = setTimeout(() => activateCandidateTrackCard(data), timeout);
       return () => clearTimeout(timer);
     }, [data]);

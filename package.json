@@ -29,9 +29,9 @@
   "dependencies": {
     "@aws-sdk/client-chime": "^3.159.0",
     "@aws-sdk/types": "^3.159.0",
-    "@chakra-ui/icons": "^1.0.15",
-    "@chakra-ui/react": "^1.6.6",
-    "@chakra-ui/theme-tools": "^1.1.9",
+    "@chakra-ui/icons": "^2.0.9",
+    "@chakra-ui/react": "^2.2.9",
+    "@chakra-ui/theme-tools": "^2.0.10",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@loadable/component": "^5.15.2",

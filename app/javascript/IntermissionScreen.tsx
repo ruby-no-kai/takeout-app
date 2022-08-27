@@ -25,7 +25,7 @@ export const IntermissionScreen: React.FC = () => {
 
 export const IntermissionScreenInner: React.FC = () => {
   return (
-    <Flex h="100%" w="100%" justify="space-between" column="row">
+    <Flex h="100%" w="100%" justify="space-between" direction="row">
       <Box h="100%">
         <ScreenAnnounceView />
       </Box>

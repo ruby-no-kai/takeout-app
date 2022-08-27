@@ -35,7 +35,7 @@ export const Login: React.FC = () => {
           alignItems="top"
           mx="15px"
         >
-          <Box maxW="331px" w="100%" mb="15px" display="flex" direction="row" alignItems="center">
+          <Box maxW="331px" w="100%" mb="15px" display="flex" flexDirection="row" alignItems="center">
             <picture>
               <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
               <Image src="/assets/hero_hamburger.svg" w="100%" />

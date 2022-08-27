@@ -75,7 +75,7 @@ export const theme = extendTheme({
   components: {
     Tabs: {
       variants: {
-        "rk-tracks": (_props) => {
+        "rk-tracks": (_props: unknown) => {
           return {
             tablist: {
               borderBottom: "1px solid",

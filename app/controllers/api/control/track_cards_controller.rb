@@ -2,12 +2,27 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
   before_action :set_track_card, only: %i(update destroy)
 
   def index
-    render(json: {
-      track_cards: [
-        *TrackCard.where(track: params[:track_slug]).candidate.map(&:as_json),
+    if params[:until]
+      ts = begin
+        Time.at(Integer(params[:until], 10))
+      rescue ArgumentError
+        raise Api::Control::ApplicationController::Error::BadRequest
+      end
+
+      cards = TrackCard.where(track: params[:track_slug])
+        .where('activation_at <= ?', ts)
+        .limit(10)
+        .order(activation_at: :desc)
+        .map(&:as_json)
+    else
+      cards = [
         TrackCard.current_for(params[:track_slug])&.as_json,
-      ].compact,
-    }.to_json)
+        *TrackCard.where(track: params[:track_slug]).candidate.map(&:as_json),
+      ]
+    end
+    render(json: {
+      track_cards: cards.compact,
+    })
   end
 
   def create

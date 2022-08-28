@@ -104,6 +104,7 @@ export const ControlApi = {
     return resp.json();
   },
 
+  // returns current and candidate trackcards
   useTrackCards(slug: TrackSlug) {
     return useSWR<ControlGetTrackCardsResponse, ApiError>(
       `/api/control/tracks/${encodeURIComponent(slug)}/cards`,

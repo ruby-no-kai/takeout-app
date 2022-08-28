@@ -10,10 +10,11 @@ import { ControlApi } from "./ControlApi";
 
 const TrackCardView = loadable(() => import("./TrackCardView"));
 const ControlTrackCardForm = loadable(() => import("./ControlTrackCardForm"));
+const ControlTrackCardView = loadable(() => import("./ControlTrackCardView"));
 
 export type Props = {
   track: Track;
-}
+};
 
 export const ControlTrackCards: React.FC<Props> = ({ track }) => {
   //  const { data: controlConferenceData } = ControlApi.useConference();
@@ -21,7 +22,9 @@ export const ControlTrackCards: React.FC<Props> = ({ track }) => {
 
   return (
     <Box>
-      <Heading>{track.name}</Heading>
+      <Heading>
+        {track.name} ({track.slug})
+      </Heading>
       <ControlTrackCardForm track={track} />
       {cardsData?.track_cards.map((card) => (
         <TrackCardBox key={`${track.slug}-${card.at}`} card={card} />
@@ -33,10 +36,7 @@ export const ControlTrackCards: React.FC<Props> = ({ track }) => {
 export const TrackCardBox: React.FC<{ card: TrackCard }> = ({ card }) => {
   return (
     <Box mt={3}>
-      <Heading as="h6" size="xs">
-        {dayjs.unix(card.at).format()}
-      </Heading>
-      <TrackCardView card={card} />
+      <ControlTrackCardView card={card} />
     </Box>
   );
 };

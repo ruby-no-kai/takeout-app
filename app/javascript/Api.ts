@@ -316,7 +316,7 @@ export type Attendee = {
 export type Conference = {
   default_track: string;
   track_order: TrackSlug[];
-  tracks: { [key: string]: Track };
+  tracks: { [key: TrackSlug]: Track };
 };
 
 export type TrackSlug = string;
@@ -329,7 +329,7 @@ export type Track = {
   card: TrackCard | null;
   card_candidate: TrackCard | null;
   spotlights: ChatSpotlight[];
-  presences: { [key: string]: StreamPresence }; // key:kind
+  presences: { [key in TrackStreamKind]: StreamPresence }; // key:kind
   viewerCount?: ViewerCount;
 };
 
@@ -430,7 +430,7 @@ export type GetAppVersionResponse = {
   release: string;
 };
 
-export type ChatSessionTracksBag = { [key: string]: TrackChatInfo | null };
+export type ChatSessionTracksBag = { [key: TrackSlug]: TrackChatInfo | null };
 
 export type GetChatSessionResponse = {
   expiry: number;

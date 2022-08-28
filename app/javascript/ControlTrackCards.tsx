@@ -25,7 +25,7 @@ export const ControlTrackCards: React.FC<Props> = ({ track }) => {
       <Heading>
         {track.name} ({track.slug})
       </Heading>
-      <ControlTrackCardForm track={track} />
+      <ControlTrackCardForm trackSlug={track.slug} />
       {cardsData?.track_cards.map((card) => (
         <TrackCardBox key={`${track.slug}-${card.at}`} card={card} />
       ))}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import dayjs from "dayjs";
 import loadable from "@loadable/component";
 
@@ -31,9 +31,10 @@ import { ControlApi, ControlTrackCard } from "./ControlApi";
 
 import { Colors } from "./theme";
 import { SpeakerAvatar } from "./SpeakerAvatar";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, CopyIcon } from "@chakra-ui/icons";
 import { errorToToast } from "./ErrorAlert";
 
+const ControlTrackCardForm = loadable(() => import("./ControlTrackCardForm")); // XXX: cyclic?
 const TrackCardView = loadable(() => import("./TrackCardView"));
 
 export const ControlTrackCardView: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
@@ -45,7 +46,14 @@ export const ControlTrackCardView: React.FC<{ card: ControlTrackCard }> = ({ car
           {dayjs.unix(card.at).format()}
         </Heading>
 
-        {card.id >= 0 && !isActivated ? <CardRemoveAction card={card} /> : null}
+        <Box>
+          {card.id >= 0 ? (
+            <>
+              {card.id >= 0 && !isActivated ? <CardRemoveAction card={card} /> : null}
+              <CardCopyAction card={card} />
+            </>
+          ) : null}
+        </Box>
       </Flex>
 
       {card.upcoming_topics ? (
@@ -226,6 +234,35 @@ const CardRemoveAction: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
         </PopoverBody>
       </PopoverContent>
     </Popover>
+  );
+};
+
+const CardCopyAction: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
+  const [shouldRender, setShouldRender] = useState(false);
+  const disclosureProps = useDisclosure({ defaultIsOpen: true });
+  const onOpen = useCallback(() => {
+    if (shouldRender) {
+      disclosureProps.onOpen();
+    } else {
+      setShouldRender(true);
+    }
+  }, [shouldRender]);
+
+  return (
+    <>
+      <IconButton
+        background="transparent"
+        icon={<CopyIcon boxSize="14px" />}
+        minW="30px"
+        w="30px"
+        h="30px"
+        aria-label="Duplicate"
+        onClick={onOpen}
+      />
+      {shouldRender ? (
+        <ControlTrackCardForm initialValue={card} trackSlug={card.track} disclosureProps={disclosureProps} />
+      ) : null}
+    </>
   );
 };
 

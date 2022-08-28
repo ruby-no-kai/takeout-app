@@ -20,10 +20,11 @@ import {
   Tooltip,
   useToast,
   Select,
+  UseDisclosureReturn,
 } from "@chakra-ui/react";
 
-import { Api, Track, TrackCard, TrackCardContent, TrackSlug } from "./Api";
-import { ControlApi, ConferencePresentationSlug, ControlGetConferenceResponse } from "./ControlApi";
+import { Api, TrackCard, TrackCardContent, TrackSlug } from "./Api";
+import { ControlApi, ControlTrackCard, ConferencePresentationSlug, ControlGetConferenceResponse } from "./ControlApi";
 import { ErrorAlert, errorToToast } from "./ErrorAlert";
 
 import {
@@ -78,26 +79,31 @@ function generateTrackCard(data: FormData): CardDraft {
       : dayjs()
           .add(data.relativeTimeInSeconds * 1000)
           .unix();
-  const card: TrackCard = {
+  const card: ControlTrackCard = {
+    ...json.json,
+    id: -1,
     track: data.track,
     ut: 0,
     at: activationAt,
-    ...json.json,
   };
   return { card };
 }
 
-export const ControlTrackCardForm: React.FC<{ track: Track }> = ({ track }) => {
+export const ControlTrackCardForm: React.FC<{
+  trackSlug: TrackSlug;
+  initialValue?: TrackCardContent;
+  disclosureProps?: UseDisclosureReturn;
+}> = ({ trackSlug, initialValue, disclosureProps }) => {
   const formID = useId();
   const toast = useToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = disclosureProps ?? useDisclosure();
   const [isDraftGood, setIsDraftGood] = useState<boolean | null>();
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);
   const { data: conferenceData } = Api.useConference();
   const { register, handleSubmit, reset, watch, setValue } = useForm<FormData>({
     defaultValues: {
-      json: "",
-      track: track.slug,
+      json: initialValue ? JSON.stringify(initialValue, null, 2) : "",
+      track: trackSlug,
       timeMode: "absolute",
       absoluteTime: dayjs().format("YYYY-MM-DDTHH:mm:ss"),
       relativeTimeInSeconds: 0,
@@ -125,10 +131,9 @@ export const ControlTrackCardForm: React.FC<{ track: Track }> = ({ track }) => {
   };
   const timeMode = watch("timeMode");
   const cardDraft = generateTrackCard(watch());
-
   return (
     <>
-      <Button onClick={onOpen}>Compose</Button>
+      {disclosureProps ? null : <Button onClick={onOpen}>Compose</Button>}
 
       <Modal size="5xl" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
         <ModalOverlay />
@@ -169,9 +174,9 @@ export const ControlTrackCardForm: React.FC<{ track: Track }> = ({ track }) => {
                               </option>
                             );
                           })
-                        ) : track.slug[0] !== "_" ? (
-                          <option key={track.slug} value={track.slug}>
-                            {track.name} ({track.slug})
+                        ) : trackSlug[0] !== "_" ? (
+                          <option key={trackSlug} value={trackSlug}>
+                            {trackSlug}
                           </option>
                         ) : null}
                         <option value="_screen">Screen (_screen)</option>

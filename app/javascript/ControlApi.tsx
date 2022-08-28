@@ -45,8 +45,10 @@ export type ControlGetConferenceResponse = {
   speakers: { [key: string]: ConferenceSpeaker };
 };
 
+export type ControlTrackCard = TrackCard & { id: number };
+
 export type ControlGetTrackCardsResponse = {
-  track_cards: TrackCard[];
+  track_cards: ControlTrackCard[];
 };
 
 export type ControlListAttendeesResponse = {
@@ -118,6 +120,13 @@ export const ControlApi = {
       track_card: card,
     });
     mutate(url);
+    return resp.json();
+  },
+
+  async deleteTrackCard(card: ControlTrackCard) {
+    const url = `/api/control/tracks/${encodeURIComponent(card.track)}/cards/${encodeURIComponent(card.id)}`;
+    const resp = await request(url, "DELETE", null, {});
+    mutate(`/api/control/tracks/${encodeURIComponent(card.track)}/cards`);
     return resp.json();
   },
 

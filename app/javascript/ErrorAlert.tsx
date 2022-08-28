@@ -3,7 +3,7 @@ import { Alert, AlertIcon, AlertTitle, AlertDescription, UseToastOptions } from 
 
 export type Props = {
   error: Error | unknown;
-}
+};
 
 export const ErrorAlert: React.FC<Props> = ({ error }) => {
   let e =
@@ -38,5 +38,6 @@ export function errorToToast(error: Error | unknown): UseToastOptions {
     description: e.message,
     duration: 30000,
     isClosable: true,
+    position: "top",
   };
 }

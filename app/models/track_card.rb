@@ -27,12 +27,12 @@ class TrackCard < ApplicationRecord
     EmitIvsMetadataJob.perform_later if emit
   end
 
-  def as_json
+  def as_json(control: false)
     content.merge(
       at: self.activation_at.to_i,
       track: track,
       ut: self.updated_at.to_i,
-    )
+    ).merge(control ? {id: id} : {})
   end
 
   def candidate?(t = Time.zone.now)
@@ -60,9 +60,16 @@ class TrackCard < ApplicationRecord
 
     validate_topic if content['topic']
     validate_speakers if content['speakers']
+
+    validate_screen if content['screen']
+    validate_upcoming_topics if content['upcoming_topics']
   end
 
   private def validate_topic
+    unless content['topic'].kind_of?(Hash)
+      errors.add :content, '.topic should be a object (Hash)'
+      return
+    end
     unless content['topic']['labels'].kind_of?(Array)
       errors.add :content, '.topic.labels should be a string[]'
     end
@@ -74,6 +81,7 @@ class TrackCard < ApplicationRecord
   private def validate_speakers
     unless content['speakers'].kind_of?(Array)
       errors.add :content, '.speakers should be a Speaker[]'
+      return
     end
     content['speakers'].each do |s|
       unless s.kind_of?(Hash)
@@ -82,6 +90,65 @@ class TrackCard < ApplicationRecord
       end
 
       errors.add :content, '.speakers[].name should be present' unless s['name'].kind_of?(String)
+    end
+  end
+
+  private def validate_screen
+    if content['screen']['heading'] && !content['screen']['heading'].is_a?(String)
+      errors.add :content, '.screen.heading should be a string or null'
+    end
+    if content['screen']['next_schedule'] 
+      unless content['screen']['next_schedule'].is_a?(Hash)
+        errors.add :content, '.screen.next_schedule should be a ScreenNextSchedule or null'
+        return
+      end
+      unless content['screen']['next_schedule']['at'].is_a?(Integer)
+        errors.add :content, '.screen.next_schedule.at should be a number'
+      end
+      unless content['screen']['next_schedule']['title'].is_a?(String)
+        errors.add :content, '.screen.next_schedule.title should be a string'
+      end
+    end
+    if content['screen']['footer'] && !content['screen']['footer'].is_a?(String)
+      errors.add :content, '.screen.footer should be a string or null'
+    end
+  end
+
+  private def validate_upcoming_topics
+    unless content['upcoming_topics'].kind_of?(Array)
+      errors.add :content, '.upcoming_topics should be a UpcomingTopic[]'
+      return
+    end
+    content['upcoming_topics'].each do |ut|
+      unless ut.kind_of?(Hash)
+        errors.add :content, '.upcoming_topics[] should be a UpcomingTopic object'
+        next
+      end
+      errors.add :content, '.upcoming_topics[].at should be a number' unless ut['at'].is_a?(Integer)
+
+      unless ut['speakers'].kind_of?(Array)
+        errors.add :content, '.upcoming_topics[].speakers should be a Speaker[]'
+        next
+      end
+      ut['speakers'].each do |s|
+        unless s.kind_of?(Hash)
+          errors.add :content, '.upcoming_topics[].speakers should be a Speaker[]'
+          next
+        end
+        errors.add :content, '.upcoming_topics[].speakers[].name should be present' unless s['name'].kind_of?(String)
+      end
+      unless ut['topic'].kind_of?(Hash)
+        errors.add :content, '.upcoming_topics[].topic should be a Topic'
+        next
+      end
+      unless ut['topic']['labels'].kind_of?(Array)
+        errors.add :content, '.upcoming_topics[].topic.labels should be a string[]'
+        next
+      end
+      unless ut['topic']['labels'].all? { |_| _.kind_of?(String) }
+        errors.add :content, '.upcoming_topics[].topic.labels should be a string[]'
+        next
+      end
     end
   end
 

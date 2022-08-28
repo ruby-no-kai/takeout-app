@@ -23,7 +23,7 @@ const ControlTrackCardForm = loadable(() => import("./ControlTrackCardForm"));
 
 export type Props = {
   track: Track;
-}
+};
 
 export const ControlStreamPresence: React.FC<Props> = ({ track }) => {
   //  const { data: controlConferenceData } = ControlApi.useConference();
@@ -114,7 +114,8 @@ export const StreamPresenceBox: React.FC<{
             <Button
               minWidth="120px"
               colorScheme={{ notready: "gray", golive: "teal", shutdown: "red" }[buttonAction]}
-              isDisabled={isRequesting || buttonAction === "notready"}
+              isLoading={isRequesting}
+              isDisabled={buttonAction === "notready"}
               onClick={onPresenceUpdateButton}
             >
               {{ notready: "Go Live", golive: "Go Live", shutdown: "End Stream" }[buttonAction]}

@@ -14,9 +14,13 @@ export const ControlTrackCardsPage: React.FC = () => {
     <Box mx="50px">
       <Flex direction="row">
         {data.conference.track_order.map((slug) => (
-          <ControlTrackCards key={slug} track={data.conference.tracks[slug]!} />
+          <Box flex={1} key={slug}>
+            <ControlTrackCards track={data.conference.tracks[slug]!} />
+          </Box>
         ))}
-        <ControlTrackCards key="_screen" track={data.conference.tracks["_screen"]!} />
+        <Box flex={1} key="_screen">
+          <ControlTrackCards track={data.conference.tracks["_screen"]!} />
+        </Box>
       </Flex>
     </Box>
   );

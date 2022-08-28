@@ -13,20 +13,24 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
         .where('activation_at <= ?', ts)
         .limit(10)
         .order(activation_at: :desc)
-        .map(&:as_json)
     else
       cards = [
-        TrackCard.current_for(params[:track_slug])&.as_json,
-        *TrackCard.where(track: params[:track_slug]).candidate.map(&:as_json),
+        TrackCard.current_for(params[:track_slug]),
+        *TrackCard.where(track: params[:track_slug]).candidate.to_a,
       ]
     end
     render(json: {
-      track_cards: cards.compact,
+      track_cards: cards.compact.map { |_| _.as_json(control: true) },
     })
   end
 
   def create
-    TrackCard.create!(track_card_params)
+    track_card = TrackCard.new(track_card_params)
+
+    now = Time.now 
+    track_card.activation_at = now if track_card.activation_at < now
+
+    track_card.save!
     EmitIvsMetadataJob.perform_now
     render(json: {ok: true}.to_json)
   end

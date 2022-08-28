@@ -6,7 +6,7 @@ import { Flex, Box } from "@chakra-ui/react";
 import { Heading } from "@chakra-ui/react";
 
 import { Api, Track, TrackCard } from "./Api";
-import { ControlApi } from "./ControlApi";
+import { ControlApi, ControlTrackCard } from "./ControlApi";
 
 const TrackCardView = loadable(() => import("./TrackCardView"));
 const ControlTrackCardForm = loadable(() => import("./ControlTrackCardForm"));
@@ -25,7 +25,7 @@ export const ControlTrackCards: React.FC<Props> = ({ track }) => {
       <Heading>
         {track.name} ({track.slug})
       </Heading>
-      <ControlTrackCardForm track={track} />
+      <ControlTrackCardForm trackSlug={track.slug} />
       {cardsData?.track_cards.map((card) => (
         <TrackCardBox key={`${track.slug}-${card.at}`} card={card} />
       ))}
@@ -33,7 +33,7 @@ export const ControlTrackCards: React.FC<Props> = ({ track }) => {
   );
 };
 
-export const TrackCardBox: React.FC<{ card: TrackCard }> = ({ card }) => {
+export const TrackCardBox: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
   return (
     <Box mt={3}>
       <ControlTrackCardView card={card} />

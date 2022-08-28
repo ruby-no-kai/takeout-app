@@ -7,24 +7,24 @@ export type ConferenceSpeakerSlug = string;
 export type ConferencePresentationKind = "keynote" | "presentation";
 export type ConferencePresentationLanguage = "EN" | "JA" | "EN & JA";
 
-export interface ConferencePresentation {
+export type ConferencePresentation = {
   slug: ConferencePresentationSlug;
   title: string;
   kind: ConferencePresentationKind;
   language: ConferencePresentationLanguage;
   description: string;
   speaker_slugs: ConferenceSpeakerSlug[];
-}
+};
 
-export interface ConferenceSpeaker {
+export type ConferenceSpeaker = {
   slug: ConferenceSpeakerSlug;
   name: string;
   github_id: string | null;
   twitter_id: string | null;
   avatar_url: string;
-}
+};
 
-export interface Ticket {
+export type Ticket = {
   id: number;
   tito_id: number;
   slug: string;
@@ -36,40 +36,40 @@ export interface Ticket {
   release_title: string;
   admin_url: string;
   tito_updated_at: number;
-}
+};
 
-export interface ChimeUser {}
+export type ChimeUser = {};
 
-export interface ControlGetConferenceResponse {
+export type ControlGetConferenceResponse = {
   presentations: { [key: string]: ConferencePresentation };
   speakers: { [key: string]: ConferenceSpeaker };
-}
+};
 
-export interface ControlGetTrackCardsResponse {
+export type ControlGetTrackCardsResponse = {
   track_cards: TrackCard[];
-}
+};
 
-export interface ControlListAttendeesResponse {
+export type ControlListAttendeesResponse = {
   items: ControlListAttendeeItem[];
-}
+};
 
-export interface ControlListAttendeeItem {
+export type ControlListAttendeeItem = {
   ticket: Ticket;
   attendee: Attendee;
   chime_user: ChimeUser | null;
-}
+};
 export type ControlGetAttendeeResponse = ControlListAttendeeItem;
 
-export interface ControlUpdateAttendeeRequest {
+export type ControlUpdateAttendeeRequest = {
   attendee: ControlUpdateAttendeeRequestAttendee;
-}
-export interface ControlUpdateAttendeeRequestAttendee {
+};
+export type ControlUpdateAttendeeRequestAttendee = {
   name: string;
   is_staff: boolean;
   is_speaker: boolean;
   is_committer: boolean;
   presentation_slugs: string[];
-}
+};
 
 // https://docs.aws.amazon.com/ivs/latest/APIReference/API_Stream.html
 export type ControlIvsStream = {

@@ -21,7 +21,7 @@ import { ErrorAlert, errorToToast } from "./ErrorAlert";
 const TrackCardView = loadable(() => import("./TrackCardView"));
 const ControlTrackCardForm = loadable(() => import("./ControlTrackCardForm"));
 
-export interface Props {
+export type Props = {
   track: Track;
 }
 

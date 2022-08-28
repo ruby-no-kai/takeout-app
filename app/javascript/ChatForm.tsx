@@ -15,7 +15,7 @@ import { useChat } from "./ChatProvider";
 
 import { ErrorAlert } from "./ErrorAlert";
 
-export interface Props {
+export type Props = {
   track: Track;
   channel: ChannelArn | null;
 }

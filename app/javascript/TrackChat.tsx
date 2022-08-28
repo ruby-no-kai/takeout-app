@@ -13,7 +13,7 @@ import { ChatStatusView } from "./ChatStatusView";
 import { ChatHistoryView } from "./ChatHistoryView";
 import { ChatForm } from "./ChatForm";
 
-export interface Props {
+export type Props = {
   track: Track;
 }
 

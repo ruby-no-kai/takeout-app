@@ -300,7 +300,7 @@ export async function swrFetcher(url: string) {
   return (await request(url, "GET", null, null)).json();
 }
 
-export interface Attendee {
+export type Attendee = {
   id: number;
   name: string;
   avatar_url: string;
@@ -311,17 +311,17 @@ export interface Attendee {
 
   is_sponsor?: boolean;
   presentation_slugs?: string[];
-}
+};
 
-export interface Conference {
+export type Conference = {
   default_track: string;
   track_order: TrackSlug[];
   tracks: { [key: string]: Track };
-}
+};
 
 export type TrackSlug = string;
 
-export interface Track {
+export type Track = {
   slug: TrackSlug;
   name: string;
   interpretation: boolean;
@@ -331,108 +331,108 @@ export interface Track {
   spotlights: ChatSpotlight[];
   presences: { [key: string]: StreamPresence }; // key:kind
   viewerCount?: ViewerCount;
-}
+};
 
 export interface TrackCard extends TrackCardHeader, TrackCardContent {}
 
-export interface TrackCardHeader {
+export type TrackCardHeader = {
   track: TrackSlug;
   at: number;
   ut: number;
-}
-export interface TrackCardContent {
+};
+export type TrackCardContent = {
   interpretation?: boolean;
   topic?: Topic | null;
   speakers?: Speaker[] | null;
 
   screen?: ScreenControl;
   upcoming_topics?: UpcomingTopic[];
-}
+};
 
-export interface Topic {
+export type Topic = {
   title: string | null;
   author: string | null;
   description: string | null;
   labels: string[];
-}
+};
 
-export interface Speaker {
+export type Speaker = {
   name: string;
   github_id: string | null;
   twitter_id: string | null;
   avatar_url: string;
-}
+};
 
-export interface ScreenControl {
+export type ScreenControl = {
   filler?: boolean;
   heading?: string;
   next_schedule?: ScreenNextSchedule;
   footer?: string;
-}
+};
 
-export interface ScreenNextSchedule {
+export type ScreenNextSchedule = {
   at: number;
   title: string;
   absolute_only?: boolean;
-}
+};
 
-export interface UpcomingTopic {
+export type UpcomingTopic = {
   track: TrackSlug;
   at: number;
   topic?: Topic | null;
   speakers: Speaker[] | null;
-}
+};
 
-export interface ChatSpotlight {
+export type ChatSpotlight = {
   id: number;
   track: TrackSlug;
   starts_at: number;
   ends_at: number;
   handles: ChatHandle[];
   updated_at: number;
-}
+};
 
-export interface TrackStreamOptions {
+export type TrackStreamOptions = {
   interpretation: boolean;
   caption: boolean;
   chat: boolean;
-}
+};
 
 export type TrackStreamOptionsState = [TrackStreamOptions, (x: TrackStreamOptions) => void];
 
-export interface StreamInfo {
+export type StreamInfo = {
   slug: TrackSlug;
   type: string;
   url: string;
   expiry: number;
-}
+};
 
 export type ChannelArn = string;
 
-export interface TrackChatInfo {
+export type TrackChatInfo = {
   channel_arn: ChannelArn;
   caption_channel_arn?: ChannelArn;
-}
+};
 
-export interface AwsCredentials {
+export type AwsCredentials = {
   access_key_id: string;
   secret_access_key: string;
   session_token: string;
-}
+};
 
-export interface GetSessionResponse {
+export type GetSessionResponse = {
   attendee: Attendee | null;
   control: boolean;
-}
+};
 
-export interface GetAppVersionResponse {
+export type GetAppVersionResponse = {
   commit: string;
   release: string;
-}
+};
 
 export type ChatSessionTracksBag = { [key: string]: TrackChatInfo | null };
 
-export interface GetChatSessionResponse {
+export type GetChatSessionResponse = {
   expiry: number;
   grace: number;
   app_arn: string;
@@ -440,32 +440,32 @@ export interface GetChatSessionResponse {
   app_user_arn: string;
   aws_credentials: AwsCredentials;
   tracks: ChatSessionTracksBag;
-}
+};
 
-export interface GetConferenceResponse {
+export type GetConferenceResponse = {
   requested_at: number;
   stale_after: number;
   conference: Conference;
-}
+};
 
-export interface CreateSessionResponse {
+export type CreateSessionResponse = {
   attendee: Attendee;
-}
+};
 
-export interface UpdateAttendeeResponse {
+export type UpdateAttendeeResponse = {
   attendee: Attendee;
-}
+};
 
-export interface GetStreamResponse {
+export type GetStreamResponse = {
   stream?: StreamInfo;
-}
+};
 
-export interface GetChatMessagePinResponse {
+export type GetChatMessagePinResponse = {
   track: TrackSlug;
   pin: ChatMessagePin | null;
-}
+};
 
-export interface ChatMessage {
+export type ChatMessage = {
   channel: ChannelArn;
   content: string | null;
   sender: ChatSender;
@@ -474,31 +474,31 @@ export interface ChatMessage {
   redacted: boolean;
 
   adminControl: ChatAdminControl | null;
-}
+};
 
-export interface ChatAdminControl {
+export type ChatAdminControl = {
   flush?: boolean;
   pin?: ChatMessagePin;
   caption?: ChatCaption;
   spotlights?: ChatSpotlight[];
   presences?: StreamPresence[];
   promo?: boolean;
-}
+};
 
-export interface ChatCaption {
+export type ChatCaption = {
   result_id: string;
   is_partial: boolean;
   transcript: string;
-}
+};
 
 // XXX: Determined and given at ChatSession
-export interface ChatSenderFlags {
+export type ChatSenderFlags = {
   isAdmin?: boolean;
   isAnonymous?: boolean;
   isStaff?: boolean;
   isSpeaker?: boolean;
   isCommitter?: boolean;
-}
+};
 
 export type ChatHandle = string;
 
@@ -508,54 +508,54 @@ export interface ChatSender extends ChatSenderFlags {
   version: string;
 }
 
-export interface ChatMessagePin {
+export type ChatMessagePin = {
   at: number;
   track: TrackSlug;
   message: ChatMessage | null;
-}
+};
 
-export interface IvsMetadata {
+export type IvsMetadata = {
   i: IvsMetadataItem[];
-}
-export interface IvsMetadataItem {
+};
+export type IvsMetadataItem = {
   c?: IvsCardUpdate;
   p?: StreamPresence;
   n?: ViewerCount;
-}
+};
 
-export interface IvsCardUpdate {
+export type IvsCardUpdate = {
   candidate?: boolean;
   clear?: TrackSlug;
   card: TrackCard | null;
-}
+};
 
 export type TrackStreamKind = "main" | "interpretation";
 
-export interface StreamPresence {
+export type StreamPresence = {
   track: TrackSlug;
   kind: TrackStreamKind;
   online: boolean;
   at: number;
-}
+};
 
-export interface ViewerCount {
+export type ViewerCount = {
   track: TrackSlug;
   count: number;
   expiry: number;
-}
+};
 
-export interface GetConferenceSponsorshipsResponse {
+export type GetConferenceSponsorshipsResponse = {
   conference_sponsorships: ConferenceSponsorship[];
-}
+};
 
-export interface ConferenceSponsorship {
+export type ConferenceSponsorship = {
   id: number;
   sponsor_app_id: string;
   avatar_url: string;
   name: string;
   large_display: boolean;
   promo: string | null;
-}
+};
 
 export const Api = {
   useSession() {

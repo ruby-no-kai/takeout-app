@@ -10,7 +10,7 @@ import { ChatStatus } from "./ChatSession";
 
 import { ErrorAlert } from "./ErrorAlert";
 
-export interface Props {
+export type Props = {
   status: ChatStatus | undefined;
   loading: boolean;
   error: Error | null | undefined;

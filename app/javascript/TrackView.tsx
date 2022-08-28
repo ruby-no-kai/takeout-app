@@ -16,7 +16,7 @@ const TrackViewerCount = loadable(() => import(/* webpackPrefetch: true */ "./Tr
 
 const AppVersionAlert = loadable(() => import("./AppVersionAlert"));
 
-export interface Props {
+export type Props = {
   track: Track;
   streamOptionsState: TrackStreamOptionsState;
 }

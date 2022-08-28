@@ -12,7 +12,7 @@ import { TwitterIcon } from "./TwitterIcon";
 
 import { SpeakerAvatar } from "./SpeakerAvatar";
 
-export interface Props {
+export type Props = {
   card: TrackCard | null;
   topicNav: JSX.Element | undefined;
 }

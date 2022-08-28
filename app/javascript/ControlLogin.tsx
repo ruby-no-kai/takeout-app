@@ -6,7 +6,7 @@ import { Box, Container, Button, FormControl, FormLabel, Input } from "@chakra-u
 import ControlApi from "./ControlApi";
 import { ErrorAlert } from "./ErrorAlert";
 
-export interface Props {}
+export type Props = {}
 
 export const ControlLogin: React.FC<Props> = () => {
   const navigate = useNavigate();

@@ -44,7 +44,7 @@ export type ChatUpdateKind =
   | "CREATE_CHANNEL_MEMBERSHIP"
   | "DELETE_CHANNEL_MEMBERSHIP";
 
-export interface ChatUpdate {
+export type ChatUpdate = {
   kind: ChatUpdateKind;
   message?: ChatMessage;
   member?: Identity;

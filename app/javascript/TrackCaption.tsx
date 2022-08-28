@@ -9,7 +9,7 @@ import { Api, ChatCaption } from "./Api";
 import { useChat } from "./ChatProvider";
 import type { ChatStatus, ChatUpdate } from "./ChatSession";
 
-export interface Props {
+export type Props = {
   track: Track;
   onUnsubscribe: () => void;
 }

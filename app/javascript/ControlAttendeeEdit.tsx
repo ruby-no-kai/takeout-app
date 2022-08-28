@@ -7,7 +7,7 @@ import { Link, Text } from "@chakra-ui/react";
 import { ControlApi, ControlUpdateAttendeeRequestAttendee } from "./ControlApi";
 import { ErrorAlert } from "./ErrorAlert";
 
-export interface Props {}
+export type Props = {}
 
 export const ControlAttendeeEdit: React.FC<Props> = () => {
   const match = useMatch("/control/attendees/:id");

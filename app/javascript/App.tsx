@@ -20,7 +20,7 @@ const ControlStreamPresencesPage = loadable(() => import("./ControlStreamPresenc
 
 const IntermissionScreen = loadable(() => import("./IntermissionScreen"));
 
-export interface Props {}
+export type Props = {}
 
 const WithNavbar: React.FC = () => {
   return (

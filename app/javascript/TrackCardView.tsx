@@ -7,7 +7,7 @@ import { TrackCard } from "./Api";
 
 const TrackTopic = loadable(() => import("./TrackTopic"));
 
-export interface Props {
+export type Props = {
   card: TrackCard | null;
   nav?: JSX.Element;
 }

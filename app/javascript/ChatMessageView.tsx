@@ -20,7 +20,7 @@ import { CampaignIcon } from "./CampaignIcon";
 import { LunchDiningIcon } from "./LunchDiningIcon";
 import { CommitterIcon } from "./CommitterIcon";
 
-export interface Props {
+export type Props = {
   track: Track;
   message: ChatMessage;
   pinned: boolean;

@@ -1,7 +1,7 @@
 import type { ChatSessionTracksBag } from "./Api";
 import type { ChatSession } from "./ChatSession";
 
-export interface ChatProviderContextData {
+export type ChatProviderContextData = {
   session?: ChatSession;
   tracks?: ChatSessionTracksBag;
   error?: Error;

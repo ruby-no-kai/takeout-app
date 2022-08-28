@@ -7,7 +7,7 @@ import { TranslateIcon } from "./TranslateIcon";
 
 import { Track, TrackStreamOptionsState } from "./Api";
 
-export interface Props {
+export type Props = {
   track: Track;
   streamOptionsState: TrackStreamOptionsState;
   instance: string;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, AlertIcon, AlertTitle, AlertDescription, UseToastOptions } from "@chakra-ui/react";
 
-export interface Props {
+export type Props = {
   error: Error | unknown;
 }
 

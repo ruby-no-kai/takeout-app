@@ -10,7 +10,7 @@ import { AspectRatio, Box, Center, VStack, Skeleton, Image, Heading } from "@cha
 import { Api, IvsMetadata, Track, TrackStreamOptions, consumeIvsMetadata } from "./Api";
 import { Colors } from "./theme";
 
-export interface Props {
+export type Props = {
   track: Track;
   streamOptions: TrackStreamOptions;
 }
@@ -67,13 +67,13 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
   }
 };
 
-export interface StreamViewProps {
+export type StreamViewProps = {
   playbackUrl: string;
   shouldStartPlayback: boolean;
   onPlayOrStop: (playing: boolean) => void;
 }
 
-export interface StreamPlaybackSession {
+export type StreamPlaybackSession = {
   url: string;
   player: videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
   root: HTMLDivElement;

@@ -6,7 +6,7 @@ import type { Track, ChatMessage } from "./Api";
 
 import { ChatMessageView } from "./ChatMessageView";
 
-export interface Props {
+export type Props = {
   track: Track;
   messages: ChatMessage[];
   pinnedMessage: ChatMessage | null;

@@ -5,7 +5,7 @@ import { AspectRatio, Image, Box } from "@chakra-ui/react";
 import type { Speaker } from "./Api";
 import { DEFAULT_AVATAR_URL } from "./meta";
 
-export interface Props {
+export type Props = {
   speakers: Speaker[];
 }
 

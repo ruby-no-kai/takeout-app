@@ -11,7 +11,7 @@ import { ControlApi } from "./ControlApi";
 const TrackCardView = loadable(() => import("./TrackCardView"));
 const ControlTrackCardForm = loadable(() => import("./ControlTrackCardForm"));
 
-export interface Props {
+export type Props = {
   track: Track;
 }
 

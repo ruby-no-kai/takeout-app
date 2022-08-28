@@ -16,6 +16,7 @@ const ControlLogin = loadable(() => import("./ControlLogin"));
 const ControlTrackCardsPage = loadable(() => import("./ControlTrackCardsPage"));
 const ControlAttendeesPage = loadable(() => import("./ControlAttendeesPage"));
 const ControlAttendeeEdit = loadable(() => import("./ControlAttendeeEdit"));
+const ControlStreamPresencesPage = loadable(() => import("./ControlStreamPresencesPage"));
 
 const IntermissionScreen = loadable(() => import("./IntermissionScreen"));
 
@@ -53,6 +54,7 @@ export const App: React.FC<Props> = (_props) => {
               <Route path="attendees/:id" element={<ControlAttendeeEdit />} />
 
               <Route path="track_cards" element={<ControlTrackCardsPage />} />
+              <Route path="stream_presences" element={<ControlStreamPresencesPage />} />
 
               <Route path="session/new" element={<ControlLogin />} />
             </Route>

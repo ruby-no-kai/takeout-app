@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
+import { Alert, AlertIcon, AlertTitle, AlertDescription, UseToastOptions } from "@chakra-ui/react";
 
 export interface Props {
   error: Error | unknown;
@@ -23,3 +23,20 @@ export const ErrorAlert: React.FC<Props> = ({ error }) => {
     </>
   );
 };
+
+export function errorToToast(error: Error | unknown): UseToastOptions {
+  let e =
+    error instanceof Error
+      ? error
+      : (() => {
+          console.error("ErrorAlert: got !(instanceof Error)", error);
+          return new Error(`Unknown Error: ${error}`);
+        })();
+  return {
+    status: "error",
+    title: `Error (${e.name})`,
+    description: e.message,
+    duration: 30000,
+    isClosable: true,
+  };
+}

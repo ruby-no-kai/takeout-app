@@ -1,4 +1,4 @@
-import { request, swrFetcher, ApiError, TrackSlug, TrackCard, Attendee } from "./Api";
+import { request, swrFetcher, ApiError, TrackSlug, TrackCard, Attendee, StreamPresence, TrackStreamKind } from "./Api";
 import useSWR from "swr";
 import { mutate } from "swr";
 
@@ -71,6 +71,24 @@ export interface ControlUpdateAttendeeRequestAttendee {
   presentation_slugs: string[];
 }
 
+// https://docs.aws.amazon.com/ivs/latest/APIReference/API_Stream.html
+export type ControlIvsStream = {
+  channel_arn: string;
+  health: "HEALTHY" | "STARVING" | "UNKNOWN";
+  playback_url: string;
+  start_time: string;
+  state: "LIVE" | "OFFLINE";
+  stream_id: string;
+  viewer_count: number;
+};
+export type ControlGetTrackStreamPresencesResponse = {
+  at: number;
+  // value is null when a ivs channel for a kind is not configured.
+  stream_presences: { [key in TrackStreamKind]: StreamPresence | null };
+  // value is null when a IVS GetChannel API responded ChannelNotBroadcasting error.
+  stream_statuses: { [key in TrackStreamKind]: ControlIvsStream | null };
+};
+
 export const ControlApi = {
   useConference() {
     return useSWR<ControlGetConferenceResponse, ApiError>("/api/control/conference", swrFetcher, {
@@ -124,6 +142,24 @@ export const ControlApi = {
     const url = `/api/control/attendees/${id}`;
     const resp = await request(url, "PUT", null, { attendee: params });
     mutate(`/api/control/attendees/${id}`);
+    return resp.json();
+  },
+
+  useTrackStreamPresence(slug: TrackSlug) {
+    return useSWR<ControlGetTrackStreamPresencesResponse, ApiError>(
+      `/api/control/tracks/${encodeURIComponent(slug)}/stream_presence`,
+      swrFetcher,
+      {
+        refreshInterval: 30000,
+        focusThrottleInterval: 30000,
+      },
+    );
+  },
+
+  async updateTrackStreamPresence(slug: TrackSlug, kind: TrackStreamKind, online: boolean) {
+    const url = `/api/control/tracks/${encodeURIComponent(slug)}/stream_presence?kind=${encodeURIComponent(kind)}`;
+    const resp = await request(url, "PUT", null, { online });
+    mutate(`/api/control/tracks/${encodeURIComponent(slug)}/stream_presence`);
     return resp.json();
   },
 };

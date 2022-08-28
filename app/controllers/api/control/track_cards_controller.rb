@@ -25,7 +25,12 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
   end
 
   def create
-    TrackCard.create!(track_card_params)
+    track_card = TrackCard.new(track_card_params)
+
+    now = Time.now 
+    track_card.activation_at = now if track_card.activation_at < now
+
+    track_card.save!
     EmitIvsMetadataJob.perform_now
     render(json: {ok: true}.to_json)
   end

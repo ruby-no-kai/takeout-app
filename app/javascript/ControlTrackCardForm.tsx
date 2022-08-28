@@ -1,82 +1,342 @@
-import React from "react";
+import React, { useEffect, useId, useState } from "react";
 import dayjs from "dayjs";
 import { useForm } from "react-hook-form";
 // import { useHistory } from "react-router-dom";
-import { Box, Container, Button, Link, FormControl, FormLabel, FormHelperText, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  useDisclosure,
+  HStack,
+  Flex,
+  Textarea,
+  VStack,
+  InputGroup,
+  InputLeftElement,
+  Center,
+  Text,
+  Tooltip,
+  useToast,
+  Select,
+} from "@chakra-ui/react";
 
-import { Api, Track, TrackCard, TrackCardContent } from "./Api";
+import { Api, Track, TrackCard, TrackCardContent, TrackSlug } from "./Api";
 import { ControlApi, ConferencePresentationSlug, ControlGetConferenceResponse } from "./ControlApi";
-import { ErrorAlert } from "./ErrorAlert";
+import { ErrorAlert, errorToToast } from "./ErrorAlert";
 
-export type Props = {
-  track: Track;
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
+import ControlTrackCardView from "./ControlTrackCardView";
+import { ErrorBoundary } from "react-error-boundary";
+
+type FormData = {
+  json: string;
+  track: TrackSlug;
+  timeMode: "absolute" | "relative";
+  absoluteTime: string;
+  relativeTimeInSeconds: number;
+};
+
+type CardDraft =
+  | {
+      card: TrackCard | null;
+      error?: null;
+    }
+  | {
+      card?: null;
+      error: Error | unknown;
+    };
+
+function generateTrackCard(data: FormData): CardDraft {
+  if (!data.json.match(/[^\s]/)) {
+    return { card: null };
+  }
+  const json = ((j) => {
+    try {
+      return { json: JSON.parse(j) as TrackCardContent };
+    } catch (e) {
+      return { error: e };
+    }
+  })(data.json);
+  if (json.error) {
+    return { error: json.error };
+  }
+  const activationAt =
+    data.timeMode === "absolute"
+      ? data.absoluteTime === ""
+        ? dayjs().unix()
+        : dayjs(data.absoluteTime).unix()
+      : dayjs()
+          .add(data.relativeTimeInSeconds * 1000)
+          .unix();
+  const card: TrackCard = {
+    track: data.track,
+    ut: 0,
+    at: activationAt,
+    ...json.json,
+  };
+  return { card };
 }
 
-export const ControlTrackCardForm: React.FC<Props> = ({ track }) => {
-  const { data: controlConferenceData } = ControlApi.useConference();
-  // const history = useHistory();
-  const [errorAlert, setErrorAlert] = React.useState<JSX.Element | null>(null);
+export const ControlTrackCardForm: React.FC<{ track: Track }> = ({ track }) => {
+  const formID = useId();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isDraftGood, setIsDraftGood] = useState<boolean | null>();
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);
+  const { data: conferenceData } = Api.useConference();
+  const { register, handleSubmit, reset, watch, setValue } = useForm<FormData>({
+    defaultValues: {
+      json: "",
+      track: track.slug,
+      timeMode: "absolute",
+      absoluteTime: dayjs().format("YYYY-MM-DDTHH:mm:ss"),
+      relativeTimeInSeconds: 0,
+    },
+  });
+  const onSubmit = handleSubmit(async (data) => {
+    const finalDraft = generateTrackCard(data);
+    if (!finalDraft.card) return;
+    if (!isDraftGood) return;
+    if (isRequesting) return;
+    setIsRequesting(true);
+    try {
+      const card = finalDraft.card;
+      console.log("draft to submit", card);
+      await ControlApi.createTrackCard(card);
+      reset();
+      onClose();
+    } catch (e) {
+      toast(errorToToast(e));
+    }
+    setIsRequesting(false);
+  });
+  const loadPredefined = (card: TrackCardContent) => {
+    setValue("json", JSON.stringify(card, null, 2));
+  };
+  const timeMode = watch("timeMode");
+  const cardDraft = generateTrackCard(watch());
 
+  return (
+    <>
+      <Button onClick={onOpen}>Compose</Button>
+
+      <Modal size="5xl" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Compose TrackCard</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <HStack w="100%" alignItems="flex-start">
+              <Box flex={1}>
+                <VStack w="100%" alignItems="flex-start">
+                  <CardFormPredefinedLoader onLoad={loadPredefined} />
+                  <VStack as="form" w="100%" onSubmit={onSubmit} id={formID}>
+                    <Textarea
+                      placeholder="TrackCardContent in JSON"
+                      w="100%"
+                      minH="300px"
+                      fontSize="12px"
+                      fontFamily={[
+                        "Noto Sans CJK Mono",
+                        "Source Han Code JP",
+                        "Source Code Pro",
+                        "Consolas",
+                        "Andale Mono",
+                        "monospace",
+                      ]}
+                      {...register("json")}
+                    />
+                    <FormControl>
+                      <FormLabel>Track</FormLabel>
+                      <Select size="sm" {...register("track")} isDisabled={!conferenceData}>
+                        {conferenceData ? (
+                          conferenceData.conference.track_order.map((v) => {
+                            const t = conferenceData.conference.tracks[v];
+                            if (!t) return null;
+                            return (
+                              <option key={t.slug} value={t.slug}>
+                                {t.name} ({t.slug})
+                              </option>
+                            );
+                          })
+                        ) : track.slug[0] !== "_" ? (
+                          <option key={track.slug} value={track.slug}>
+                            {track.name} ({track.slug})
+                          </option>
+                        ) : null}
+                        <option value="_screen">Screen (_screen)</option>
+                      </Select>
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Activate at (default=now)</FormLabel>
+                      <InputGroup display={timeMode === "absolute" ? "block" : "none"}>
+                        <InputLeftElement width="4.0rem">
+                          <Tooltip
+                            label="Click to enter using relative time"
+                            display={timeMode === "absolute" ? "block" : "none"}
+                            openDelay={30}
+                          >
+                            <Button size="sm" h="1.75rem" onClick={() => setValue("timeMode", "relative")}>
+                              at:
+                            </Button>
+                          </Tooltip>
+                        </InputLeftElement>
+                        <Input
+                          pl="4.5rem"
+                          type="datetime-local"
+                          step={1}
+                          {...register("absoluteTime", { valueAsDate: true })}
+                        />
+                      </InputGroup>
+                      <InputGroup display={timeMode === "relative" ? "block" : "none"}>
+                        <InputLeftElement width="4.0rem">
+                          <Tooltip
+                            label="Click to enter using absolute time"
+                            display={timeMode === "relative" ? "block" : "none"}
+                            openDelay={30}
+                          >
+                            <Button size="sm" h="1.75rem" onClick={() => setValue("timeMode", "absolute")}>
+                              in:
+                            </Button>
+                          </Tooltip>
+                        </InputLeftElement>
+                        <Input
+                          pl="4.5rem"
+                          type="number"
+                          {...register("relativeTimeInSeconds", { valueAsNumber: true })}
+                        />
+                      </InputGroup>
+                    </FormControl>
+                  </VStack>
+                </VStack>
+              </Box>
+              <Box flex={1} h="100%">
+                <CardFormPreview draft={cardDraft} onFeedback={(ok) => setIsDraftGood(ok)} />
+              </Box>
+            </HStack>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              form={formID}
+              type="submit"
+              isDisabled={!isDraftGood}
+              isLoading={isRequesting}
+            >
+              Send
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
+
+const CardFormPredefinedLoader: React.FC<{ onLoad: (c: TrackCardContent) => any }> = ({ onLoad }) => {
+  const toast = useToast();
+  const { data: controlConferenceData } = ControlApi.useConference();
   const { register, handleSubmit, reset } = useForm<{
     slug: ConferencePresentationSlug;
-    inSeconds: number;
   }>({
     defaultValues: {
       slug: "",
-      inSeconds: 0,
     },
   });
 
   const onSubmit = handleSubmit(async (data) => {
     if (!controlConferenceData) return;
-    if (isRequesting) return;
-    setIsRequesting(true);
-
-    try {
-      const card: TrackCard = {
-        track: track.slug,
-        at: dayjs().add(data.inSeconds, "seconds").unix(),
-        ut: 0,
-        ...generateTrackCardFromPresentation(controlConferenceData, data.slug),
-      };
+    const card = generateTrackCardFromPresentation(controlConferenceData, data.slug);
+    if (card) {
       console.log(card);
-      await ControlApi.createTrackCard(card);
-      setErrorAlert(null);
-    } catch (e) {
-      setErrorAlert(
-        <Box my={2}>
-          <ErrorAlert error={e} />
-        </Box>,
-      );
+      onLoad(card);
+      reset();
+    } else {
+      toast({
+        status: "error",
+        title: "Presentation not exists",
+        description: `Couldn't find "${data.slug}"!`,
+        duration: 10000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
     }
-    setIsRequesting(false);
-    reset();
   });
 
-  if (!controlConferenceData) {
-    return <p>Loading</p>;
+  return (
+    <Box w="100%">
+      <form onSubmit={onSubmit}>
+        <Flex w="100%" direction="row">
+          <Input flexGrow={2} size="sm" placeholder="Presentation slug to load..." {...register("slug")} />
+          <Button size="sm" type="submit" isLoading={!controlConferenceData}>
+            Load
+          </Button>
+        </Flex>
+      </form>
+    </Box>
+  );
+};
+
+const CardFormPreviewFeedback: React.FC<{
+  card: TrackCard;
+  onFeedback: (card: TrackCard) => void;
+  children: React.ReactNode;
+}> = ({ card, onFeedback, children }) => {
+  useEffect(() => {
+    onFeedback(card);
+  }, [card]);
+  return <>{children}</>;
+};
+
+const CardFormPreview: React.FC<{ draft: CardDraft; onFeedback: (ok: boolean) => void }> = ({ draft, onFeedback }) => {
+  const [lastKnownGoodCard, setLastKnownGoodCard] = useState(draft.card ?? null);
+  let card = draft.card ?? lastKnownGoodCard;
+  let onGoodState = !!(card && card === draft.card);
+
+  useEffect(() => {
+    onFeedback(onGoodState);
+  }, [onGoodState]);
+
+  if (card === null) {
+    return (
+      <Center w="100%" h="100%">
+        <Text>Preview will appear here!</Text>
+      </Center>
+    );
   }
 
-  //<Input {...register("at", { valueAsDate: true })} type="datetime-local" />
-
   return (
-    <Box>
-      {errorAlert}
-      <form onSubmit={onSubmit}>
-        <FormControl mt={4} id="cardform_slug" isRequired>
-          <FormLabel>Name</FormLabel>
-          <Input {...register("slug")} />
-        </FormControl>
-
-        <FormControl mt={4} id="cardform_at">
-          <FormLabel>Activation In</FormLabel>
-          <Input {...register("inSeconds", { valueAsNumber: true })} type="number" />
-        </FormControl>
-        <Button mt={4} size="lg" type="submit" isLoading={isRequesting}>
-          Save
-        </Button>
-      </form>
+    <Box w="100%" h="100%">
+      {card ? (
+        <ErrorBoundary
+          resetKeys={[card]}
+          fallbackRender={({ error }) => {
+            return (
+              <>
+                {lastKnownGoodCard ? <ControlTrackCardView card={{ id: -1, ...lastKnownGoodCard }} /> : null}
+                <ErrorAlert error={error} />
+              </>
+            );
+          }}
+        >
+          <CardFormPreviewFeedback onFeedback={(card) => setLastKnownGoodCard(card)} card={card}>
+            <ControlTrackCardView card={{ id: -1, ...card }} />
+          </CardFormPreviewFeedback>
+        </ErrorBoundary>
+      ) : null}
+      {draft.error ? <ErrorAlert error={draft.error} /> : null}
     </Box>
   );
 };
@@ -84,9 +344,11 @@ export const ControlTrackCardForm: React.FC<Props> = ({ track }) => {
 function generateTrackCardFromPresentation(
   controlConferenceData: ControlGetConferenceResponse,
   slug: ConferencePresentationSlug,
-): TrackCardContent {
-  console.log(controlConferenceData);
+): TrackCardContent | null {
   const presentation = controlConferenceData.presentations[slug]!;
+  if (!presentation) {
+    return null;
+  }
 
   return {
     interpretation: presentation.language !== "EN", // TODO:

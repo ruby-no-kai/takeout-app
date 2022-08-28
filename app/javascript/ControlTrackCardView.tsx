@@ -45,7 +45,7 @@ export const ControlTrackCardView: React.FC<{ card: ControlTrackCard }> = ({ car
           {dayjs.unix(card.at).format()}
         </Heading>
 
-        {isActivated ? null : <CardRemoveAction card={card} />}
+        {card.id >= 0 && !isActivated ? <CardRemoveAction card={card} /> : null}
       </Flex>
 
       {card.upcoming_topics ? (

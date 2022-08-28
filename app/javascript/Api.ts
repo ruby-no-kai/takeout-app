@@ -337,8 +337,8 @@ export interface TrackCard extends TrackCardHeader, TrackCardContent {}
 
 export type TrackCardHeader = {
   track: TrackSlug;
-  at: number;
-  ut: number;
+  at: number; // activation at
+  ut: number; // updated at
 };
 export type TrackCardContent = {
   interpretation?: boolean;

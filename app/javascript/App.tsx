@@ -47,10 +47,15 @@ export const App: React.FC<Props> = (_props) => {
           <Route path="/*" element={<WithNavbar />}>
             <Route path="attendee" element={<AttendeeEdit />} />
             <Route path="tracks/:slug" element={<TrackPage />} />
-            <Route path="control/attendees" element={<ControlAttendeesPage />} />
-            <Route path="control/attendees/:id" element={<ControlAttendeeEdit />} />
-            <Route path="control/track_cards" element={<ControlTrackCardsPage />} />
-            <Route path="control/session/new" element={<ControlLogin />} />
+
+            <Route path="control/*">
+              <Route path="attendees" element={<ControlAttendeesPage />} />
+              <Route path="attendees/:id" element={<ControlAttendeeEdit />} />
+
+              <Route path="track_cards" element={<ControlTrackCardsPage />} />
+
+              <Route path="session/new" element={<ControlLogin />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

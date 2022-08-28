@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
 import loadable from "@loadable/component";
 
-import { Flex, Box, Tag, HStack, useDisclosure } from "@chakra-ui/react";
+import { Flex, Box, Tag, HStack, useDisclosure, IconButton, Tooltip, useToast } from "@chakra-ui/react";
 import { Heading, Text } from "@chakra-ui/react";
 import {
   Button,
@@ -14,31 +14,39 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+} from "@chakra-ui/react";
 
 import { Api, ScreenControl, ScreenNextSchedule, Speaker, Topic, Track, TrackCard, UpcomingTopic } from "./Api";
+import { ControlApi, ControlTrackCard } from "./ControlApi";
+
 import { Colors } from "./theme";
 import { SpeakerAvatar } from "./SpeakerAvatar";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { errorToToast } from "./ErrorAlert";
 
 const TrackCardView = loadable(() => import("./TrackCardView"));
 
-// [x] interpretation flag
-// [x] topic. speaker name
-// [x] TrackCardView preview (topic&speaker in full)
-// screen
-//   filler
-//   upcoming topic
-//   basic announcement (heading, next schedule, footer)
-// upcoming_topics
-//   track, at, topic, speakers
-//
-// <TrackCardView card={card} />;
-
-export const ControlTrackCardView: React.FC<{ card: TrackCard }> = ({ card }) => {
+export const ControlTrackCardView: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
+  const isActivated = dayjs().unix() >= card.at;
   return (
     <Box border="1px solid" borderColor={Colors.chatBorder2} backgroundColor="white">
-      <Heading as="h6" size="xs">
-        {dayjs.unix(card.at).format()}
-      </Heading>
+      <Flex justifyContent="space-between" direction="row">
+        <Heading as="h6" size="xs">
+          {dayjs.unix(card.at).format()}
+        </Heading>
+
+        {isActivated ? null : <CardRemoveAction card={card} />}
+      </Flex>
 
       {card.upcoming_topics ? (
         <CardUpcomingTopics topics={card.upcoming_topics} />
@@ -176,6 +184,48 @@ const CardScreen: React.FC<{ screen: ScreenControl }> = ({ screen }) => {
         </>
       ) : null}
     </>
+  );
+};
+
+const CardRemoveAction: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
+  const [isRequesting, setIsRequesting] = useState(false);
+  const toast = useToast();
+  const perform = () => {
+    if (isRequesting) return;
+    setIsRequesting(true);
+    ControlApi.deleteTrackCard(card)
+      .then(() => {
+        setIsRequesting(false);
+      })
+      .catch((e) => {
+        setIsRequesting(false);
+        toast(errorToToast(e));
+      });
+  };
+  return (
+    <Popover closeOnBlur matchWidth>
+      <PopoverTrigger>
+        <IconButton
+          background="transparent"
+          icon={<DeleteIcon boxSize="14px" />}
+          minW="30px"
+          w="30px"
+          h="30px"
+          aria-label="Delete"
+          type="submit"
+        />
+      </PopoverTrigger>
+      <PopoverContent w="100px">
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader>Sure?</PopoverHeader>
+        <PopoverBody>
+          <Button colorScheme="red" size="sm" onClick={perform} isLoading={isRequesting}>
+            Remove
+          </Button>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
   );
 };
 

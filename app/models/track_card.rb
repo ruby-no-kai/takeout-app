@@ -27,12 +27,12 @@ class TrackCard < ApplicationRecord
     EmitIvsMetadataJob.perform_later if emit
   end
 
-  def as_json
+  def as_json(control: false)
     content.merge(
       at: self.activation_at.to_i,
       track: track,
       ut: self.updated_at.to_i,
-    )
+    ).merge(control ? {id: id} : {})
   end
 
   def candidate?(t = Time.zone.now)

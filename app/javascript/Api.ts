@@ -529,9 +529,11 @@ export interface IvsCardUpdate {
   card: TrackCard | null;
 }
 
+export type TrackStreamKind = "main" | "interpretation";
+
 export interface StreamPresence {
   track: TrackSlug;
-  kind: "main" | "interpretation";
+  kind: TrackStreamKind;
   online: boolean;
   at: number;
 }

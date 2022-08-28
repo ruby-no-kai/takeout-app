@@ -333,7 +333,7 @@ export type Track = {
   viewerCount?: ViewerCount;
 };
 
-export interface TrackCard extends TrackCardHeader, TrackCardContent {}
+export type TrackCard = TrackCardHeader & TrackCardContent;
 
 export type TrackCardHeader = {
   track: TrackSlug;

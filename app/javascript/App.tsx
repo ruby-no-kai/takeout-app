@@ -17,10 +17,11 @@ const ControlTrackCardsPage = loadable(() => import("./ControlTrackCardsPage"));
 const ControlAttendeesPage = loadable(() => import("./ControlAttendeesPage"));
 const ControlAttendeeEdit = loadable(() => import("./ControlAttendeeEdit"));
 const ControlStreamPresencesPage = loadable(() => import("./ControlStreamPresencesPage"));
+const ControlScreenPage = loadable(() => import("./ControlScreenPage"));
 
 const IntermissionScreen = loadable(() => import("./IntermissionScreen"));
 
-export type Props = {}
+export type Props = {};
 
 const WithNavbar: React.FC = () => {
   return (
@@ -53,6 +54,7 @@ export const App: React.FC<Props> = (_props) => {
               <Route path="attendees" element={<ControlAttendeesPage />} />
               <Route path="attendees/:id" element={<ControlAttendeeEdit />} />
 
+              <Route path="screen" element={<ControlScreenPage />} />
               <Route path="track_cards" element={<ControlTrackCardsPage />} />
               <Route path="stream_presences" element={<ControlStreamPresencesPage />} />
 

@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     /control/attendees/:id
     /control/track_cards
     /control/stream_presences
+    /control/screen
   ).each do |_|
     get _ => 'frontend#show_require_control'
   end

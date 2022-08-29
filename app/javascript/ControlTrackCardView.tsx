@@ -240,6 +240,7 @@ const CardRemoveAction: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
 const CardCopyAction: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
   const [shouldRender, setShouldRender] = useState(false);
   const disclosureProps = useDisclosure({ defaultIsOpen: true });
+  // XXX: useCallback is not required anymore (it _was_ required)
   const onOpen = useCallback(() => {
     if (shouldRender) {
       disclosureProps.onOpen();

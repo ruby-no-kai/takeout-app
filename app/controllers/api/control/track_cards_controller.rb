@@ -68,6 +68,8 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
         interpretation: attributes[:interpretation],
         topic: attributes[:topic],
         speakers: attributes[:speakers],
+        screen: attributes[:screen],
+        upcoming_topics: attributes[:upcoming_topics],
       },
     }
   end

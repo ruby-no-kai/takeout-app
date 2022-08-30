@@ -25,7 +25,7 @@ export type Props = {
   message: ChatMessage;
   pinned: boolean;
   showAdminActions: boolean;
-}
+};
 
 export const ChatMessageView: React.FC<Props> = (props) => {
   const { track, message, pinned, showAdminActions } = props;
@@ -234,6 +234,7 @@ function isMessageSpotlighted(message: ChatMessage, spotlights: ChatSpotlight[])
   return (
     spotlights.findIndex((spotlight) => {
       return (
+        spotlight._removed !== true &&
         spotlight.starts_at <= ts &&
         (spotlight.ends_at ? ts < spotlight.ends_at : true) &&
         spotlight.handles.indexOf(handle) !== -1

@@ -247,6 +247,36 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
       { revalidate: false },
     );
   }
+  if (adminControl.spotlights_r) {
+    const spotlightRemovals = adminControl.spotlights_r;
+    mutate(
+      API_CONFERENCE,
+      async (known2: GetConferenceResponse | undefined) => {
+        if (!known2) {
+          console.warn("consumeChatAdminControl/2, known undefined");
+          return known2;
+        }
+        let known: GetConferenceResponse = JSON.parse(JSON.stringify(known2));
+        known.conference.track_order.forEach((trackSlug) => {
+          const track = known.conference.tracks[trackSlug];
+          if (!track) return;
+          spotlightRemovals.forEach((removal) => {
+            const idx = track.spotlights.findIndex((v) => v.id === removal.id);
+            if (idx !== -1) {
+              track.spotlights[idx]._removed = true;
+              console.log("consumeChatAdminControl/spotlightRemovals: remove ", {
+                trackSlug,
+                removal,
+                spotlight: track.spotlights[idx],
+              });
+            }
+          });
+        });
+        return known;
+      },
+      { revalidate: false },
+    );
+  }
   if (adminControl.presences) {
     const presences = adminControl.presences;
     mutate(
@@ -390,7 +420,11 @@ export type ChatSpotlight = {
   ends_at: number;
   handles: ChatHandle[];
   updated_at: number;
+
+  _removed?: boolean;
 };
+
+export type ChatSpotlightRemoval = { id: number };
 
 export type TrackStreamOptions = {
   interpretation: boolean;
@@ -481,6 +515,7 @@ export type ChatAdminControl = {
   pin?: ChatMessagePin;
   caption?: ChatCaption;
   spotlights?: ChatSpotlight[];
+  spotlights_r: ChatSpotlightRemoval[];
   presences?: StreamPresence[];
   promo?: boolean;
 };

@@ -1,4 +1,14 @@
-import { request, swrFetcher, ApiError, TrackSlug, TrackCard, Attendee, StreamPresence, TrackStreamKind } from "./Api";
+import {
+  request,
+  swrFetcher,
+  ApiError,
+  TrackSlug,
+  TrackCard,
+  Attendee,
+  StreamPresence,
+  TrackStreamKind,
+  ChatSpotlight,
+} from "./Api";
 import useSWR from "swr";
 import { mutate } from "swr";
 
@@ -45,7 +55,17 @@ export type ControlGetConferenceResponse = {
   speakers: { [key: string]: ConferenceSpeaker };
 };
 
-export type ControlTrackCard = TrackCard & { id: number };
+export type ControlColleration = {
+  id: number;
+  description: string;
+};
+
+export type ControlTrackCardHeader = {
+  id: number;
+  control_colleration?: ControlColleration | null;
+};
+
+export type ControlTrackCard = TrackCard & ControlTrackCardHeader;
 
 export type ControlGetTrackCardsResponse = {
   track_cards: ControlTrackCard[];
@@ -90,6 +110,11 @@ export type ControlGetTrackStreamPresencesResponse = {
   // value is null when a IVS GetChannel API responded ChannelNotBroadcasting error.
   stream_statuses: { [key in TrackStreamKind]: ControlIvsStream | null };
 };
+
+export type ControlChatSpotlightHeader = {
+  control_colleration?: ControlColleration | null;
+};
+export type ControlChatSpotlight = ChatSpotlight & ControlChatSpotlightHeader;
 
 export const ControlApi = {
   useConference() {

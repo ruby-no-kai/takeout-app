@@ -72,6 +72,14 @@ export const ControlTrackCardView: React.FC<{ card: ControlTrackCard }> = ({ car
         )
       ) : null}
       {card.topic || card.speakers ? <CardPreview card={card} /> : null}
+
+      <Box>
+        {card.control_colleration ? (
+          <Tag colorScheme="blue" size="sm">
+            {card.control_colleration.description}
+          </Tag>
+        ) : null}
+      </Box>
     </Box>
   );
 };

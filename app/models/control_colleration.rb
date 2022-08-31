@@ -1,6 +1,6 @@
 class ControlColleration < ApplicationRecord
-  has_many :chat_spotlights
-  has_many :track_cards
+  has_many :chat_spotlights, dependent: :destroy
+  has_many :track_cards, dependent: :destroy
 
   def as_json
     {

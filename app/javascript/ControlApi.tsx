@@ -116,6 +116,16 @@ export type ControlChatSpotlightHeader = {
 };
 export type ControlChatSpotlight = ChatSpotlight & ControlChatSpotlightHeader;
 
+export type ControlGetControlCollerationResponse = {
+  colleration: ControlColleration;
+  track_cards: ControlTrackCard[];
+  chat_spotlights: ControlChatSpotlight[];
+};
+export type ControlDeleteControlCollerationResponse = {
+  track_cards: ControlTrackCard[];
+  chat_spotlights: ControlChatSpotlight[];
+};
+
 export const ControlApi = {
   useConference() {
     return useSWR<ControlGetConferenceResponse, ApiError>("/api/control/conference", swrFetcher, {
@@ -196,6 +206,35 @@ export const ControlApi = {
     const resp = await request(url, "PUT", null, { online });
     mutate(`/api/control/tracks/${encodeURIComponent(slug)}/stream_presence`);
     return resp.json();
+  },
+
+  useControlColleration(id: number | undefined | null) {
+    return useSWR<ControlGetControlCollerationResponse, ApiError>(
+      id ? `/api/control/control_collerations/${id}` : null,
+      swrFetcher,
+      {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      },
+    );
+  },
+
+  async deleteControlColleration(id: number) {
+    //return useSWR<ControlDeleteControlCollerationResponse, ApiError
+    const url = `/api/control/control_collerations/${id}`;
+    const resp = await request(url, "DELETE", null, {});
+    const data = (await resp.json()) as ControlDeleteControlCollerationResponse;
+
+    const cardTracks = new Map<TrackSlug, boolean>();
+    data.track_cards.forEach((v) => {
+      cardTracks.set(v.track, true);
+    });
+    cardTracks.forEach((_, slug) => {
+      mutate(`/api/control/tracks/${encodeURIComponent(slug)}/cards`);
+    });
+    // TODO: chat_spotlights
+
+    return data;
   },
 };
 export default ControlApi;

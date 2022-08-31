@@ -69,6 +69,8 @@ Rails.application.routes.draw do
         resource :stream_presence, only: %i(show update), path: 'stream_presence'
       end
 
+      resources :control_collerations, only: %i(show destroy)
+
       resources :attendees, only: %i(index show update)
     end
   end

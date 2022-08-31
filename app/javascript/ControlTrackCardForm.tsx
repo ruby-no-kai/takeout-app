@@ -85,6 +85,7 @@ function generateTrackCard(data: FormData): CardDraft {
     track: data.track,
     ut: 0,
     at: activationAt,
+    control_colleration: null,
   };
   return { card };
 }

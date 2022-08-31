@@ -1,4 +1,6 @@
 class ChatSpotlight < ApplicationRecord
+  belongs_to :control_colleration, required: false
+
   def self.set(track, handles, t: Time.zone.now, start_t: t, emit: true)
     last = ChatSpotlight.where(track: track, ends_at: nil).order(starts_at: :asc).last
     if last && !last.ends_at
@@ -12,7 +14,7 @@ class ChatSpotlight < ApplicationRecord
     spotlight
   end
 
-  def as_json
+  def as_json(control: false)
     {
       id: id,
       track: track,
@@ -20,6 +22,8 @@ class ChatSpotlight < ApplicationRecord
       ends_at: ends_at&.to_i,
       handles: handles,
       updated_at: updated_at&.to_i,
-    }
+    }.merge(control ? {
+      control_colleration: control_colleration&.as_json,
+    } : {})
   end
 end

@@ -1,4 +1,6 @@
 class TrackCard < ApplicationRecord
+  belongs_to :control_colleration, required: false
+
   validates :track, presence: true
   validates :activation_at, presence: true
 
@@ -32,7 +34,10 @@ class TrackCard < ApplicationRecord
       at: self.activation_at.to_i,
       track: track,
       ut: self.updated_at.to_i,
-    ).merge(control ? {id: id} : {})
+    ).merge(control ? {
+      id: id,
+      control_colleration: control_colleration&.as_json,
+    } : {})
   end
 
   def candidate?(t = Time.zone.now)

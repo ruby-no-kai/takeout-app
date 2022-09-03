@@ -26,7 +26,7 @@ class TrackCard < ApplicationRecord
       content: content,
       activation_at: t,
     )
-    EmitIvsMetadataJob.perform_later if emit
+    EmitConferenceDataJob.perform_now(route: :ivs) if emit
   end
 
   def as_json(control: false)

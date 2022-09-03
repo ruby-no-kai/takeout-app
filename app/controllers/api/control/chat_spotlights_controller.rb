@@ -33,13 +33,13 @@ class Api::Control::ChatSpotlightsController < Api::Control::ApplicationControll
 
   def update
     @chat_spotlight.update!(chat_spotlight_params)
-    EmitChatSpotlightJob.perform_now(spotlights: [@chat_spotlight], remove: false)
+    EmitConferenceDataJob.perform_now(route: :chime)
     render(json: {ok: true}.to_json)
   end
 
   def destroy
     @chat_spotlight.destroy!
-    EmitChatSpotlightJob.perform_now(spotlights: [@chat_spotlight], remove: true)
+    EmitConferenceDataJob.perform_now(route: :chime)
     render(json: {ok: true}.to_json)
   end
 

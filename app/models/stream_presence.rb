@@ -10,7 +10,7 @@ class StreamPresence < ApplicationRecord
     if save
       presence.save!
       if emit
-        EmitStreamPresenceJob.perform_now(presence: presence, was_online: was_online)
+        EmitConferenceDataJob.perform_now(route: was_online ? :ivs : :both)
       end
     end
     presence

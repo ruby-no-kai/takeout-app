@@ -110,7 +110,6 @@ resource "aws_cloudfront_distribution" "takeout-rk-o" {
     viewer_protocol_policy = "redirect-to-https"
   }
 
-
   ordered_cache_behavior {
     path_pattern     = "/api/conference"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
@@ -172,6 +171,28 @@ resource "aws_cloudfront_distribution" "takeout-rk-o" {
     min_ttl     = 0
     default_ttl = 0
     max_ttl     = 60
+
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
+  ordered_cache_behavior {
+    path_pattern     = "/outpost/*"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "takeout-s3"
+
+    forwarded_values {
+      query_string = true
+      headers      = []
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl     = 0
+    default_ttl = 900
+    max_ttl     = 31536000
 
     compress               = true
     viewer_protocol_policy = "redirect-to-https"

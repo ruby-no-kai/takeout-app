@@ -16,8 +16,7 @@ class Api::Control::ControlCollerationsController < Api::Control::ApplicationCon
     ApplicationRecord.transaction do
       @colleration.destroy!
     end
-    EmitChatSpotlightJob.perform_now(spotlights: chat_spotlights, remove: true)
-    EmitIvsMetadataJob.perform_now(items: nil)
+    EmitConferenceDataJob.perform_now(route: chat_spotlights.empty? ? :ivs : :both)
 
     render(json: {
       track_cards: cards.map { |_| _.as_json(control: true) },

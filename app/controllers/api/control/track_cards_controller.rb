@@ -15,12 +15,12 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
         .order(activation_at: :desc)
     else
       cards = [
-        TrackCard.current_for(params[:track_slug]),
         *TrackCard.where(track: params[:track_slug]).candidate.to_a,
+        TrackCard.current_for(params[:track_slug]),
       ]
     end
     render(json: {
-      track_cards: cards.compact.map { |_| _.as_json(control: true) },
+      track_cards: cards.compact.map { |_| _.as_json(control: true) }.reverse,
     })
   end
 
@@ -31,14 +31,14 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
     track_card.activation_at = now if track_card.activation_at < now
 
     track_card.save!
-    EmitIvsMetadataJob.perform_now
+    EmitConferenceDataJob.perform_now(route: :ivs)
     render(json: {ok: true}.to_json)
   end
 
   def update
     if @track_card.candidate?
       @track_card.update!(track_card_params)
-      EmitIvsMetadataJob.perform_later
+      EmitConferenceDataJob.perform_now(route: :ivs)
       render(json: {ok: true}.to_json)
     else
       raise Api::ApplicationController::Error::BadRequest, "cannot update activated cards"
@@ -48,7 +48,7 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
   def destroy
     if @track_card.candidate?
       @track_card.destroy!
-      EmitIvsMetadataJob.perform_later
+      EmitConferenceDataJob.perform_now(route: :ivs)
       render(json: {ok: true}.to_json)
     else
       raise Api::ApplicationController::Error::BadRequest, "cannot delete activated cards"

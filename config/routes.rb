@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     /control/stream_presences
     /control/screen
     /control/next_session
+    /control/tracks/:slug
   ).each do |_|
     get _ => 'frontend#show_require_control'
   end

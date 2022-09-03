@@ -12,10 +12,11 @@ import { Colors } from "./theme";
 
 export type Props = {
   track: Track;
-  streamOptions: TrackStreamOptions;
-}
+  streamOptions: Pick<TrackStreamOptions, "interpretation">;
+  ignoreStreamPresence?: boolean;
+};
 
-export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
+export const TrackVideo: React.FC<Props> = ({ track, streamOptions, ignoreStreamPresence }) => {
   const [streamTokenNotExpired, setStreamTokenNotExpired] = React.useState(true);
   const [isPlaying, setIsPlaying] = React.useState(true);
   const streamKind = determineStreamKind(track, streamOptions.interpretation);
@@ -40,7 +41,7 @@ export const TrackVideo: React.FC<Props> = ({ track, streamOptions }) => {
     }
   }, [track.slug, streamKind, streamInfo?.stream?.expiry]);
 
-  if (!streamPresence?.online) {
+  if (!streamPresence?.online && ignoreStreamPresence !== true) {
     return <TrackOfflineView />;
   }
 
@@ -71,13 +72,13 @@ export type StreamViewProps = {
   playbackUrl: string;
   shouldStartPlayback: boolean;
   onPlayOrStop: (playing: boolean) => void;
-}
+};
 
 export type StreamPlaybackSession = {
   url: string;
   player: videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
   root: HTMLDivElement;
-}
+};
 
 const StreamView: React.FC<StreamViewProps> = ({ playbackUrl, shouldStartPlayback, onPlayOrStop }) => {
   const [_session, setSession] = React.useState<StreamPlaybackSession | null>(null);

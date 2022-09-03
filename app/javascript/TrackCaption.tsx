@@ -12,9 +12,10 @@ import type { ChatStatus, ChatUpdate } from "./ChatSession";
 export type Props = {
   track: Track;
   onUnsubscribe: () => void;
-}
+  h?: string;
+};
 
-export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
+export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe, h: height }) => {
   const chat = useChat();
   const [chatSessionStatus, setChatSessionStatus] = React.useState(chat?.session?.status);
   const captionChannel = track.chat ? chat.tracks?.[track.slug]?.caption_channel_arn ?? null : null;
@@ -93,7 +94,7 @@ export const TrackCaption: React.FC<Props> = ({ track, onUnsubscribe }) => {
 
   return (
     <Box
-      h="80px"
+      h={height ?? "80px"}
       w="100%"
       overflowX="hidden"
       overflowY="hidden"

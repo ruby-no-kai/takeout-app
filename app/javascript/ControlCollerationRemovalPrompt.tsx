@@ -17,7 +17,7 @@ import { errorToToast } from "./ErrorAlert";
 import { ControlApi } from "./ControlApi";
 
 const ControlTrackCardView = loadable(() => import("./ControlTrackCardView"));
-//const ControlChatSpotlightView = loadable(() => import("./ControlChatSpotlightView"));
+const ControlChatSpotlightView = loadable(() => import("./ControlChatSpotlightView"));
 //
 type Item = { id: number; control_colleration?: { id?: number } | null }; // XXX: id!
 
@@ -111,13 +111,13 @@ const Detail: React.FC<{
             return <ControlTrackCardView key={v.id} isActionable={false} card={v} />;
           }
         })}
-        {/*colleration.chat_spotlights.map((v) => {
+        {colleration.chat_spotlights.map((v) => {
           if (itemType === "chatSpotlight" && v.id === item.id) {
             return <React.Fragment key={v.id}></React.Fragment>;
           } else {
             return <ControlChatSpotlightView key={v.id} isActionable={false} chatSpotlight={v} />;
           }
-            })*/}
+        })}
       </Box>
     </>
   );

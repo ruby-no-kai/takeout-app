@@ -236,8 +236,13 @@ export const ControlApi = {
     cardTracks.forEach((_, slug) => {
       mutate(`/api/control/tracks/${encodeURIComponent(slug)}/cards`);
     });
-    // TODO: chat_spotlights
-
+    const spotlightTracks = new Map<TrackSlug, boolean>();
+    data.chat_spotlights.forEach((v) => {
+      spotlightTracks.set(v.track, true);
+    });
+    spotlightTracks.forEach((_, slug) => {
+      mutate(`/api/control/tracks/${encodeURIComponent(slug)}/spotlights`);
+    });
     return data;
   },
 

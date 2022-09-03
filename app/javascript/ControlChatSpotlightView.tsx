@@ -91,7 +91,7 @@ const ChatSpotlightRemoveActionColleration: React.FC<{ spotlight: ControlChatSpo
         disclosure={disclosure}
         onRemoveSingle={onRemoveSingle}
       >
-        <ControlChatSpotlightView isActionable={false} spotlight={spotlight} />
+        <ControlChatSpotlightView isActionable={false} chatSpotlight={spotlight} />
       </ControlCollerationRemovalPrompt>
     </>
   );

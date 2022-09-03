@@ -2,7 +2,18 @@ import React from "react";
 import loadable from "@loadable/component";
 import dayjs from "dayjs";
 
-import { Flex, Box, Skeleton, SkeletonText, Text, HStack, Button, useToast, Tooltip } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Skeleton,
+  SkeletonText,
+  Text,
+  HStack,
+  Button,
+  useToast,
+  Tooltip,
+  IconButton,
+} from "@chakra-ui/react";
 import { Heading } from "@chakra-ui/react";
 import {
   AlertDialog,
@@ -17,9 +28,7 @@ import { Api, StreamPresence, Track, TrackCard, TrackStreamKind } from "./Api";
 import { ControlApi, ControlIvsStream } from "./ControlApi";
 import { Colors } from "./theme";
 import { ErrorAlert, errorToToast } from "./ErrorAlert";
-
-const TrackCardView = loadable(() => import("./TrackCardView"));
-const ControlTrackCardForm = loadable(() => import("./ControlTrackCardForm"));
+import { RepeatIcon } from "@chakra-ui/icons";
 
 export type Props = {
   track: Track;
@@ -27,12 +36,12 @@ export type Props = {
 
 export const ControlStreamPresence: React.FC<Props> = ({ track }) => {
   //  const { data: controlConferenceData } = ControlApi.useConference();
-  const { data, error } = ControlApi.useTrackStreamPresence(track.slug);
+  const { data, error, mutate } = ControlApi.useTrackStreamPresence(track.slug);
 
   if (!data) {
     return (
       <Box border="1px solid" borderColor={Colors.chatBorder2} backgroundColor="white">
-        <SkeletonText />
+        <Skeleton w="100%" h="160px" />
         {error ? <ErrorAlert error={error} /> : null}
       </Box>
     );
@@ -42,9 +51,24 @@ export const ControlStreamPresence: React.FC<Props> = ({ track }) => {
     <Box border="1px solid" borderColor={Colors.chatBorder2} backgroundColor="white">
       {error ? <ErrorAlert error={error} /> : null}
 
-      <Text as="p">
-        <>as of {dayjs.unix(data.at).format()}</>
-      </Text>
+      <Flex direction="row" justifyContent="space-between">
+        <Text as="p">
+          <>as of {dayjs.unix(data.at).format()}</>
+        </Text>
+        <Box>
+          <IconButton
+            background="transparent"
+            icon={<RepeatIcon boxSize="14px" />}
+            minW="30px"
+            w="30px"
+            h="30px"
+            aria-label="Reload"
+            onClick={() => {
+              mutate();
+            }}
+          />
+        </Box>
+      </Flex>
 
       <StreamPresenceBox
         track={track}
@@ -103,15 +127,16 @@ export const StreamPresenceBox: React.FC<{
   };
 
   return (
-    <Box mt={1}>
-      <Heading as="h4" size="xs">
-        {kind}
-      </Heading>
+    <Box mt={3} px={2}>
+      <Flex direction="row" alignItems="center" justifyContent="space-between">
+        <Heading as="h4" fontSize="1.1rem">
+          {kind}
+        </Heading>
 
-      <HStack>
         <Box>
           <Tooltip label={buttonLabel} shouldWrapChildren={buttonAction === "notready"}>
             <Button
+              size="sm"
               minWidth="120px"
               colorScheme={{ notready: "gray", golive: "teal", shutdown: "red" }[buttonAction]}
               isLoading={isRequesting}
@@ -122,7 +147,9 @@ export const StreamPresenceBox: React.FC<{
             </Button>
           </Tooltip>
         </Box>
+      </Flex>
 
+      <HStack w="100%" justifyContent="space-between">
         <Box>
           <Text fontWeight="bold">Status</Text>
           {presence.online ? "Live" : "Disabled"}

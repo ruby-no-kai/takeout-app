@@ -180,6 +180,7 @@ export type Track = {
 export type TrackCard = TrackCardHeader & TrackCardContent;
 
 export type TrackCardHeader = {
+  id: number;
   track: TrackSlug;
   at: number; // activation at
   ut: number; // updated at

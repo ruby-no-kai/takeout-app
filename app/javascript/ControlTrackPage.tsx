@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import loadable, { lazy } from "@loadable/component";
 
 import { Box, Flex, Heading } from "@chakra-ui/react";
@@ -122,8 +122,11 @@ export const VideoPane: React.FC<{ track: Track }> = ({ track }) => {
 };
 
 export const InfoPane: React.FC<{ track: Track }> = ({ track }) => {
-  //  const { data: controlConferenceData } = ControlApi.useConference();
-  const { data: cardsData } = ControlApi.useTrackCards(track.slug);
+  const { data: cardsData, mutate: mutateCards } = ControlApi.useTrackCards(track.slug);
+
+  useEffect(() => {
+    mutateCards();
+  }, [track.card?.id, track.card?.ut, track.card_candidate?.id, track.card_candidate?.ut]);
 
   return (
     <Box>

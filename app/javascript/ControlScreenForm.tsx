@@ -63,6 +63,7 @@ function formDataToTrackCard(data: FormData): TrackCard {
           .add(data.relativeTimeInSeconds * 1000)
           .unix();
   const header = {
+    id: -1,
     track: "_screen",
     ut: 0,
     at: activationAt,

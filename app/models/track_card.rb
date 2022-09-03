@@ -31,11 +31,11 @@ class TrackCard < ApplicationRecord
 
   def as_json(control: false)
     content.merge(
+      id: id,
       at: self.activation_at.to_i,
       track: track,
       ut: self.updated_at.to_i,
     ).merge(control ? {
-      id: id,
       control_colleration: control_colleration&.as_json,
     } : {})
   end

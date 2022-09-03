@@ -61,7 +61,6 @@ export type ControlColleration = {
 };
 
 export type ControlTrackCardHeader = {
-  id: number;
   control_colleration?: ControlColleration | null;
 };
 

@@ -331,14 +331,14 @@ const CardFormPreview: React.FC<{ draft: CardDraft; onFeedback: (ok: boolean) =>
           fallbackRender={({ error }) => {
             return (
               <>
-                {lastKnownGoodCard ? <ControlTrackCardView card={{ id: -1, ...lastKnownGoodCard }} /> : null}
+                {lastKnownGoodCard ? <ControlTrackCardView card={{ ...lastKnownGoodCard, id: -1 }} /> : null}
                 <ErrorAlert error={error} />
               </>
             );
           }}
         >
           <CardFormPreviewFeedback onFeedback={(card) => setLastKnownGoodCard(card)} card={card}>
-            <ControlTrackCardView card={{ id: -1, ...card }} />
+            <ControlTrackCardView card={{ ...card, id: -1 }} />
           </CardFormPreviewFeedback>
         </ErrorBoundary>
       ) : null}

@@ -55,6 +55,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
           >
             <TrackVideo track={track} streamOptions={streamOptionsState[0]} />
           </React.Suspense>
+          {/* TODO: hide caption while offline */}
           {streamOptions.caption ? (
             <React.Suspense fallback={<Skeleton w="100%" h="80px" />}>
               <TrackCaption

@@ -20,6 +20,7 @@ const ControlAttendeeEdit = loadable(() => import("./ControlAttendeeEdit"));
 const ControlStreamPresencesPage = loadable(() => import("./ControlStreamPresencesPage"));
 const ControlScreenPage = loadable(() => import("./ControlScreenPage"));
 const ControlNextSessionPage = loadable(() => import("./ControlNextSessionPage"));
+const ControlTrackPage = loadable(() => import("./ControlTrackPage"));
 
 const IntermissionScreen = loadable(() => import("./IntermissionScreen"));
 
@@ -53,6 +54,8 @@ export const App: React.FC<Props> = (_props) => {
             <Route path="tracks/:slug" element={<TrackPage />} />
 
             <Route path="control/*">
+              <Route path="tracks/:slug" element={<ControlTrackPage />} />
+
               <Route path="attendees" element={<ControlAttendeesPage />} />
               <Route path="attendees/:id" element={<ControlAttendeeEdit />} />
 

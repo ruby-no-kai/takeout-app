@@ -33,16 +33,6 @@ import { Api, TrackCard, TrackCardContent, TrackSlug } from "./Api";
 import { ControlApi, ControlTrackCard, ConferencePresentationSlug, ControlGetConferenceResponse } from "./ControlApi";
 import { ErrorAlert, errorToToast } from "./ErrorAlert";
 
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from "@chakra-ui/react";
-
 type FormData = {
   mode: "announcement" | "filler";
 

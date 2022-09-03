@@ -29,14 +29,13 @@ export const ControlChatSpotlightView: React.FC<{ chatSpotlight: ControlChatSpot
   chatSpotlight: spotlight,
   isActionable,
 }) => {
-  console.log(spotlight);
   return (
     <Box border="1px solid" borderColor={Colors.chatBorder2} backgroundColor="white">
       <Flex justifyContent="space-between" direction="row">
         <Heading as="h6" size="xs">
           {dayjs.unix(spotlight.starts_at).format()}
           {" - "}
-          {dayjs.unix(spotlight.ends_at).format()}
+          {spotlight.ends_at ? dayjs.unix(spotlight.ends_at).format() : "forever"}
         </Heading>
 
         <Box>

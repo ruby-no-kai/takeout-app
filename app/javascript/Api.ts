@@ -417,7 +417,7 @@ export type ChatSpotlight = {
   id: number;
   track: TrackSlug;
   starts_at: number;
-  ends_at: number;
+  ends_at: number | null;
   handles: ChatHandle[];
   updated_at: number;
 

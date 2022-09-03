@@ -18,9 +18,6 @@ export const ControlChatSpotlightsPage: React.FC = () => {
             <ControlChatSpotlights track={data.conference.tracks[slug]!} />
           </Box>
         ))}
-        <Box flex={1} key="_screen">
-          <ControlChatSpotlights track={data.conference.tracks["_screen"]!} />
-        </Box>
       </Flex>
     </Box>
   );

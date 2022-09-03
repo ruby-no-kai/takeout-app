@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     /control/chat_spotlights
     /control/stream_presences
     /control/screen
+    /control/next_session
   ).each do |_|
     get _ => 'frontend#show_require_control'
   end
@@ -70,6 +71,8 @@ Rails.application.routes.draw do
         resources :chat_spotlights, only: %i(index create update destroy)
         resource :stream_presence, only: %i(show update), path: 'stream_presence'
       end
+
+      resource :next_session, only: %i(create)
 
       resources :control_collerations, only: %i(show destroy)
 

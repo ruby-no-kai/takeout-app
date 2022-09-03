@@ -19,6 +19,7 @@ const ControlAttendeesPage = loadable(() => import("./ControlAttendeesPage"));
 const ControlAttendeeEdit = loadable(() => import("./ControlAttendeeEdit"));
 const ControlStreamPresencesPage = loadable(() => import("./ControlStreamPresencesPage"));
 const ControlScreenPage = loadable(() => import("./ControlScreenPage"));
+const ControlNextSessionPage = loadable(() => import("./ControlNextSessionPage"));
 
 const IntermissionScreen = loadable(() => import("./IntermissionScreen"));
 
@@ -59,6 +60,8 @@ export const App: React.FC<Props> = (_props) => {
               <Route path="track_cards" element={<ControlTrackCardsPage />} />
               <Route path="chat_spotlights" element={<ControlChatSpotlightsPage />} />
               <Route path="stream_presences" element={<ControlStreamPresencesPage />} />
+
+              <Route path="next_session" element={<ControlNextSessionPage />} />
 
               <Route path="session/new" element={<ControlLogin />} />
             </Route>

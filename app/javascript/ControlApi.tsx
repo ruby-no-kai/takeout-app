@@ -130,6 +130,18 @@ export type ControlGetChatSpotlightsResponse = {
   chat_spotlights: ControlChatSpotlight[];
 };
 
+export type ControlCreateNextSessionRequest = {
+  next_sessions: { track: TrackSlug; presentation: ConferencePresentationSlug }[];
+  activation_at: number;
+  description: string;
+};
+export type ControlCreateNextSessionResponse = {
+  ok: boolean;
+  control_colleration: ControlColleration;
+  track_cards: ControlTrackCard[];
+  chat_spotlights: ControlChatSpotlight[];
+};
+
 export const ControlApi = {
   useConference() {
     return useSWR<ControlGetConferenceResponse, ApiError>("/api/control/conference", swrFetcher, {
@@ -259,6 +271,12 @@ export const ControlApi = {
     const resp = await request(url, "DELETE", null, {});
     mutate(`/api/control/tracks/${encodeURIComponent(spotlight.track)}/chat_spotlights`);
     return resp.json();
+  },
+
+  async createNextSession(req: ControlCreateNextSessionRequest) {
+    const url = `/api/control/next_session`;
+    const resp = await request(url, "POST", null, req);
+    return resp.json() as Promise<ControlCreateNextSessionResponse>;
   },
 };
 export default ControlApi;

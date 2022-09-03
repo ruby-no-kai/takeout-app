@@ -1,7 +1,18 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";
-import { Box, IconButton, Text, Link, FormControl, FormLabel, Switch, Input, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  IconButton,
+  Text,
+  Link,
+  FormControl,
+  FormLabel,
+  Switch,
+  Input,
+  Textarea,
+  useToast,
+} from "@chakra-ui/react";
 import { Alert, AlertIcon, Tooltip, VStack, Flex } from "@chakra-ui/react";
 
 import TextareaAutoSize from "react-textarea-autosize";
@@ -13,14 +24,15 @@ import { Api, Track, ChannelArn } from "./Api";
 import { Colors } from "./theme";
 import { useChat } from "./ChatProvider";
 
-import { ErrorAlert } from "./ErrorAlert";
+import { ErrorAlert, errorToToast } from "./ErrorAlert";
 
 export type Props = {
   track: Track;
   channel: ChannelArn | null;
-}
+};
 
 export const ChatForm: React.FC<Props> = ({ track, channel }) => {
+  const toast = useToast();
   const chat = useChat();
 
   const { data: session } = Api.useSession();
@@ -60,11 +72,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
       }
       reset({ message: "", asAdmin: false });
     } catch (e) {
-      setErrorAlert(
-        <Box my={2}>
-          <ErrorAlert error={e} />
-        </Box>,
-      );
+      toast(errorToToast(e));
     }
     setIsRequesting(false);
   });

@@ -126,6 +126,10 @@ export type ControlDeleteControlCollerationResponse = {
   chat_spotlights: ControlChatSpotlight[];
 };
 
+export type ControlGetChatSpotlightsResponse = {
+  chat_spotlights: ControlChatSpotlight[];
+};
+
 export const ControlApi = {
   useConference() {
     return useSWR<ControlGetConferenceResponse, ApiError>("/api/control/conference", swrFetcher, {
@@ -232,9 +236,29 @@ export const ControlApi = {
     cardTracks.forEach((_, slug) => {
       mutate(`/api/control/tracks/${encodeURIComponent(slug)}/cards`);
     });
-    // TODO: chat_spotlights
-
+    const spotlightTracks = new Map<TrackSlug, boolean>();
+    data.chat_spotlights.forEach((v) => {
+      spotlightTracks.set(v.track, true);
+    });
+    spotlightTracks.forEach((_, slug) => {
+      mutate(`/api/control/tracks/${encodeURIComponent(slug)}/spotlights`);
+    });
     return data;
+  },
+
+  useChatSpotlights(slug: TrackSlug) {
+    return useSWR<ControlGetChatSpotlightsResponse, ApiError>(
+      `/api/control/tracks/${encodeURIComponent(slug)}/chat_spotlights`,
+      swrFetcher,
+    );
+  },
+  async deleteChatSpotlight(spotlight: ControlChatSpotlight) {
+    const url = `/api/control/tracks/${encodeURIComponent(spotlight.track)}/chat_spotlights/${encodeURIComponent(
+      spotlight.id,
+    )}`;
+    const resp = await request(url, "DELETE", null, {});
+    mutate(`/api/control/tracks/${encodeURIComponent(spotlight.track)}/chat_spotlights`);
+    return resp.json();
   },
 };
 export default ControlApi;

@@ -14,6 +14,7 @@ const TrackPage = loadable(() => import(/* webpackPrefetch: true */ "./TrackPage
 const ControlRoot = loadable(() => import("./ControlRoot"));
 const ControlLogin = loadable(() => import("./ControlLogin"));
 const ControlTrackCardsPage = loadable(() => import("./ControlTrackCardsPage"));
+const ControlChatSpotlightsPage = loadable(() => import("./ControlChatSpotlightsPage"));
 const ControlAttendeesPage = loadable(() => import("./ControlAttendeesPage"));
 const ControlAttendeeEdit = loadable(() => import("./ControlAttendeeEdit"));
 const ControlStreamPresencesPage = loadable(() => import("./ControlStreamPresencesPage"));
@@ -56,6 +57,7 @@ export const App: React.FC<Props> = (_props) => {
 
               <Route path="screen" element={<ControlScreenPage />} />
               <Route path="track_cards" element={<ControlTrackCardsPage />} />
+              <Route path="chat_spotlights" element={<ControlChatSpotlightsPage />} />
               <Route path="stream_presences" element={<ControlStreamPresencesPage />} />
 
               <Route path="session/new" element={<ControlLogin />} />

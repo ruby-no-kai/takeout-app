@@ -36,6 +36,7 @@ import { errorToToast } from "./ErrorAlert";
 
 const ControlTrackCardForm = loadable(() => import("./ControlTrackCardForm")); // XXX: cyclic?
 const TrackCardView = loadable(() => import("./TrackCardView"));
+const ControlCollerationRemovalPrompt = loadable(() => import("./ControlCollerationRemovalPrompt")); // XXX: cyclic?
 
 export const ControlTrackCardView: React.FC<{ card: ControlTrackCard; isActionable?: boolean }> = ({
   card,
@@ -214,34 +215,10 @@ const CardRemoveAction: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
   }
 };
 const CardRemoveActionColleration: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isRequesting, setIsRequesting] = useState(false);
-  const toast = useToast();
+  const disclosure = useDisclosure();
+  const { onOpen } = disclosure;
   const onRemoveSingle = () => {
-    if (isRequesting) return;
-    setIsRequesting(true);
-    ControlApi.deleteTrackCard(card)
-      .then(() => {
-        setIsRequesting(false);
-        onClose();
-      })
-      .catch((e) => {
-        setIsRequesting(false);
-        toast(errorToToast(e));
-      });
-  };
-  const onRemoveAll = () => {
-    if (isRequesting) return;
-    setIsRequesting(true);
-    ControlApi.deleteControlColleration(card.control_colleration?.id!) // XXX: id!
-      .then(() => {
-        setIsRequesting(false);
-        onClose();
-      })
-      .catch((e) => {
-        setIsRequesting(false);
-        toast(errorToToast(e));
-      });
+    return ControlApi.deleteTrackCard(card);
   };
   return (
     <>
@@ -256,31 +233,14 @@ const CardRemoveActionColleration: React.FC<{ card: ControlTrackCard }> = ({ car
         onClick={onOpen}
       />
 
-      <Modal isOpen={isOpen} onClose={onClose} size="3xl">
-        <ModalOverlay />
-
-        <ModalContent>
-          <ModalHeader>Remove all related items?</ModalHeader>
-          <ModalCloseButton />
-
-          <ModalBody>
-            <Text>
-              This item is a part of colleration. You can choose to remove only this item or all related items.
-            </Text>
-
-            <CardRemoveActionCollerationDetail card={card} />
-          </ModalBody>
-
-          <ModalFooter>
-            <Button mr={3} colorScheme="gray" isLoading={isRequesting} onClick={onRemoveSingle}>
-              Remove
-            </Button>
-            <Button colorScheme="red" isLoading={isRequesting} onClick={onRemoveAll}>
-              Remove all
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ControlCollerationRemovalPrompt
+        itemType="trackCard"
+        item={card}
+        disclosure={disclosure}
+        onRemoveSingle={onRemoveSingle}
+      >
+        <ControlTrackCardView isActionable={false} card={card} />
+      </ControlCollerationRemovalPrompt>
     </>
   );
 };
@@ -323,36 +283,6 @@ const CardRemoveActionSingle: React.FC<{ card: ControlTrackCard }> = ({ card }) 
         </PopoverBody>
       </PopoverContent>
     </Popover>
-  );
-};
-
-const CardRemoveActionCollerationDetail: React.FC<{ card: ControlTrackCard }> = ({ card }) => {
-  const { data: colleration } = ControlApi.useControlColleration(card.control_colleration?.id);
-  if (!colleration) return <Skeleton />;
-
-  // TODO: chat_highlights
-
-  return (
-    <>
-      <Box>
-        <Heading as="h4" fontSize="1.2rem">
-          Item you selected to remove
-        </Heading>
-        <ControlTrackCardView isActionable={false} card={card} />
-      </Box>
-      <Box>
-        <Heading as="h4" fontSize="1.2rem">
-          Related items
-        </Heading>
-        {colleration.track_cards.map((v) => {
-          if (v.id === card.id) {
-            return <React.Fragment key={v.id}></React.Fragment>;
-          } else {
-            return <ControlTrackCardView key={v.id} isActionable={false} card={v} />;
-          }
-        })}
-      </Box>
-    </>
   );
 };
 

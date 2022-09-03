@@ -9,7 +9,7 @@ class ChatSpotlight < ApplicationRecord
     end
     spotlight = ChatSpotlight.create!(track: track, starts_at: start_t, ends_at: nil, handles: handles)
     if emit
-      EmitChatSpotlightJob.perform_now(spotlights: [last, spotlight].compact)
+      EmitConferenceDataJob.perform_now(route: :chime)
     end
     spotlight
   end

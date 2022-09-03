@@ -35,6 +35,6 @@ namespace :takeout do
       content: presentation_b.as_track_card,
     ) : nil
 
-    EmitIvsMetadataJob.perform_now
+    EmitConferenceDataJob.perform_now(route: :ivs)
   end
 end

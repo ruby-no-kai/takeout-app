@@ -53,8 +53,7 @@ class Api::Control::NextSessionsController < Api::Control::ApplicationController
       )
     end
 
-    EmitChatSpotlightJob.perform_now(spotlights: chat_spotlights)
-    EmitIvsMetadataJob.perform_now
+    EmitConferenceDataJob.perform_now(route: :ivs)
 
     render(json: {
       ok: true,

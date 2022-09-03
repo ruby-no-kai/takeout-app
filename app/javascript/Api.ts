@@ -2,13 +2,13 @@ import useSWR from "swr";
 import { mutate } from "swr";
 import * as Rails from "@rails/ujs";
 import dayjs from "dayjs";
-import { dequal } from "dequal";
 
 import { CACHE_BUSTER } from "./meta";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 const API_CONFERENCE = `/api/conference?p=${CACHE_BUSTER}`;
+const PSEUDO_TRACK_SLUGS: TrackSlug[] = ["_screen"];
 
 export class ApiError extends Error {
   public localError: Error;
@@ -69,80 +69,6 @@ export async function request(path: string, method: string, query: object | null
   return resp;
 }
 
-function mergeConferenceData(target: GetConferenceResponse, other: GetConferenceResponse) {
-  //console.log("mergeConferenceData", JSON.parse(JSON.stringify({ target, other })));
-  Object.entries(other.conference.tracks).forEach(([trackSlug, otherTrack]) => {
-    //console.log(`mergeConferenceData: track ${trackSlug}`);
-    if (!target.conference.tracks[trackSlug]) return;
-
-    const mergeCard = (key: "card" | "card_candidate") => {
-      const targetCard: TrackCard | null = target.conference.tracks[trackSlug][key];
-      const otherCard: TrackCard | null = otherTrack[key];
-      if (!otherCard) return;
-
-      if (!targetCard || targetCard.ut < otherCard.ut) {
-        //console.log("mergeConferenceData/mergeCard: otherCard", { trackSlug, key, targetCard, otherCard });
-        target.conference.tracks[trackSlug][key] = otherCard;
-      } else {
-        //console.log("mergeConferenceData/mergeCard: targetCard", { trackSlug, key, targetCard, otherCard });
-      }
-    };
-    mergeCard("card");
-    mergeCard("card_candidate");
-    //console.log("mergeConferenceData: merged cards");
-
-    const mergeSpotlight = () => {
-      const knownSpotlights = new Map<number, ChatSpotlight>();
-
-      const targetSpotlights = new Map(target.conference.tracks[trackSlug].spotlights.map((s) => [s.id, s]));
-      const otherSpotlights = new Map(target.conference.tracks[trackSlug].spotlights.map((s) => [s.id, s]));
-
-      [
-        [targetSpotlights, otherSpotlights],
-        [otherSpotlights, targetSpotlights],
-      ].forEach(([a, b]) => {
-        a.forEach((sA, id) => {
-          if (knownSpotlights.has(id)) return;
-          const sB = b.get(id);
-          if (!sB) return;
-
-          knownSpotlights.set(id, sA.updated_at < sB.updated_at ? sB : sA);
-        });
-      });
-
-      [targetSpotlights, otherSpotlights].forEach((ss) => {
-        ss.forEach((s, id) => {
-          if (!knownSpotlights.has(id)) knownSpotlights.set(id, s);
-        });
-      });
-
-      target.conference.tracks[trackSlug].spotlights = Array.from(knownSpotlights.values());
-    };
-    mergeSpotlight();
-    //console.log("mergeConferenceData: merged spotlights");
-
-    const mergePresence = () => {
-      Object.entries(otherTrack.presences).forEach(([, otherPresence]) => {
-        const targetPresence = target.conference.tracks[trackSlug].presences[otherPresence.kind];
-        if (!targetPresence) {
-          target.conference.tracks[trackSlug].presences[otherPresence.kind] = otherPresence;
-        } else if (targetPresence && targetPresence.at <= otherPresence.at) {
-          target.conference.tracks[trackSlug].presences[otherPresence.kind] = otherPresence;
-        }
-      });
-    };
-    mergePresence();
-    //console.log("mergeConferenceData: merged presences");
-    //
-    const mergeViewerCount = () => {
-      if (otherTrack.viewerCount && !target.conference.tracks[trackSlug].viewerCount) {
-        target.conference.tracks[trackSlug].viewerCount = otherTrack.viewerCount;
-      }
-    };
-    mergeViewerCount();
-  });
-}
-
 function determineEarliestCandidateActivationAt(data: GetConferenceResponse) {
   const timestamps = data.conference.track_order
     .map((slug) => data.conference.tracks[slug]?.card_candidate?.at)
@@ -154,63 +80,11 @@ function determineEarliestCandidateActivationAt(data: GetConferenceResponse) {
 }
 
 export function consumeIvsMetadata(metadata: IvsMetadata) {
-  mutate(
-    API_CONFERENCE,
-    async (known2: GetConferenceResponse | undefined) => {
-      if (!known2) {
-        console.warn("consumeIvsMetadata, known undefined");
-        return known2;
-      }
-      let known: GetConferenceResponse = JSON.parse(JSON.stringify(known2));
-      let updated = false;
-      metadata.i?.forEach((item) => {
-        console.log(item);
-        if (item.c) {
-          const cardUpdate = item.c;
-          const cardKey = cardUpdate.candidate ? "card_candidate" : "card";
-
-          if (cardUpdate.clear) {
-            const track = known.conference.tracks[cardUpdate.clear];
-            if (track?.[cardKey]) {
-              console.log("Clearing card", { key: cardKey, cardUpdate });
-              track[cardKey] = null;
-              updated = true;
-            }
-          } else if (cardUpdate.card) {
-            const track = known.conference.tracks[cardUpdate.card.track];
-            if (track) {
-              console.log("Updating card", { key: cardKey, cardUpdate });
-              track[cardKey] = cardUpdate.card;
-              updated = true;
-            }
-          }
-        }
-
-        if (item.p) {
-          const presence = item.p;
-          const track = known.conference.tracks[presence.track];
-          if (track) {
-            const was = track.presences[presence.kind]?.at ?? 0;
-            console.log("Updating stream presence", { presence, was });
-            track.presences[presence.kind] = presence;
-            updated = true;
-          }
-        }
-
-        if (item.n) {
-          const track = known.conference.tracks[item.n.track];
-          if (track) {
-            console.log("Updating viewerCount", item.n);
-            track.viewerCount = item.n;
-            updated = true;
-          }
-        }
-      });
-      if (updated) known.requested_at = 0;
-      return known;
-    },
-    { revalidate: false },
-  );
+  console.log("consumeIvsMetadata", metadata);
+  // TODO: viewerCount
+  if (metadata.outpost) {
+    consumeOutpostNotification(metadata.outpost);
+  }
 }
 
 export function consumeChatAdminControl(adminControl: ChatAdminControl) {
@@ -222,84 +96,24 @@ export function consumeChatAdminControl(adminControl: ChatAdminControl) {
       false,
     );
   }
-  if (adminControl.spotlights) {
-    const spotlights = adminControl.spotlights;
-    mutate(
-      API_CONFERENCE,
-      async (known2: GetConferenceResponse | undefined) => {
-        if (!known2) {
-          console.warn("consumeChatAdminControl/2, known undefined");
-          return known2;
-        }
-        let known: GetConferenceResponse = JSON.parse(JSON.stringify(known2));
-        spotlights.forEach((spotlight) => {
-          const track = known.conference.tracks[spotlight.track];
-          if (!track) return null;
-          const idx = track.spotlights.findIndex((v) => v.id === spotlight.id);
-          if (idx !== -1) {
-            track.spotlights[idx] = spotlight;
-          } else {
-            track.spotlights.push(spotlight);
-          }
-        });
-        return known;
-      },
-      { revalidate: false },
-    );
+  if (adminControl.outpost) {
+    consumeOutpostNotification(adminControl.outpost);
   }
-  if (adminControl.spotlights_r) {
-    const spotlightRemovals = adminControl.spotlights_r;
+}
+
+function consumeOutpostNotification(outpost: OutpostNotification) {
+  if (outpost.conference) {
+    console.log("outpost.conference", outpost.conference);
     mutate(
       API_CONFERENCE,
-      async (known2: GetConferenceResponse | undefined) => {
-        if (!known2) {
-          console.warn("consumeChatAdminControl/2, known undefined");
-          return known2;
-        }
-        let known: GetConferenceResponse = JSON.parse(JSON.stringify(known2));
-        known.conference.track_order.forEach((trackSlug) => {
-          const track = known.conference.tracks[trackSlug];
-          if (!track) return;
-          spotlightRemovals.forEach((removal) => {
-            const idx = track.spotlights.findIndex((v) => v.id === removal.id);
-            if (idx !== -1) {
-              track.spotlights[idx]._removed = true;
-              console.log("consumeChatAdminControl/spotlightRemovals: remove ", {
-                trackSlug,
-                removal,
-                spotlight: track.spotlights[idx],
-              });
-            }
-          });
-        });
-        return known;
+      async (_known: GetConferenceResponse) => {
+        const resp = await request(`/outpost/${outpost.conference}`, "GET", null, null);
+        console.log("outpost.conference/mutate", outpost.conference);
+        return (await resp.json()) as GetConferenceResponse;
       },
-      { revalidate: false },
-    );
-  }
-  if (adminControl.presences) {
-    const presences = adminControl.presences;
-    mutate(
-      API_CONFERENCE,
-      async (known2: GetConferenceResponse | undefined) => {
-        if (!known2) {
-          console.warn("consumeChatAdminControl/2, known undefined");
-          return known2;
-        }
-        const known: GetConferenceResponse = JSON.parse(JSON.stringify(known2));
-        presences.forEach((presence) => {
-          const track = known.conference.tracks[presence.track];
-          if (track) {
-            const was = track.presences[presence.kind]?.at ?? 0;
-            if (was < presence.at) {
-              console.log("Updating stream presence (chat)", presence);
-              track.presences[presence.kind] = presence;
-            }
-          }
-        });
-        return known;
+      {
+        revalidate: false,
       },
-      { revalidate: false },
     );
   }
 }
@@ -514,10 +328,13 @@ export type ChatAdminControl = {
   flush?: boolean;
   pin?: ChatMessagePin;
   caption?: ChatCaption;
-  spotlights?: ChatSpotlight[];
-  spotlights_r: ChatSpotlightRemoval[];
-  presences?: StreamPresence[];
   promo?: boolean;
+
+  outpost?: OutpostNotification;
+};
+
+export type OutpostNotification = {
+  conference?: string;
 };
 
 export type ChatCaption = {
@@ -550,12 +367,10 @@ export type ChatMessagePin = {
 };
 
 export type IvsMetadata = {
-  i: IvsMetadataItem[];
+  outpost?: OutpostNotification;
 };
-export type IvsMetadataItem = {
-  c?: IvsCardUpdate;
-  p?: StreamPresence;
-  n?: ViewerCount;
+type IvsMetadataItem = {
+  n?: ViewerCount; // TODO:
 };
 
 export type IvsCardUpdate = {
@@ -615,22 +430,18 @@ export const Api = {
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
       //focusThrottleInterval: 15 * 1000, // TODO:
-      compare(knownData, newData) {
-        if (!knownData || !newData) return false;
-
-        try {
-          mergeConferenceData(newData, knownData);
-        } catch (e) {
-          console.warn(e);
-          throw e;
-        }
-        const res = dequal(newData, knownData);
-        return res;
-      },
     });
+    let data = swr.data;
 
     // Schedule candidate TrackCard activation
-    const { data } = swr;
+    const overlayCardActivation = useSWR<{ timestamp: number }, ApiError>(
+      "/outpost/.virtual/conference/overlay/activation",
+      async (_x) => {
+        return { timestamp: -1 };
+      },
+      { revalidateOnFocus: false, revalidateOnReconnect: false },
+    );
+    console.log("overlayCardActivation", overlayCardActivation.data);
     useEffect(() => {
       if (!data) return;
       const earliestCandidateActivationAt = determineEarliestCandidateActivationAt(data);
@@ -641,11 +452,42 @@ export const Api = {
           new Date(earliestCandidateActivationAt * 1000),
         ).toISOString()}, in ${timeout / 1000}s`,
       );
-      const timer = setTimeout(() => activateCandidateTrackCard(data), timeout);
+      const timer = setTimeout(
+        () =>
+          mutate("/outpost/.virtual/conference/overlay/activation", async (_: unknown) => ({
+            timestamp: earliestCandidateActivationAt,
+          })),
+        timeout,
+      );
       return () => clearTimeout(timer);
     }, [data]);
 
-    return swr;
+    const data1: typeof swr.data = useMemo(() => {
+      if (!swr.data) return swr.data;
+      let now = dayjs().unix();
+      const trackSlugs = [...swr.data.conference.track_order, ...PSEUDO_TRACK_SLUGS];
+      let found = new Map<TrackSlug, boolean>();
+      for (let i = 0; i < trackSlugs.length; i++) {
+        let track = swr.data.conference.tracks[trackSlugs[i]];
+        if (!track?.card_candidate) continue;
+        if (track.card_candidate.at >= now) {
+          found.set(trackSlugs[i], true);
+        }
+      }
+      if (found) {
+        const patched: GetConferenceResponse = JSON.parse(JSON.stringify(swr.data));
+        found.forEach((_, trackSlug) => {
+          const track = patched.conference.tracks[trackSlug]!;
+          patched.conference.tracks[trackSlug]!.card = track.card_candidate!;
+          patched.conference.tracks[trackSlug]!.card_candidate = null;
+        });
+        return patched;
+      } else {
+        return swr.data;
+      }
+    }, [swr.data, overlayCardActivation.data?.timestamp]);
+
+    return { ...swr, data: data1 };
   },
 
   // XXX: this is not an API

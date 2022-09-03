@@ -66,9 +66,12 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
         </Box>,
       );
     }
-    setFocus("message");
     setIsRequesting(false);
   });
+
+  React.useEffect(() => {
+    if (!isRequesting) setFocus("message");
+  }, [isRequesting]);
 
   const shouldDisable = !session?.attendee || !chat.session || !channel;
 

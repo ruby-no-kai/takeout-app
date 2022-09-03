@@ -1,5 +1,6 @@
 import React from "react";
 import loadable, { lazy } from "@loadable/component";
+import * as Sentry from "@sentry/react";
 
 import { Flex, Box, Container } from "@chakra-ui/react";
 import { AspectRatio, Skeleton, HStack } from "@chakra-ui/react";
@@ -19,7 +20,7 @@ const AppVersionAlert = loadable(() => import("./AppVersionAlert"));
 export type Props = {
   track: Track;
   streamOptionsState: TrackStreamOptionsState;
-}
+};
 
 export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
   const [streamOptions, setStreamOptions] = streamOptionsState;
@@ -86,15 +87,17 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
 
       <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]} mt="12px">
         <Box w="100%">
-          <TrackCardView
-            card={track.card}
-            nav={
-              <HStack alignItems="flex-start" spacing="20px">
-                {track.viewerCount ? <TrackViewerCount count={track.viewerCount} /> : null}
-                <Box display={["none", "none", "block", "block"]}>{trackOptionsSelector("2")}</Box>
-              </HStack>
-            }
-          />
+          <Sentry.ErrorBoundary fallback={<p>Error...</p>}>
+            <TrackCardView
+              card={track.card}
+              nav={
+                <HStack alignItems="flex-start" spacing="20px">
+                  {track.viewerCount ? <TrackViewerCount count={track.viewerCount} /> : null}
+                  <Box display={["none", "none", "block", "block"]}>{trackOptionsSelector("2")}</Box>
+                </HStack>
+              }
+            />
+          </Sentry.ErrorBoundary>
         </Box>
         <Box maxW={["auto", "auto", "auto", "400px"]} w="100%" ml="30px">
           <AppVersionAlert />

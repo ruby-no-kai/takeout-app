@@ -126,6 +126,10 @@ export type ControlDeleteControlCollerationResponse = {
   chat_spotlights: ControlChatSpotlight[];
 };
 
+export type ControlGetChatSpotlightsResponse = {
+  chat_spotlights: ControlChatSpotlight[];
+};
+
 export const ControlApi = {
   useConference() {
     return useSWR<ControlGetConferenceResponse, ApiError>("/api/control/conference", swrFetcher, {
@@ -235,6 +239,21 @@ export const ControlApi = {
     // TODO: chat_spotlights
 
     return data;
+  },
+
+  useChatSpotlights(slug: TrackSlug) {
+    return useSWR<ControlGetChatSpotlightsResponse, ApiError>(
+      `/api/control/tracks/${encodeURIComponent(slug)}/chat_spotlights`,
+      swrFetcher,
+    );
+  },
+  async deleteChatSpotlight(spotlight: ControlChatSpotlight) {
+    const url = `/api/control/tracks/${encodeURIComponent(spotlight.track)}/chat_spotlights/${encodeURIComponent(
+      spotlight.id,
+    )}`;
+    const resp = await request(url, "DELETE", null, {});
+    mutate(`/api/control/tracks/${encodeURIComponent(spotlight.track)}/chat_spotlights`);
+    return resp.json();
   },
 };
 export default ControlApi;

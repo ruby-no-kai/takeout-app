@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     /control/attendees
     /control/attendees/:id
     /control/track_cards
+    /control/chat_spotlights
     /control/stream_presences
     /control/screen
   ).each do |_|
@@ -66,6 +67,7 @@ Rails.application.routes.draw do
 
       resources :tracks, param: :slug, only: %i() do
         resources :track_cards, only: %i(index create update destroy), path: 'cards'
+        resources :chat_spotlights, only: %i(index create update destroy)
         resource :stream_presence, only: %i(show update), path: 'stream_presence'
       end
 

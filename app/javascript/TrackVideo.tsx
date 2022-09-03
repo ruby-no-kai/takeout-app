@@ -175,7 +175,7 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl, shouldStartPlaybac
 
   return (
     <AspectRatio ratio={16 / 9}>
-      <Box w="100%" h="100%" ref={elem} />
+      <Box h="100%" ref={elem} />
     </AspectRatio>
   );
 };

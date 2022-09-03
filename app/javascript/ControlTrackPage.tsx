@@ -38,7 +38,7 @@ export const ControlTrackPage: React.FC = () => {
         templateAreas={`"preview infopane chatpane"
          "trackcard infopane chatpane"`}
         templateColumns="1fr 20%  20%"
-        templateRows="70% 30% "
+        templateRows="75% 25% "
         gap={4}
       >
         <GridItem area={"preview"}>
@@ -133,11 +133,21 @@ export const InfoPane: React.FC<{ track: Track }> = ({ track }) => {
       <Flex direction="row">
         {cardsData?.track_cards ? (
           <>
-            {cardsData.track_cards[0] ? <TrackCardBox heading="Current card" card={cardsData.track_cards[0]} /> : null}
-            {cardsData.track_cards[1] ? <TrackCardBox heading="Up next" card={cardsData.track_cards[1]} /> : null}
+            {cardsData.track_cards[0] ? (
+              <TrackCardBox heading="Current card" card={cardsData.track_cards[0]} />
+            ) : (
+              <Box flex={1} />
+            )}
+            {cardsData.track_cards[1] ? (
+              <TrackCardBox heading="Up next" card={cardsData.track_cards[1]} />
+            ) : (
+              <Box flex={1} />
+            )}
           </>
         ) : null}
-        <ControlTrackCardForm trackSlug={track.slug} />
+        <Box flex={1}>
+          <ControlTrackCardForm trackSlug={track.slug} />
+        </Box>
       </Flex>
     </Box>
   );
@@ -145,7 +155,7 @@ export const InfoPane: React.FC<{ track: Track }> = ({ track }) => {
 
 const TrackCardBox: React.FC<{ heading: string; card: ControlTrackCard }> = ({ heading, card }) => {
   return (
-    <Box mr={3}>
+    <Box mr={3} flex={1}>
       <Heading as="h5" fontSize="1.1rem">
         {heading}
       </Heading>

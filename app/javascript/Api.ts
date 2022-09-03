@@ -446,35 +446,44 @@ export const Api = {
       if (!data) return;
       const earliestCandidateActivationAt = determineEarliestCandidateActivationAt(data);
       if (!earliestCandidateActivationAt) return;
-      const timeout = (earliestCandidateActivationAt - dayjs().unix()) * 1000 + 500;
+      const timeout = (earliestCandidateActivationAt - dayjs().unix()) * 1000 + 1500;
+      if (timeout < 0) return;
       console.log(
         `Scheduling candidate TrackCard activation; earliest will happen at ${dayjs(
           new Date(earliestCandidateActivationAt * 1000),
         ).toISOString()}, in ${timeout / 1000}s`,
       );
-      const timer = setTimeout(
-        () =>
-          mutate("/outpost/.virtual/conference/overlay/activation", async (_: unknown) => ({
-            timestamp: earliestCandidateActivationAt,
-          })),
-        timeout,
-      );
+      const timer = setTimeout(() => {
+        console.log("Triggering TrackCard activation");
+        mutate(
+          "/outpost/.virtual/conference/overlay/activation",
+          async (_: unknown) => {
+            return {
+              timestamp: earliestCandidateActivationAt,
+            };
+          },
+          { revalidate: false },
+        );
+      }, timeout);
       return () => clearTimeout(timer);
     }, [data]);
 
     const data1: typeof swr.data = useMemo(() => {
       if (!swr.data) return swr.data;
+      console.log("TrackCard activation triggered");
       let now = dayjs().unix();
       const trackSlugs = [...swr.data.conference.track_order, ...PSEUDO_TRACK_SLUGS];
       let found = new Map<TrackSlug, boolean>();
       for (let i = 0; i < trackSlugs.length; i++) {
         let track = swr.data.conference.tracks[trackSlugs[i]];
         if (!track?.card_candidate) continue;
-        if (track.card_candidate.at >= now) {
+        console.log("TrackCard activation", { now, at: track.card_candidate.at, track });
+        if (track.card_candidate.at <= now) {
           found.set(trackSlugs[i], true);
         }
       }
-      if (found) {
+      if (found.size > 0) {
+        console.log("activating candidate TrackCard", found);
         const patched: GetConferenceResponse = JSON.parse(JSON.stringify(swr.data));
         found.forEach((_, trackSlug) => {
           const track = patched.conference.tracks[trackSlug]!;
@@ -485,7 +494,7 @@ export const Api = {
       } else {
         return swr.data;
       }
-    }, [swr.data, overlayCardActivation.data?.timestamp]);
+    }, [swr.data, overlayCardActivation.data]);
 
     return { ...swr, data: data1 };
   },

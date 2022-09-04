@@ -82,10 +82,16 @@ IVS and Chime SDK for Messaging are uncovered by Terraform :/
 ### Chime SDK for Messaging
 
 ```sh
-aws chime create-app-instance --name rk-takeout-dev
-aws chime create-app-instance-user --app-instance-arn "arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443" --app-instance-user-id app --name app
-aws chime create-app-instance-admin --app-instance-arn "arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443" --app-instance-admin-arn arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/user/app
+aws chime create-app-instance --name rk-takeout-...
 ```
+
+And write app instance ARN down to conference jsonnet. Then run
+
+```
+rake takeout:ensure_chime
+```
+
+and it'll output channel and user ARNs for conference jsonnet.
 
 ### IVS
 

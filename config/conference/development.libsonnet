@@ -43,6 +43,9 @@ local ivs_url = 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/vide
   chime: {
     app_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443',
     app_user_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/user/app',
+    kiosk_user_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/user/kiosk',
+    systems_channel_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/channel/4ef6b2b5b7a2e7070613f62d4e4dc41d0770b24af0a3536ac2773de86225c5b3',
+
   },
   ivs: {
     region: 'us-west-2',

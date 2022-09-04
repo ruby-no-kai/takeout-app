@@ -26,10 +26,10 @@ export const ScreenAnnounceView: React.FC = () => {
   const { data, mutate } = Api.useConference();
 
   // XXX: i know i can use useSWR refreshInterval
-  React.useEffect(() => {
-    const interval = setInterval(() => mutate(), 1000);
-    return () => clearInterval(interval);
-  }, []);
+  //React.useEffect(() => {
+  //  const interval = setInterval(() => mutate(), 1000);
+  //  return () => clearInterval(interval);
+  //}, []);
 
   const card = data?.conference?.tracks?._screen?.card;
 

@@ -390,7 +390,7 @@ function generateTrackCardFromPresentation(
   };
 }
 
-function templateIntermission(): TrackCardConent {
+function templateIntermission(): TrackCardContent {
   return {
     interpretation: true,
   };

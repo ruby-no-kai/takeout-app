@@ -17,7 +17,7 @@ import { useChat } from "./ChatProvider";
 import { Colors } from "./theme";
 import { MicIcon } from "./MicIcon";
 import { CampaignIcon } from "./CampaignIcon";
-import { LunchDiningIcon } from "./LunchDiningIcon";
+import { KaigiStaffIcon } from "./KaigiStaffIcon";
 import { CommitterIcon } from "./CommitterIcon";
 
 export type Props = {
@@ -39,7 +39,7 @@ export const ChatMessageView: React.FC<Props> = (props) => {
       w="100%"
       direction="row"
       alignItems="flex-start"
-      bg={pinned ? Colors.baseLight : message.sender.isAdmin ? "#ffffff" : Colors.backgroundColor}
+      bg={pinned ? Colors.baseLight : message.sender.isAdmin ? "#ffffff" : "transparent"}
       py={pinned ? "10px" : "4px"}
       px="15px"
       onMouseEnter={() => setShowMenuButton(true)}
@@ -88,7 +88,7 @@ const ChatMessageAuthor: React.FC<{ author: ChatSender; highlight: boolean; pinn
   highlight,
   pinned,
 }) => {
-  const defaultBg = pinned ? Colors.baseLight : Colors.backgroundColor;
+  const defaultBg = pinned ? Colors.baseLight : "transparent";
   const { bg, fg } = [
     author.isAdmin ? Colors.nameHighlightOrgz : null,
     highlight && author.isSpeaker ? Colors.nameHighlightSpeaker : null,
@@ -101,7 +101,7 @@ const ChatMessageAuthor: React.FC<{ author: ChatSender; highlight: boolean; pinn
 
   const icons: JSX.Element[] = [];
   if (author.isAdmin) icons.push(<CampaignIcon key="admin" color={fg} />);
-  if (author.isStaff) icons.push(<LunchDiningIcon key="staff" color={fg} />);
+  if (author.isStaff) icons.push(<KaigiStaffIcon key="staff" color={fg} />);
   if (author.isSpeaker) icons.push(<MicIcon key="speaker" color={fg} />);
   if (author.isCommitter) icons.push(<CommitterIcon key="committer" color={fg} />);
 

@@ -28,20 +28,21 @@ import { ErrorAlert } from "./ErrorAlert";
 export const Login: React.FC = () => {
   return (
     <Box w="100%" h="100%" minH="100vh" bgColor={Colors.bg} py={["20px", "20px", "20px", "165px"]}>
-      <Container maxW={["auto", "auto", "auto", "780px"]} w="100%">
+      <Container maxW={["auto", "auto", "auto", "795px"]} w="100%">
         <Flex
           direction={["column", "column", "column", "row"]}
-          justifyContent="space-around"
+          justifyContent="space-between"
           alignItems="top"
           mx="15px"
         >
-          <Box maxW="331px" w="100%" mb="15px" display="flex" flexDirection="row" alignItems="center">
-            <picture>
+          <Box maxW="317px" w="100%" mb="15px" display="flex" flexDirection="row" alignItems="center">
+            <Image src="/assets/hero.svg" w="100%" />
+            {/*<picture>
               <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
               <Image src="/assets/hero_hamburger.svg" w="100%" />
-            </picture>
+              </picture>*/}
           </Box>
-          <Box>
+          <Box w={["100%", "100%", "360px", "360px"]}>
             <VStack>
               <Box>
                 <Heading
@@ -52,18 +53,18 @@ export const Login: React.FC = () => {
                   css={{ "& svg": { maxWidth: "100%", height: "auto" } }}
                 >
                   <Logo />
-                  <VisuallyHidden>RubyKaigi Takeout 2021 Streaming Login</VisuallyHidden>
+                  <VisuallyHidden>RubyKaigi 2022 Streaming Login</VisuallyHidden>
                 </Heading>
                 <Flex direction="row-reverse">
-                  <Box mr="-10px">
+                  <Box mr="-2px">
                     <StreamingLogo />
                   </Box>
                 </Flex>
               </Box>
               <Box textAlign="center" pt="30px">
                 <Text>
-                  A paid ticket is required to access this virtual conference.{" "}
-                  <Link isExternal href="https://ti.to/rubykaigi/takeout-2021" textDecoration="underline">
+                  Don't have a ticket?{" "}
+                  <Link isExternal href="https://ti.to/rubykaigi/2022" textDecoration="underline">
                     Register now.
                   </Link>
                 </Text>

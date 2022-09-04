@@ -70,6 +70,8 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
         speakers: attributes[:speakers],
         screen: attributes[:screen],
         upcoming_topics: attributes[:upcoming_topics],
+        intermission: !!attributes[:intermission],
+        show_promo: !!attributes[:show_promo],
       },
     }
   end

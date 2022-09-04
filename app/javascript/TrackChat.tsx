@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Box, Flex, Skeleton } from "@chakra-ui/react";
 
-import type { Track, ChatMessage } from "./Api";
+import type { Track, ChatMessage, ChatMessagePin } from "./Api";
 import { Api, consumeChatAdminControl } from "./Api";
 import { Colors } from "./theme";
 import { useChat } from "./ChatProvider";
@@ -12,6 +12,7 @@ import type { ChatStatus, ChatUpdate } from "./ChatSession";
 import { ChatStatusView } from "./ChatStatusView";
 import { ChatHistoryView } from "./ChatHistoryView";
 import { ChatForm } from "./ChatForm";
+import dayjs from "dayjs";
 
 export type Props = {
   track: Track;
@@ -26,7 +27,6 @@ type ChatHistoryLoadingStatus =
 export const TrackChat: React.FC<Props> = ({ track }) => {
   const chat = useChat();
   const { data: session } = Api.useSession();
-  const { data: chatMessagePin } = Api.useChatMessagePin(track.slug);
   const [[chatSessionStatus, chatSessionError], setChatSessionStatusTuple] = React.useState<ChatSessionStatusTuple>([
     chat?.session?.status,
     chat?.session?.error,
@@ -94,6 +94,8 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
       });
   }, [chat.session, chatSessionStatus, trackChannel]);
 
+  const chatMessagePin = useChatMessagePinOrSponsorshipPromo(track);
+
   if (!track.chat) {
     console.warn("TrackChat: NO TRACK CHAT PRESENT");
     return <></>;
@@ -115,7 +117,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
             messages={chatHistory}
             loading={isLoadingHistory.status === "LOADING"}
             showAdminActions={session?.attendee?.is_staff ?? false}
-            pinnedMessage={chatMessagePin?.pin?.message ?? null}
+            pinnedMessage={chatMessagePin?.message ?? null}
           />
         ) : (
           <Skeleton flexGrow={1} flexShrink={0} flexBasis={0} />
@@ -127,5 +129,55 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
     </Flex>
   );
 };
+
+const SPONSORSHIP_PROMO_TICK_INTERVAL = 5;
+const SPONSORSHIP_PROMO_ROTATE_INTERVAL = 20;
+
+function useChatMessagePinOrSponsorshipPromo(track: Track): ChatMessagePin | null {
+  const { data: serverPin } = Api.useChatMessagePin(track.slug);
+  const { data: sponsorships } = Api.useConferenceSponsorships();
+  const promoEntries = useMemo(() => sponsorships?.conference_sponsorships.filter((v) => v.promo), [sponsorships]);
+
+  const shouldShowPromo = track.card?.show_promo;
+  const [tick, setTick] = useState(-1);
+
+  useEffect(() => {
+    if (shouldShowPromo) {
+      setTick(dayjs().unix());
+      const timer = setInterval(() => {
+        setTick(dayjs().unix());
+      }, SPONSORSHIP_PROMO_TICK_INTERVAL * 1000);
+      return () => clearInterval(timer);
+    } else {
+      setTick(-1);
+      return undefined;
+    }
+  }, [shouldShowPromo]);
+
+  //console.log("useChatMessagePinOrSponsorshipPromo", { shouldShowPromo, tick, promoEntries, serverPin });
+
+  if (shouldShowPromo && promoEntries) {
+    const now = tick === -1 ? dayjs().unix() : tick;
+    const sponsor = promoEntries[Math.floor(now / SPONSORSHIP_PROMO_ROTATE_INTERVAL) % promoEntries.length];
+    //console.log("useChatMessagePinOrSponsorshipPromo", { now, sponsor });
+    if (sponsor?.promo) {
+      const pseudoPinMessage: ChatMessagePin = {
+        at: now,
+        track: "PROMO",
+        message: {
+          channel: "PROMO",
+          id: `PROMO-${sponsor.id}`,
+          content: sponsor.promo,
+          sender: { handle: `ps_${sponsor.sponsor_app_id}`, version: "0", name: sponsor.name },
+          timestamp: now * 1000,
+          redacted: false,
+          adminControl: { promo: true },
+        },
+      };
+      return pseudoPinMessage;
+    }
+  }
+  return serverPin?.pin ?? null;
+}
 
 export default TrackChat;

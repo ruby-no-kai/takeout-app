@@ -80,10 +80,18 @@ export const VideoPane: React.FC<{ track: Track }> = ({ track }) => {
   return (
     <Box>
       <Tabs isLazy index={currentTab} onChange={setCurrentTab} variant="soft-rounded">
-        <TabList>
-          <Tab>Main</Tab>
-          <Tab>Interpretation</Tab>
-        </TabList>
+        <Flex direction="row" justify="space-between" alignItems="center">
+          <Box>
+            <Heading as="p" fontSize="1.1rem">
+              {track.name} ({track.slug})
+            </Heading>
+          </Box>
+
+          <TabList>
+            <Tab>Main</Tab>
+            <Tab>Interpretation</Tab>
+          </TabList>
+        </Flex>
         <TabPanels>
           <TabPanel p={0}>
             <React.Suspense

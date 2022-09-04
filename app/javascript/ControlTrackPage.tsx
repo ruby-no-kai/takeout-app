@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import loadable, { lazy } from "@loadable/component";
 
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { Box, Flex, Heading, VStack } from "@chakra-ui/react";
 import { Grid, GridItem, Skeleton, AspectRatio } from "@chakra-ui/react";
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
 
@@ -146,7 +146,9 @@ export const InfoPane: React.FC<{ track: Track }> = ({ track }) => {
           </>
         ) : null}
         <Box flex={1}>
-          <ControlTrackCardForm trackSlug={track.slug} />
+          <VStack>
+            <ControlTrackCardForm trackSlug={track.slug} />
+          </VStack>
         </Box>
       </Flex>
     </Box>

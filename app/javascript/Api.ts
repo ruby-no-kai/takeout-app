@@ -189,6 +189,7 @@ export type TrackCardContent = {
   interpretation?: boolean;
   topic?: Topic | null;
   speakers?: Speaker[] | null;
+  intermission?: boolean;
 
   screen?: ScreenControl;
   upcoming_topics?: UpcomingTopic[];

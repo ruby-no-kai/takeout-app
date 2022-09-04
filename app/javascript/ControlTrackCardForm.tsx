@@ -134,7 +134,21 @@ export const ControlTrackCardForm: React.FC<{
   const cardDraft = generateTrackCard(watch());
   return (
     <>
-      {disclosureProps ? null : <Button onClick={onOpen}>Compose</Button>}
+      {disclosureProps ? null : (
+        <>
+          <Button onClick={onOpen}>Compose</Button>
+          <Button
+            onClick={() => {
+              setValue("timeMode", "relative");
+              setValue("relativeTimeInSeconds", 0);
+              setValue("json", JSON.stringify(templateIntermission()));
+              onOpen();
+            }}
+          >
+            Intermission
+          </Button>
+        </>
+      )}
 
       <Modal size="5xl" isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
         <ModalOverlay />
@@ -373,6 +387,12 @@ function generateTrackCardFromPresentation(
         avatar_url: speaker.avatar_url,
       };
     }),
+  };
+}
+
+function templateIntermission(): TrackCardConent {
+  return {
+    interpretation: true,
   };
 }
 

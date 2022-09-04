@@ -68,6 +68,7 @@ export const ControlTrackCardView: React.FC<{ card: ControlTrackCard; isActionab
 
       {card.topic ? <CardTopic topic={card.topic} /> : null}
       {card.speakers ? <CardSpeakers speakers={card.speakers} /> : null}
+      {card.intermission ? <Text>Intermission: On</Text> : null}
       {card.topic || card.speakers || card.interpretation ? (
         card.interpretation ? (
           <Text>Interpretation: On</Text>

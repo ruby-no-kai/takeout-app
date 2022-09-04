@@ -15,7 +15,7 @@ export const IntermissionScreen: React.FC = () => {
   return (
     <Box w="100vw" h="auto" maxW="1920px" maxH="1080px">
       <AspectRatio ratio={16 / 9}>
-        <Box bgColor="#D7D165" bgImage="/assets/screen-bg.png" bgSize="contain" w="100%" h="100%" p="2.5vw">
+        <Box bgColor={Colors.bg} bgImage="/assets/screen-bg.png" bgSize="contain" w="100%" h="100%" p="2.5vw">
           <IntermissionScreenInner />
         </Box>
       </AspectRatio>

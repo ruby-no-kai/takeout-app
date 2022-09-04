@@ -49,7 +49,7 @@ export const ScreenAnnounceView: React.FC = () => {
       <Box css={{ "& svg": { height: "2.5vw", width: "auto" } }}>
         <Logo />
       </Box>
-      <Box w="100%" flexGrow={1} flexShrink={0} flexBasis={0}>
+      <Box w="100%" flexGrow={1} flexShrink={0} flexBasis={0} fontFamily={"Poppins"}>
         {card?.upcoming_topics ? (
           <AnnounceUpcomingTopics upcoming_topics={card.upcoming_topics} />
         ) : (
@@ -62,7 +62,7 @@ export const ScreenAnnounceView: React.FC = () => {
 
 const AnnounceBasic: React.FC<{ screen: ScreenControl }> = ({ screen }) => {
   return (
-    <Flex w="100%" h="100%" direction="column" justify="space-around" color={Colors.main} textAlign="center">
+    <Flex w="100%" h="100%" direction="column" justify="space-around" color={Colors.textDefault} textAlign="center">
       {screen.heading ? (
         <Text fontWeight="700" fontSize="4vw" lineHeight="6vw">
           {returnToBr(screen.heading)}
@@ -169,7 +169,7 @@ const AnnounceUpcomingTopics: React.FC<{ upcoming_topics: UpcomingTopic[] }> = (
   const relativeTime = useRelativeTime(earliestStartUnix);
 
   return (
-    <Flex w="100%" h="100%" direction="column" justify="space-around" color={Colors.main} textAlign="center">
+    <Flex w="100%" h="100%" direction="column" justify="space-around" textAlign="center">
       <VStack w="100%" spacing="2.6vw">
         <Text fontWeight="500" fontSize="2.3vw" lineHeight="2.8vw">
           Next session will start {relativeTime}:
@@ -227,16 +227,7 @@ const ScreenTopicSpeaker: React.FC<{ speaker: Speaker }> = ({ speaker }) => {
     (speaker.github_id && <GitHubIcon boxSize="1.55vw" m={0} />) ||
     (speaker.twitter_id && <TwitterIcon boxSize="1.55vw" m={0} />);
   return (
-    <HStack
-      as="p"
-      spacing="1vw"
-      fontWeight="500"
-      fontSize="1.6vw"
-      h="20px"
-      lineHeight="2vw"
-      mt="0.7vw"
-      color={Colors.main}
-    >
+    <HStack as="p" spacing="1vw" fontWeight="500" fontSize="1.6vw" h="20px" lineHeight="2vw" mt="0.7vw">
       <Text as="span">{speaker.name}</Text>
       {primaryIcon ? primaryIcon : null}
       {primaryAlias ? (

@@ -35,16 +35,23 @@ export const Login: React.FC = () => {
           alignItems="top"
           mx="15px"
         >
-          <Box maxW="317px" w="100%" mb="15px" display="flex" flexDirection="row" alignItems="center">
-            <Image src="/assets/hero.svg" w="100%" />
+          <Box
+            w="100%"
+            mb="15px"
+            display="flex"
+            flexDirection={["column", "column", "column", "row"]}
+            alignItems="center"
+            justifyContent="space-around"
+          >
+            <Image src="/assets/hero.svg" w="100%" maxW="317px" minH="383px" />
             {/*<picture>
               <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
               <Image src="/assets/hero_hamburger.svg" w="100%" />
               </picture>*/}
           </Box>
-          <Box w={["100%", "100%", "360px", "360px"]}>
-            <VStack>
-              <Box>
+          <Box w={["100%", "100%", "100%", "360px"]}>
+            <VStack w="100%">
+              <Box w="100%" maxW="360px">
                 <Heading
                   as="h1"
                   w={["100%", "100%", "360px", "360px"]}

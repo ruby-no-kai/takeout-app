@@ -69,8 +69,7 @@ data "aws_iam_policy_document" "takeout-prd" {
     ]
 
     resources = [
-      "arn:aws:chime:us-east-1:${local.aws_account_id}:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/*", #dev
-      "arn:aws:chime:us-east-1:005216166247:app-instance/11029a8c-c09e-47c2-aff6-db9515482395/*",            #prd
+      "${data.external.conference.result.production_chime_app_instance_arn}/*",
     ]
   }
 
@@ -80,13 +79,7 @@ data "aws_iam_policy_document" "takeout-prd" {
       "ivs:PutMetadata",
       "ivs:GetStream",
     ]
-    resources = [
-      "arn:aws:ivs:us-west-2:005216166247:channel/oTssPyKzhjoS", # dev
-
-      "arn:aws:ivs:us-west-2:005216166247:channel/VvM44QACk0cP", # prd a
-      "arn:aws:ivs:us-west-2:005216166247:channel/lxVf1pHuVdbU", # prd b
-      "arn:aws:ivs:us-west-2:005216166247:channel/BqJ6JEV7iJUt", # prd interpret
-    ]
+    resources = split("|#|", data.external.conference.result.production_ivs_channel_arns)
   }
 
   statement {

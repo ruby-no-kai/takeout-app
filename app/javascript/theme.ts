@@ -1,6 +1,6 @@
 import { extendTheme } from "@chakra-ui/react";
 
-const main = "#0B374D";
+const main = "#4e6994"; // 2022
 const accent = "#E14033";
 export const Colors = {
   base: "#EBE0CE",
@@ -13,22 +13,23 @@ export const Colors = {
   linkHover: "#0092D8",
   lightGray: "#BFC6C9",
 
-  bg: "#EBE0CE",
+  bg: "#FDF7EF", // 2022
 
   secondary: "#7C757D",
   secondaryText: "#767077",
 
-  dark: "#343A40",
+  dark: "#41414F", // 2022
 
-  textDefault: "#212529",
+  textDefault: "#2C2C31", // 2022
   textAccent: accent,
   textMuted: "#727272",
 
-  backgroundColor: "#F9F9F9",
+  backgroundColor: "#f2efea", // 2022
 
   border: "#DFDFDF",
   chatBorder: "#CED4DA", // TODO:
   chatBorder2: "#E0E0E0", // TODO:
+  chatBg: "#F9F9F9",
 
   nameHighlightOrgz: { bg: "#BD4848", fg: "#FFFFFF" },
   nameHighlightCore: { bg: "#74439B", fg: "#FFFFFF" },
@@ -44,8 +45,8 @@ export const theme = extendTheme({
   useSystemColorMode: false,
 
   fonts: {
-    heading: "Titillium Web",
-    body: "Roboto",
+    heading: "Poppins",
+    body: "Source Sans 3", // TODO:
   },
   styles: {
     global: {

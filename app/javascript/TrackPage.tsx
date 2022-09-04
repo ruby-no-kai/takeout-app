@@ -161,7 +161,7 @@ const TrackTabContent: React.FC<{ track: Track; selected: boolean }> = ({ track,
 
 const TrackPageSkeleton: React.FC = () => {
   return (
-    <Tabs>
+    <Tabs variant="rk-tracks">
       <TabList>
         <Tab>
           <Skeleton w="240px" h="25px" />

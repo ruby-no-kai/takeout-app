@@ -442,7 +442,7 @@ export const Api = {
       async (_x) => {
         return { timestamp: -1 };
       },
-      { revalidateOnFocus: false, revalidateOnReconnect: false },
+      { revalidateOnFocus: false, revalidateOnReconnect: false, revalidateIfStale: false },
     );
     console.log("overlayCardActivation", overlayCardActivation.data);
     useEffect(() => {

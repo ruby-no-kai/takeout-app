@@ -1,4 +1,5 @@
 require 'securerandom'
+
 class EmitConferenceDataJob < ApplicationJob
   def perform(t: Time.zone.now, route:)
     # GetConferenceResponse
@@ -24,6 +25,7 @@ class EmitConferenceDataJob < ApplicationJob
       send_chime(outpost_key)
     when :ivs
       send_ivs(outpost_key)
+      send_chime(outpost_key, track: false)
     when :chime
       send_chime(outpost_key)
     else
@@ -31,15 +33,17 @@ class EmitConferenceDataJob < ApplicationJob
     end
   end
 
-  def send_chime(outpost_key)
+  def send_chime(outpost_key, track: true, systems: true)
     @chimemessaging = Aws::ChimeSDKMessaging::Client.new(region: 'us-east-1', logger: Rails.logger)
 
     control = {control: {outpost: {conference: outpost_key}}}
 
-    Conference.track_slugs.each do |track_slug|
-      channel_arn = Conference.data.fetch(:tracks).dig(track_slug, :chime, :channel_arn)
-      next unless channel_arn
+    channel_arns = [
+      *(track ? Conference.chime_channel_arns : []),
+      *(systems ? [Conference.data.fetch(:chime).fetch(:systems_channel_arn)] : []),
+    ]
 
+    channel_arns.each do |channel_arn|
       @chimemessaging.send_channel_message(
         chime_bearer: Conference.data.fetch(:chime).fetch(:app_user_arn),
         channel_arn: channel_arn,

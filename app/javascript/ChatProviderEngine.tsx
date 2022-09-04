@@ -5,13 +5,16 @@ import type { ChatProviderContextData } from "./ChatProviderTypes";
 
 import { ChatSession } from "./ChatSession";
 
-export const ChatProviderEngine: React.FC<{ set: (x: ChatProviderContextData) => void }> = ({ set }) => {
+export const ChatProviderEngine: React.FC<{ set: (x: ChatProviderContextData) => void; isKiosk: boolean }> = ({
+  set,
+  isKiosk,
+}) => {
   const { data: sessionData } = Api.useSession();
   const {
     data: chatSessionData,
     mutate: mutateChatSession,
     error: chatSessionError,
-  } = Api.useChatSession(sessionData?.attendee?.id);
+  } = Api.useChatSession(sessionData?.attendee?.id, isKiosk);
 
   const [chatSession, _setChatSession] = React.useState(new ChatSession());
 
@@ -53,6 +56,7 @@ export const ChatProviderEngine: React.FC<{ set: (x: ChatProviderContextData) =>
     const sess = {
       session: chatSession,
       tracks: chatSessionData?.tracks,
+      systems_channel_arn: chatSessionData?.systems_channel_arn,
       error: chatSessionError,
     };
     console.log("ChatProviderEngine", sess);

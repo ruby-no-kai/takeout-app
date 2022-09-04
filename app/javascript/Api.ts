@@ -290,6 +290,7 @@ export type GetChatSessionResponse = {
   app_user_arn: string;
   aws_credentials: AwsCredentials;
   tracks: ChatSessionTracksBag;
+  systems_channel_arn: string;
 };
 
 export type GetConferenceResponse = {
@@ -573,10 +574,10 @@ export const Api = {
     );
   },
 
-  useChatSession(attendeeId: number | undefined) {
+  useChatSession(attendeeId: number | undefined, isKiosk: boolean) {
     // attendeeId for cache buster
     return useSWR<GetChatSessionResponse, ApiError>(
-      attendeeId ? `/api/chat_session?i=${attendeeId}&p=${CACHE_BUSTER}` : null,
+      attendeeId || isKiosk ? `/api/chat_session?i=${attendeeId}&p=${CACHE_BUSTER}&kiosk=${isKiosk ? "1" : "0"}` : null,
       swrFetcher,
       {
         revalidateOnFocus: true,

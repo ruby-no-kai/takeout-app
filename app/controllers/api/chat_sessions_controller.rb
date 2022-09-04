@@ -3,11 +3,14 @@ class Api::ChatSessionsController < Api::ApplicationController
     @sts ||= Aws::STS::Client.new(region: 'us-east-1', logger: Rails.logger)
   end
 
-  before_action :require_attendee
-
   def show
-    unless current_attendee.chime_user&.ready?
-      CreateChimeUserJob.perform_now(current_attendee)
+    is_kiosk = params[:kiosk] == '1'
+
+    unless is_kiosk
+      require_attendee 
+      unless current_attendee.chime_user&.ready?
+        CreateChimeUserJob.perform_now(current_attendee)
+      end
     end
 
     chaining = self.class.sts.config.credentials.session_token.present?
@@ -18,14 +21,16 @@ class Api::ChatSessionsController < Api::ApplicationController
     exp = now + lifetime + grace
     response.date = now
     response.headers['expires'] = (exp-grace).httpdate
-    response.cache_control.merge!( public: false, stale_while_revalidate: grace, stale_if_error: grace )
+    response.cache_control.merge!( public: false,  stale_if_error: grace )
+
+    chime_user = is_kiosk ? Conference.chime_kiosk_user : current_attendee.chime_user
 
     role_session = self.class.sts.assume_role(
       role_arn: Rails.application.config.x.chime.user_role_arn,
-      role_session_name: current_attendee.chime_user.chime_id,
+      role_session_name: chime_user.chime_id,
       duration_seconds: lifetime,
       tags: [
-        { key: 'rk_takeout_user_id', value: current_attendee.chime_user.chime_id},
+        { key: 'rk_takeout_user_id', value: chime_user.chime_id},
       ],
     )
 
@@ -34,7 +39,7 @@ class Api::ChatSessionsController < Api::ApplicationController
       grace: grace.to_i,
       app_arn: Conference.data.fetch(:chime).fetch(:app_arn),
       app_user_arn: Conference.data.fetch(:chime).fetch(:app_user_arn),
-      user_arn: current_attendee.chime_user.chime_arn,
+      user_arn: chime_user.chime_arn,
       aws_credentials: {
         access_key_id: role_session.credentials.access_key_id,
         secret_access_key: role_session.credentials.secret_access_key,
@@ -43,6 +48,7 @@ class Api::ChatSessionsController < Api::ApplicationController
       tracks: Conference.data.fetch(:tracks).transform_values do |track|
         track.fetch(:chime, nil)
       end,
+      systems_channel_arn: Conference.data.fetch(:chime).fetch(:systems_channel_arn),
     })
   end
 end

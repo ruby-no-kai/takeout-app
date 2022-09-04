@@ -44,7 +44,7 @@ class Conference
   end
 
   def self.chime_channel_arns
-    data.fetch(:tracks).each_value.map { |t| t.dig(:chime, :channel_arn) }
+    data.fetch(:tracks).each_value.map { |t| t.dig(:chime, :channel_arn) }.compact
   end
 
   def self.ivs_channel_arns
@@ -55,4 +55,13 @@ class Conference
     data.fetch(:track_order)
   end
 
+  DummyChimeUser = Struct.new(:chime_id, :chime_arn)
+
+  def self.chime_kiosk_user
+    kiosk_user_arn = data.fetch(:chime).fetch(:kiosk_user_arn)
+    DummyChimeUser.new(
+      kiosk_user_arn.split(?/).last,
+      kiosk_user_arn,
+    )
+  end
 end

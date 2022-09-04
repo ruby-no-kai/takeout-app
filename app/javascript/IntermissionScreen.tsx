@@ -13,7 +13,7 @@ import { ScreenAnnounceView } from "./ScreenAnnounceView";
 
 export const IntermissionScreen: React.FC = () => {
   return (
-    <Box w="100vw" h="auto" maxW="1920px" maxH="1080px">
+    <Box w="100vw" h="auto">
       <AspectRatio ratio={16 / 9}>
         <Box bgColor={Colors.bg} bgImage="/assets/screen-bg.png" bgSize="contain" w="100%" h="100%" p="2.5vw">
           <IntermissionScreenInner />

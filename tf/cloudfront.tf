@@ -198,6 +198,28 @@ resource "aws_cloudfront_distribution" "takeout-rk-o" {
     viewer_protocol_policy = "redirect-to-https"
   }
 
+  ordered_cache_behavior {
+    path_pattern     = "/api/conference_sponsorships"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "takeout-app"
+
+    forwarded_values {
+      query_string = true
+      headers      = []
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl     = 0
+    default_ttl = 0
+    max_ttl     = 86400
+
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods   = ["GET", "HEAD"]

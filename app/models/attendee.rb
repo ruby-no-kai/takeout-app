@@ -17,7 +17,7 @@ class Attendee < ApplicationRecord
     # Note: using release_title because release_slug may have a randomised value
     roles = [
       ticket.release_title&.downcase,
-      *ticket.metadata.fetch(:roles, []),
+      *ticket.metadata.fetch('roles', []),
     ]
     roles.each do |role|
       case role

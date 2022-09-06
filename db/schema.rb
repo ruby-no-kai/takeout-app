@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_29_093617) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_06_043244) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -132,6 +132,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_29_093617) do
     t.datetime "tito_updated_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.json "metadata", default: {}, null: false
     t.index ["discount_code_used"], name: "index_tickets_on_discount_code_used"
     t.index ["email", "reference"], name: "index_tickets_on_email_and_reference"
     t.index ["reference"], name: "index_tickets_on_reference"

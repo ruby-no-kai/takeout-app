@@ -25,6 +25,7 @@ class TitoWebhookController < ApplicationController
       release_title: params[:release_title],
       discount_code_used: params[:discount_code_used],
       admin_url: params[:admin_url],
+      metadata: params[:metadata]&.fetch(:takeout_app, {}) || {},
       tito_updated_at: updated_at,
     )
 

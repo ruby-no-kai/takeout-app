@@ -15,15 +15,21 @@ class Attendee < ApplicationRecord
 
   def assign_inferred_role
     # Note: using release_title because release_slug may have a randomised value
-    case ticket.release_title&.downcase
-    when 'staff'
-      self.is_staff = true
-    when 'speaker'
-      self.is_speaker = true
-    when 'ruby committer'
-      self.is_committer = true
-    when 'sponsor'
-      self.is_sponsor = true
+    roles = [
+      ticket.release_title&.downcase,
+      *ticket.metadata.fetch(:roles, []),
+    ]
+    roles.each do |role|
+      case role
+      when 'staff'
+        self.is_staff = true
+      when 'speaker'
+        self.is_speaker = true
+      when 'ruby committer'
+        self.is_committer = true
+      when 'sponsor'
+        self.is_sponsor = true
+      end
     end
   end
 

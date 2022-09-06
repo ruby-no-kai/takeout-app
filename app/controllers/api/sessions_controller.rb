@@ -18,6 +18,10 @@ class Api::SessionsController < Api::ApplicationController
       raise Api::ApplicationController::Error::Unauthorized, "Ticket not found. Check your entered information is identical to the one shown on your ticket."
     end
 
+    if ticket.release_title&.downcase&.start_with?('booth staff')
+      raise Api::ApplicationController::Error::Unauthorized, "Booth pass does not have access to the conference."
+    end
+
     attendee = ticket.active_attendee
     unless attendee
       attendee = ticket.build_attendee

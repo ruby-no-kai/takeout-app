@@ -60,6 +60,8 @@ class TranscribeEngine
   end
 
   def start
+    vocabulary_name = ENV.fetch('TRANSCRIBE_VOCABULARY_NAME', 'rk_2021_words')
+    vocabulary_name = nil if vocabulary_name.empty?
     @client.start_stream_transcription(
       language_code: ENV.fetch('TRANSCRIBE_LANGUAGE_CODE', 'en-US'),
 
@@ -69,7 +71,7 @@ class TranscribeEngine
       media_encoding: "pcm",
       media_sample_rate_hertz: 16000,
 
-      vocabulary_name: ENV.fetch('TRANSCRIBE_VOCABULARY_NAME', 'rk_2021_words'),
+      vocabulary_name: vocabulary_name,
 
       input_event_stream_handler: @input_stream,
       output_event_stream_handler: @output_stream,

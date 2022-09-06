@@ -1,7 +1,7 @@
 import type { ChatMessage } from "./Api";
 import type { ChatUpdate } from "./ChatSession";
 
-const HISTORY_LENGTH = 100;
+const HISTORY_LENGTH = 500;
 
 export class ChatLog {
   messages: ChatMessage[];

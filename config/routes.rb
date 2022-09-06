@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     /control/session/new
 
     /screen
+    /subscreen/:slug
   ).each do |_|
     get _ => 'frontend#show'
   end

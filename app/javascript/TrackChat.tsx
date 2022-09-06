@@ -16,6 +16,10 @@ import dayjs from "dayjs";
 
 export type Props = {
   track: Track;
+
+  disableAdminControl?: boolean;
+  disableSponsorPromo?: boolean;
+  hideForm?: boolean;
 };
 
 export type ChatSessionStatusTuple = [ChatStatus | undefined, Error | null | undefined];
@@ -24,7 +28,7 @@ type ChatHistoryLoadingStatus =
   | { status: "LOADED"; error?: null }
   | { status: "ERRORED"; error: Error };
 
-export const TrackChat: React.FC<Props> = ({ track }) => {
+export const TrackChat: React.FC<Props> = ({ track, disableAdminControl, disableSponsorPromo, hideForm }) => {
   const chat = useChat();
   const { data: session } = Api.useSession();
   const [[chatSessionStatus, chatSessionError], setChatSessionStatusTuple] = React.useState<ChatSessionStatusTuple>([
@@ -44,7 +48,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
     },
     onMessage(update: ChatUpdate) {
       const adminControl = update.message?.adminControl;
-      if (adminControl) {
+      if (adminControl && !disableAdminControl) {
         consumeChatAdminControl(adminControl);
       }
       chatLog.append(update);
@@ -94,7 +98,7 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
       });
   }, [chat.session, chatSessionStatus, trackChannel]);
 
-  const chatMessagePin = useChatMessagePinOrSponsorshipPromo(track);
+  const chatMessagePin = useChatMessagePinOrSponsorshipPromo(track, disableSponsorPromo === true);
 
   if (!track.chat) {
     console.warn("TrackChat: NO TRACK CHAT PRESENT");
@@ -123,9 +127,11 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
           <Skeleton flexGrow={1} flexShrink={0} flexBasis={0} />
         )}
       </Box>
-      <Box w="100%">
-        <ChatForm track={track} channel={trackChannel} />
-      </Box>
+      {hideForm ? null : (
+        <Box w="100%">
+          <ChatForm track={track} channel={trackChannel} />
+        </Box>
+      )}
     </Flex>
   );
 };
@@ -133,12 +139,12 @@ export const TrackChat: React.FC<Props> = ({ track }) => {
 const SPONSORSHIP_PROMO_TICK_INTERVAL = 5;
 const SPONSORSHIP_PROMO_ROTATE_INTERVAL = 20;
 
-function useChatMessagePinOrSponsorshipPromo(track: Track): ChatMessagePin | null {
+function useChatMessagePinOrSponsorshipPromo(track: Track, disableSponsorPromo: boolean): ChatMessagePin | null {
   const { data: serverPin } = Api.useChatMessagePin(track.slug);
   const { data: sponsorships } = Api.useConferenceSponsorships();
   const promoEntries = useMemo(() => sponsorships?.conference_sponsorships.filter((v) => v.promo), [sponsorships]);
 
-  const shouldShowPromo = track.card?.show_promo;
+  const shouldShowPromo = track.card?.show_promo && !disableSponsorPromo;
   const [tick, setTick] = useState(-1);
 
   useEffect(() => {

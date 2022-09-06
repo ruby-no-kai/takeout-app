@@ -23,6 +23,7 @@ const ControlNextSessionPage = loadable(() => import("./ControlNextSessionPage")
 const ControlTrackPage = loadable(() => import("./ControlTrackPage"));
 
 const IntermissionScreen = loadable(() => import("./IntermissionScreen"));
+const SubScreen = loadable(() => import("./SubScreen"));
 
 export type Props = {};
 
@@ -48,6 +49,7 @@ export const App: React.FC<Props> = (_props) => {
           <Route path="/session/new" element={<Login />} />
 
           <Route path="/screen" element={<IntermissionScreen />} />
+          <Route path="/subscreen/:slug" element={<SubScreen />} />
 
           <Route path="/*" element={<WithNavbar />}>
             <Route path="attendee" element={<AttendeeEdit />} />

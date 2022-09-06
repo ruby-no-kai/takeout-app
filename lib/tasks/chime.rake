@@ -69,7 +69,7 @@ namespace :takeout do
       type: "DEFAULT",
       chime_bearer: admin_arn,
     )
-    track_channels.each_value do |arn|
+    [*caption_channels.values, *track_channels.values].each do |arn|
       chimemessaging.create_channel_membership(
         channel_arn: arn,
         member_arn: kiosk_arn,

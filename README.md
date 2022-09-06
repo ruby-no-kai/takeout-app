@@ -103,9 +103,21 @@ aws ivs create-channel --region us-west-2 --latency-mode LOW --type STANDARD --a
 
 ### caption/serve.rb
 
+## Data management
+
+### ConferenceSponsorship
+
+```
+ruby misc/generate_conference_sponsorships_data.rb /tmp/RubyKaigi\ 2022_\ Sponsor\ Live\ Promo\ Text\ \(Responses\)\ -\ Form\ Responses\ 1.csv /tmp/sponsors.yml > ~/Downloads/sponsors.json
+ruby misc/upload_conference_sponsorships_avatar.rb rk-takeout-app prd/avatars/ < ~/Downloads/sponsors.json
+aws s3 cp ~/Downloads/sponsors.json s3://rk-takeout-app/prd/tmp/sponsors.json
+rake takeout:import_sponsorships
+```
+
 ## License
 
 MIT License (c) Sorah Fukumori 2021
 
 - unless otherwise noted
   - e.g. `app/javascript/*Icon.tsx`
+

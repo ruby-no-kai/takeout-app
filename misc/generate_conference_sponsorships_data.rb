@@ -16,11 +16,12 @@ PromoText = Struct.new(:org_domain, :name, :text, :sponsor_app_id, keyword_init:
 promo_texts = {}
 CSV.open(csv_path, headers: true) do |csv|
   csv.each do |row|
-    promo_texts[row.fetch('sponsor_app_id')] = PromoText.new(
-      org_domain: row.fetch('Email Address').split(?@,2)[1].strip,
+    org_domain =  row.fetch('Email Address').split(?@,2)[1].strip
+    promo_texts[row.fetch('sponsor_app_id') || org_domain] = PromoText.new(
+      org_domain:,
       name: row.fetch('Sponsor Name').strip,
       text: row.fetch('Text').strip,
-      sponsor_app_id: row.fetch('sponsor_app_id'),
+      sponsor_app_id: row.fetch('sponsor_app_id') || org_domain,
     )
   end
 end
@@ -34,7 +35,7 @@ eligible_sponsors = plans.flat_map{ |_| _.fetch(:plans).each_value.flat_map { |_
 result = []
 eligible_sponsors.each do |sponsor|
   id = sponsor.fetch(:id).to_s
-  promo = promo_texts[id]
+  promo = promo_texts[id] || promo_texts[sponsor.fetch(:slug)]
 
   if promo && sponsor.fetch(:slug) != promo.org_domain
     warn "WARN sponsor_id=#{id} (#{sponsor.fetch(:slug)}), #{promo.inspect}"
@@ -55,12 +56,12 @@ eligible_sponsors.each do |sponsor|
 
   result.push(
     sponsor_app_id: id,
-    avatar_url: "https://rubykaigi.org/2021-takeout/images/sponsors/#{sponsor.fetch(:asset_file_id)}@3x.png",
+    avatar_url: "https://rubykaigi.org/2022/images/sponsors/#{sponsor.fetch(:asset_file_id)}_#{sponsor.fetch(:base_plan)}@3x.png",
     large_display: %(ruby).include?(sponsor.fetch(:base_plan)),
     name: promo&.name || sponsor.fetch(:name),
     promo: promo&.text,
   )
 end
 
-puts({conference_sponsorships: result}.to_json)
+puts JSON.pretty_generate({conference_sponsorships: result})
 

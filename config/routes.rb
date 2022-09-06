@@ -46,6 +46,7 @@ Rails.application.routes.draw do
 
     resource :session, only: %i(show create destroy) do
       post :take_control
+      post :use_kiosk
     end
 
     resource :attendee, only: %i(update)

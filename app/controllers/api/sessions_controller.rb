@@ -7,6 +7,7 @@ class Api::SessionsController < Api::ApplicationController
     render(json: {
       attendee: current_attendee&.as_json,
       control: !!session[:staff_control],
+      kiosk: session[:kiosk],
     }.to_json)
   end
 
@@ -50,6 +51,16 @@ class Api::SessionsController < Api::ApplicationController
     expect = Rails.application.config.x.control.password
     if !expect || Rack::Utils.secure_compare(expect, params[:password])
       session[:staff_control] = true
+      render(json: {ok: true}.to_json)
+    else
+      raise Api::ApplicationController::Error::Unauthorized
+    end
+  end
+
+  def use_kiosk
+    expect = Rails.application.config.x.kiosk.password
+    if !expect || Rack::Utils.secure_compare(expect, params[:password])
+      session[:kiosk] = (params[:name].is_a?(String) && params[:name].present?) ? params[:name] : "unknown (#{request.request_id})"
       render(json: {ok: true}.to_json)
     else
       raise Api::ApplicationController::Error::Unauthorized

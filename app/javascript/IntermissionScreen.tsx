@@ -14,10 +14,12 @@ import { ScreenAnnounceView } from "./ScreenAnnounceView";
 import { ChatProvider } from "./ChatProvider";
 import { useChat } from "./ChatProvider";
 import { ChatUpdate } from "./ChatSession";
+import { KioskLogin } from "./KioskLogin";
 
 export const IntermissionScreen: React.FC = () => {
   return (
     <ChatProvider isKiosk>
+      <KioskLogin />
       <Box w="100vw" h="auto">
         <AspectRatio ratio={16 / 9}>
           <Box bgColor={Colors.bg} bgImage="/assets/screen-bg.png" bgSize="contain" w="100%" h="100%" p="2.5vw">

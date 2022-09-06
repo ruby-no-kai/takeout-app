@@ -18,6 +18,7 @@ Rails.application.configure do
   config.x.release_meta.cache_buster = ENV['TAKEOUT_CACHE_BUSTER']
 
   config.x.control.password = ENV['TAKEOUT_CONTROL_PASSWORD']
+  config.x.kiosk.password = ENV['TAKEOUT_KIOSK_PASSWORD']
 
   config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :inline : :shoryuken
 

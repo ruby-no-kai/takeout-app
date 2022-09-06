@@ -6,7 +6,9 @@ class Api::ChatSessionsController < Api::ApplicationController
   def show
     is_kiosk = params[:kiosk] == '1'
 
-    unless is_kiosk
+    if is_kiosk && session[:kiosk]
+      # do nothing
+    else
       require_attendee 
       unless current_attendee.chime_user&.ready?
         CreateChimeUserJob.perform_now(current_attendee)

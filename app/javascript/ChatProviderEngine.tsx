@@ -14,7 +14,7 @@ export const ChatProviderEngine: React.FC<{ set: (x: ChatProviderContextData) =>
     data: chatSessionData,
     mutate: mutateChatSession,
     error: chatSessionError,
-  } = Api.useChatSession(sessionData?.attendee?.id, isKiosk);
+  } = Api.useChatSession(sessionData?.attendee?.id, isKiosk, (sessionData?.kiosk ?? null) !== null);
 
   const [chatSession, _setChatSession] = React.useState(new ChatSession());
 

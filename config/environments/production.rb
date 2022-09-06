@@ -18,6 +18,7 @@ Rails.application.configure do
     config.x.s3.public_region = ENV.fetch('TAKEOUT_S3_REGION')
 
     config.x.control.password = ENV.fetch('TAKEOUT_CONTROL_PASSWORD')
+    config.x.kiosk.password = ENV.fetch('TAKEOUT_KIOSK_PASSWORD')
 
     config.x.sentry.dsn = ENV['SENTRY_DSN']
     config.x.release_meta.commit = ENV['HEROKU_SLUG_COMMIT']

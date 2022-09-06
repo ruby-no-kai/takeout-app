@@ -274,6 +274,7 @@ export type AwsCredentials = {
 export type GetSessionResponse = {
   attendee: Attendee | null;
   control: boolean;
+  kiosk: string | null;
 };
 
 export type GetAppVersionResponse = {
@@ -547,6 +548,15 @@ export const Api = {
     return resp.json();
   },
 
+  async createKioskSession(password: string, name: string) {
+    const resp = await request("/api/session/use_kiosk", "POST", null, {
+      password,
+      name,
+    });
+    mutate("/api/session");
+    return resp.json();
+  },
+
   async updateAttendee(name: string, gravatar_email: string): Promise<UpdateAttendeeResponse> {
     const resp = await request("/api/attendee", "PUT", null, {
       name,
@@ -575,10 +585,12 @@ export const Api = {
     );
   },
 
-  useChatSession(attendeeId: number | undefined, isKiosk: boolean) {
+  useChatSession(attendeeId: number | undefined, isKiosk: boolean, kioskReady: boolean) {
     // attendeeId for cache buster
     return useSWR<GetChatSessionResponse, ApiError>(
-      attendeeId || isKiosk ? `/api/chat_session?i=${attendeeId}&p=${CACHE_BUSTER}&kiosk=${isKiosk ? "1" : "0"}` : null,
+      attendeeId || (isKiosk && kioskReady)
+        ? `/api/chat_session?i=${attendeeId}&p=${CACHE_BUSTER}&kiosk=${isKiosk ? "1" : "0"}`
+        : null,
       swrFetcher,
       {
         revalidateOnFocus: true,

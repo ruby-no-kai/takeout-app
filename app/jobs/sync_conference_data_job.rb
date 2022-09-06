@@ -2,6 +2,9 @@ require 'yaml'
 require 'open-uri'
 
 class SyncConferenceDataJob < ApplicationJob
+  DEFAULT_SPEAKERS_URL = 'https://rubykaigi.org/2022/data/speakers.yml'
+  DEFAULT_PRESENTATIONS_URL = 'https://rubykaigi.org/2022/data/presentations.yml'
+
   def perform(speakers_url_add: [], presentations_url_add: [])
     ApplicationRecord.transaction do
       sync_speakers(url_add: speakers_url_add)
@@ -14,7 +17,7 @@ class SyncConferenceDataJob < ApplicationJob
   end
 
   def sync_speakers(url_add: [])
-    dataset = ['https://rubykaigi.org/2021-takeout/data/speakers.yml', *url_add].map { |url|  YAML.safe_load(URI.open(url, 'r', &:read)) }
+    dataset = [DEFAULT_SPEAKERS_URL, *url_add].map { |url|  YAML.safe_load(URI.open(url, 'r', &:read)) }
 
     known_slugs = []
     dataset.each do |data|
@@ -35,7 +38,7 @@ class SyncConferenceDataJob < ApplicationJob
   end
 
   def sync_presentations(url_add: [])
-    dataset = ['https://rubykaigi.org/2021-takeout/data/presentations.yml', *url_add].map { |url|  YAML.safe_load(URI.open(url, 'r', &:read)) }
+    dataset = [DEFAULT_PRESENTATIONS_URL, *url_add].map { |url|  YAML.safe_load(URI.open(url, 'r', &:read)) }
 
     known_slugs = []
     dataset.each do |data|

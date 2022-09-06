@@ -111,7 +111,15 @@ aws ivs create-channel --region us-west-2 --latency-mode LOW --type STANDARD --a
 ruby misc/generate_conference_sponsorships_data.rb /tmp/RubyKaigi\ 2022_\ Sponsor\ Live\ Promo\ Text\ \(Responses\)\ -\ Form\ Responses\ 1.csv /tmp/sponsors.yml > ~/Downloads/sponsors.json
 ruby misc/upload_conference_sponsorships_avatar.rb rk-takeout-app prd/avatars/ < ~/Downloads/sponsors.json
 aws s3 cp ~/Downloads/sponsors.json s3://rk-takeout-app/prd/tmp/sponsors.json
+rails runner 'p ConferenceSponsorship.delete_all'
 rake takeout:import_sponsorships
+```
+
+### ConferenceSpeaker, ConferencePresentation
+
+
+```
+rake takeout:sync_conference_data
 ```
 
 ## License

@@ -105,6 +105,7 @@ export const VideoPane: React.FC<{ track: Track }> = ({ track }) => {
                 track={track}
                 streamOptions={{ interpretation: false }}
                 ignoreStreamPresence={presences?.stream_statuses.main?.state === "LIVE"}
+                ignoreTrackInterpretation={true}
               />
             </React.Suspense>
           </TabPanel>
@@ -120,6 +121,7 @@ export const VideoPane: React.FC<{ track: Track }> = ({ track }) => {
                 track={track}
                 streamOptions={{ interpretation: true }}
                 ignoreStreamPresence={presences?.stream_statuses.interpretation?.state === "LIVE"}
+                ignoreTrackInterpretation={true}
               />
             </React.Suspense>
           </TabPanel>

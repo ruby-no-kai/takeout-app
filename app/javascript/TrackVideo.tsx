@@ -14,12 +14,18 @@ export type Props = {
   track: Track;
   streamOptions: Pick<TrackStreamOptions, "interpretation">;
   ignoreStreamPresence?: boolean;
+  ignoreTrackInterpretation?: boolean;
 };
 
-export const TrackVideo: React.FC<Props> = ({ track, streamOptions, ignoreStreamPresence }) => {
+export const TrackVideo: React.FC<Props> = ({
+  track,
+  streamOptions,
+  ignoreStreamPresence,
+  ignoreTrackInterpretation,
+}) => {
   const [streamTokenNotExpired, setStreamTokenNotExpired] = React.useState(true);
   const [isPlaying, setIsPlaying] = React.useState(true);
-  const streamKind = determineStreamKind(track, streamOptions.interpretation);
+  const streamKind = determineStreamKind(track, streamOptions.interpretation, ignoreTrackInterpretation === true);
   const streamPresence = track.presences[streamKind];
 
   // TODO: handle error
@@ -197,7 +203,14 @@ const TrackOfflineView: React.FC = () => {
   );
 };
 
-function determineStreamKind(track: Track, userPreference: boolean): "main" | "interpretation" {
+function determineStreamKind(
+  track: Track,
+  userPreference: boolean,
+  ignoreTrackInterpretation: boolean,
+): "main" | "interpretation" {
+  if (ignoreTrackInterpretation && userPreference) {
+    return "interpretation";
+  }
   // When user doesn't prefer intepret
   if (!userPreference) {
     return "main";

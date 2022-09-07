@@ -392,8 +392,8 @@ function generateTrackCardFromPresentation(
 
 function templateIntermission(): TrackCardContent {
   return {
-    interpretation: true,
     show_promo: true,
+    intermission: true,
   };
 }
 

@@ -25,6 +25,8 @@ data "aws_iam_policy_document" "s3-rk-takeout-app" {
       "${aws_s3_bucket.rk-takeout-app.arn}/prd/packs/*",
       "${aws_s3_bucket.rk-takeout-app.arn}/dev/assets/*",
       "${aws_s3_bucket.rk-takeout-app.arn}/prd/assets/*",
+      "${aws_s3_bucket.rk-takeout-app.arn}/dev/outpost/*",
+      "${aws_s3_bucket.rk-takeout-app.arn}/prd/outpost/*",
       "${aws_s3_bucket.rk-takeout-app.arn}/tmp/*",
     ]
     principals {

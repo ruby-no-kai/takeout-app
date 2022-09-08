@@ -7,7 +7,7 @@ import { Link, Text } from "@chakra-ui/react";
 import { ControlApi, ControlUpdateAttendeeRequestAttendee } from "./ControlApi";
 import { ErrorAlert } from "./ErrorAlert";
 
-export type Props = {}
+export type Props = {};
 
 export const ControlAttendeeEdit: React.FC<Props> = () => {
   const match = useMatch("/control/attendees/:id");
@@ -63,15 +63,15 @@ export const ControlAttendeeEdit: React.FC<Props> = () => {
             <FormLabel>Name</FormLabel>
             <Input {...register("name")} />
           </FormControl>
-          <FormControl mt={4} id="attendee__staff" isRequired>
+          <FormControl mt={4} id="attendee__staff">
             <FormLabel>Staff</FormLabel>
             <Checkbox {...register("is_staff")} />
           </FormControl>
-          <FormControl mt={4} id="attendee__speaker" isRequired>
+          <FormControl mt={4} id="attendee__speaker">
             <FormLabel>Speaker</FormLabel>
             <Checkbox {...register("is_speaker")} />
           </FormControl>
-          <FormControl mt={4} id="attendee__committer" isRequired>
+          <FormControl mt={4} id="attendee__committer">
             <FormLabel>Committer</FormLabel>
             <Checkbox {...register("is_committer")} />
           </FormControl>

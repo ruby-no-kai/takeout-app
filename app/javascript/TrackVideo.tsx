@@ -231,7 +231,7 @@ const TrackDisabledView: React.FC<{ onIntent: () => void }> = ({ onIntent }) => 
           </Heading>
           <Box>
             <Button variant="link" onClick={onClick}>
-              Play stream forcefully
+              Play live stream (even in the in-person venue)
             </Button>
           </Box>
         </VStack>

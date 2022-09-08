@@ -23,7 +23,7 @@ export const SubScreen: React.FC = () => {
       <KioskLogin />
       <Box w="100vw" h="auto">
         <AspectRatio ratio={16 / 9}>
-          <Box bgColor={Colors.bg} bgImage="/assets/screen-bg.png" bgSize="contain" w="100%" h="100%" p="2.5vw">
+          <Box bgColor={Colors.bg} bgImage="/assets/screen-bg.png" bgSize="contain" w="100%" h="100%" p="0.7vw">
             <SubScreenInner trackSlug={trackSlug!} />
           </Box>
         </AspectRatio>
@@ -66,12 +66,12 @@ export const SubScreenInner: React.FC<{ trackSlug: TrackSlug }> = ({ trackSlug }
   if (!track) return <p>four-oh-four, track not exists</p>;
 
   return (
-    <Flex h="100%" w="100%" justify="space-between" direction="row">
-      <Box h="100%" flex={1}>
-        <SubScreenChatView track={track} />
-      </Box>
-      <Box h="100%" flex={1}>
+    <Flex h="100%" w="100%" justify="space-between" direction="column">
+      <Box w="100%" h="30%">
         {<SubScreenCaptionView track={track} />}
+      </Box>
+      <Box w="100%" flexGrow={2}>
+        <SubScreenChatView track={track} />
       </Box>
     </Flex>
   );

@@ -46,7 +46,7 @@ export const theme = extendTheme({
 
   fonts: {
     heading: "Poppins",
-    body: "Source Sans 3", // TODO:
+    body: "Roboto",
   },
   styles: {
     global: {

@@ -646,6 +646,27 @@ export const Api = {
       swrFetcher,
     );
   },
+
+  useAmINotAtRubyKaigi() {
+    return useSWR<{ ok: boolean }, ApiError>(
+      `/.virtual/am-i-not-at-rubykaigi`,
+      async (_url?: string) => {
+        const resp = await fetch("https://am-i-not-at-rubykaigi.s3.dualstack.ap-northeast-1.amazonaws.com/check", {
+          method: "GET",
+        });
+        if (resp.status === 403) {
+          return { ok: false };
+        } else {
+          throw new ApiError(new Error(`useAmINotAtRubyKaigi returned error ${resp.status}`), null);
+        }
+      },
+      {
+        revalidateOnFocus: true,
+        revalidateOnReconnect: true,
+        revalidateIfStale: false,
+      },
+    );
+  },
 };
 
 export default Api;

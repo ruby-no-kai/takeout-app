@@ -5,7 +5,7 @@ import videojs from "video.js";
 import { VideoJSEvents as VideoJSIVSEvents, VideoJSIVSTech, VideoJSQualityPlugin } from "amazon-ivs-player";
 import "./videojs";
 
-import { AspectRatio, Box, Center, VStack, Skeleton, Image, Heading } from "@chakra-ui/react";
+import { AspectRatio, Box, Center, VStack, Skeleton, Image, Heading, Button } from "@chakra-ui/react";
 
 import { Api, IvsMetadata, Track, TrackStreamOptions, consumeIvsMetadata } from "./Api";
 import { Colors } from "./theme";
@@ -15,6 +15,7 @@ export type Props = {
   streamOptions: Pick<TrackStreamOptions, "interpretation">;
   ignoreStreamPresence?: boolean;
   ignoreTrackInterpretation?: boolean;
+  ignoreInVenueStatus?: boolean;
 };
 
 export const TrackVideo: React.FC<Props> = ({
@@ -22,11 +23,14 @@ export const TrackVideo: React.FC<Props> = ({
   streamOptions,
   ignoreStreamPresence,
   ignoreTrackInterpretation,
+  ignoreInVenueStatus,
 }) => {
   const [streamTokenNotExpired, setStreamTokenNotExpired] = React.useState(true);
   const [isPlaying, setIsPlaying] = React.useState(true);
+  const [intentToPlayInVenue, setIntentToPlayInVenue] = React.useState(ignoreInVenueStatus);
   const streamKind = determineStreamKind(track, streamOptions.interpretation, ignoreTrackInterpretation === true);
   const streamPresence = track.presences[streamKind];
+  const { data: outOfRubyKaigi } = Api.useAmINotAtRubyKaigi();
 
   // TODO: handle error
   const { data: streamInfo, mutate: streamMutate } = Api.useStream(track.slug, streamKind === "interpretation");
@@ -53,6 +57,10 @@ export const TrackVideo: React.FC<Props> = ({
 
   if (streamInfo && !streamInfo.stream) {
     return <TrackOfflineView />;
+  }
+
+  if (!intentToPlayInVenue && outOfRubyKaigi && !outOfRubyKaigi.ok) {
+    return <TrackDisabledView onIntent={() => setIntentToPlayInVenue(true)} />;
   }
 
   if (streamInfo?.stream && streamTokenNotExpired) {
@@ -197,6 +205,35 @@ const TrackOfflineView: React.FC = () => {
           <Heading as="div" color={Colors.textMuted}>
             Offline...
           </Heading>
+        </VStack>
+      </Center>
+    </AspectRatio>
+  );
+};
+
+const TrackDisabledView: React.FC<{ onIntent: () => void }> = ({ onIntent }) => {
+  const onClick = () => {
+    if (confirm("Consider going to the hall to avoid extra load in our internet circuits. Do you want to play?")) {
+      if (confirm("Do you really want to play the stream in the kaigi?")) {
+        onIntent();
+      }
+    }
+  };
+  return (
+    <AspectRatio ratio={16 / 9}>
+      <Center w="100%" h="100%">
+        <VStack>
+          <Box w="95px" h="95px" css={{ filter: "grayscale(1)" }}>
+            <Image src="/assets/ninja_blue.svg" w="100%" h="100%" alt="" />
+          </Box>
+          <Heading as="div" color={Colors.textMuted}>
+            Disabled in Kaigi venue
+          </Heading>
+          <Box>
+            <Button variant="link" onClick={onClick}>
+              Play stream forcefully
+            </Button>
+          </Box>
         </VStack>
       </Center>
     </AspectRatio>

@@ -119,7 +119,7 @@ function consumeOutpostNotification(outpost: OutpostNotification) {
   if (outpost.venue_announcements) {
     console.log("outpost.venue_announcements", outpost.venue_announcements);
     mutate(
-      API_CONFERENCE,
+      `/api/venue_announcements`,
       async (_known: GetVenueAnnouncementsResponse) => {
         const resp = await request(`/outpost/${outpost.venue_announcements}`, "GET", null, null);
         console.log("outpost.venue_announcements/mutate", outpost.venue_announcements);

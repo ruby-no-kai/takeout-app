@@ -16,6 +16,8 @@ import { useParams } from "react-router-dom";
 import { SubScreenChatView } from "./SubScreenChatView";
 import { SubScreenCaptionView } from "./SubScreenCaptionView";
 
+import { SubScreenAnnouncementsView } from "./SubScreenAnnouncementsView";
+
 export const SubScreen: React.FC = () => {
   const { slug: trackSlug }: Readonly<Partial<{ slug: TrackSlug }>> = useParams();
   return (
@@ -67,8 +69,12 @@ export const SubScreenInner: React.FC<{ trackSlug: TrackSlug }> = ({ trackSlug }
 
   return (
     <Flex h="100%" w="100%" justify="space-between" direction="column">
-      <Box w="100%" h="30%">
-        {<SubScreenCaptionView track={track} />}
+      <Box w="100%" h="30%" overflow="hidden">
+        {track.card?.intermission ? (
+          <SubScreenAnnouncementsView track={track} />
+        ) : (
+          <SubScreenCaptionView track={track} />
+        )}
       </Box>
       <Box w="100%" flexGrow={2}>
         <SubScreenChatView track={track} />

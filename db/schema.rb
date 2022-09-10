@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_06_043244) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_09_043148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -149,6 +149,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_06_043244) do
     t.bigint "control_colleration_id"
     t.index ["control_colleration_id"], name: "index_track_cards_on_control_colleration_id"
     t.index ["track", "activation_at"], name: "index_track_cards_on_track_and_activation_at", unique: true, order: { activation_at: :desc }
+  end
+
+  create_table "venue_announcements", force: :cascade do |t|
+    t.text "content", default: "", null: false
+    t.boolean "enabled", default: false, null: false
+    t.boolean "only_intermission", default: false, null: false
+    t.boolean "only_signage", default: false, null: false
+    t.boolean "only_subscreen", default: false, null: false
+    t.integer "order_index", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enabled", "order_index"], name: "index_venue_announcements_on_enabled_and_order_index"
   end
 
   add_foreign_key "attendees", "tickets"

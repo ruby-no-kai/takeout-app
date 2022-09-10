@@ -8,6 +8,8 @@ import {
   StreamPresence,
   TrackStreamKind,
   ChatSpotlight,
+  VenueAnnouncement,
+  VenueAnnouncementContent,
 } from "./Api";
 import useSWR from "swr";
 import { mutate } from "swr";
@@ -140,6 +142,20 @@ export type ControlCreateNextSessionResponse = {
   track_cards: ControlTrackCard[];
   chat_spotlights: ControlChatSpotlight[];
 };
+
+export type ControlGetVenueAnnouncementsResponse = {
+  venue_announcements: VenueAnnouncement[];
+};
+
+export type ControlCreateVenueAnnouncementRequest = {
+  venue_announcement: VenueAnnouncementContent;
+};
+
+export type ControlUpdateVenueAnnouncementRequest = {
+  venue_announcement: VenueAnnouncement;
+};
+
+export type ControlDeleteVenueAnnouncementRequest = {};
 
 export const ControlApi = {
   useConference() {
@@ -276,6 +292,31 @@ export const ControlApi = {
     const url = `/api/control/next_session`;
     const resp = await request(url, "POST", null, req);
     return resp.json() as Promise<ControlCreateNextSessionResponse>;
+  },
+
+  useVenueAnnouncements() {
+    return useSWR<ControlGetVenueAnnouncementsResponse, ApiError>(`/api/control/venue_announcements`, swrFetcher);
+  },
+
+  async createVenueAnnouncement(req: VenueAnnouncementContent) {
+    const url = `/api/control/venue_announcements`;
+    const resp = await request(url, "POST", null, req);
+    mutate(`/api/control/venue_announcements`);
+    return resp.json() as Promise<{ venue_announcement: VenueAnnouncement }>;
+  },
+
+  async updateVenueAnnouncement(req: VenueAnnouncement) {
+    const url = `/api/control/venue_announcements/${encodeURIComponent(req.id)}`;
+    const resp = await request(url, "PUT", null, req);
+    mutate(`/api/control/venue_announcements`);
+    return resp.json() as Promise<{ venue_announcement: VenueAnnouncement }>;
+  },
+
+  async deleteVenueAnnouncement(req: VenueAnnouncement) {
+    const url = `/api/control/venue_announcements/${encodeURIComponent(req.id)}`;
+    const resp = await request(url, "DELETE", null, req);
+    mutate(`/api/control/venue_announcements`);
+    return resp.json() as Promise<{ venue_announcement: VenueAnnouncement }>;
   },
 };
 export default ControlApi;

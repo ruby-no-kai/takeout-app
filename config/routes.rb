@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     /control/screen
     /control/next_session
     /control/tracks/:slug
+    /control/venue_announcements
   ).each do |_|
     get _ => 'frontend#show_require_control'
   end
@@ -65,6 +66,7 @@ Rails.application.routes.draw do
     end
 
     resources :conference_sponsorships, only: %i(index)
+    resources :venue_announcements, only: %i(index)
 
     scope path: 'control', module: 'control' do
       resource :conference, only: %i(show)
@@ -78,6 +80,7 @@ Rails.application.routes.draw do
       resource :next_session, only: %i(create)
 
       resources :control_collerations, only: %i(show destroy)
+      resources :venue_announcements, only: %i(index destroy create update)
 
       resources :attendees, only: %i(index show update)
     end

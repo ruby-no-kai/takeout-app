@@ -116,6 +116,20 @@ function consumeOutpostNotification(outpost: OutpostNotification) {
       },
     );
   }
+  if (outpost.venue_announcements) {
+    console.log("outpost.venue_announcements", outpost.venue_announcements);
+    mutate(
+      API_CONFERENCE,
+      async (_known: GetVenueAnnouncementsResponse) => {
+        const resp = await request(`/outpost/${outpost.venue_announcements}`, "GET", null, null);
+        console.log("outpost.venue_announcements/mutate", outpost.venue_announcements);
+        return (await resp.json()) as GetVenueAnnouncementsResponse;
+      },
+      {
+        revalidate: false,
+      },
+    );
+  }
 }
 
 function activateCandidateTrackCard(data: GetConferenceResponse) {
@@ -340,6 +354,7 @@ export type ChatAdminControl = {
 
 export type OutpostNotification = {
   conference?: string;
+  venue_announcements?: string;
 };
 
 export type ChatCaption = {
@@ -410,6 +425,21 @@ export type ConferenceSponsorship = {
   name: string;
   large_display: boolean;
   promo: string | null;
+};
+
+export type VenueAnnouncementHeader = { id: number };
+export type VenueAnnouncementContent = {
+  content: string;
+  enabled: boolean;
+  only_intermission: boolean;
+  only_signage: boolean;
+  only_subscreen: boolean;
+  order_index: number;
+};
+export type VenueAnnouncement = VenueAnnouncementHeader & VenueAnnouncementContent;
+
+export type GetVenueAnnouncementsResponse = {
+  venue_announcements: VenueAnnouncement[];
 };
 
 export const Api = {
@@ -666,6 +696,10 @@ export const Api = {
         revalidateIfStale: false,
       },
     );
+  },
+
+  useVenueAnnouncements() {
+    return useSWR<GetVenueAnnouncementsResponse, ApiError>(`/api/venue_announcements`, swrFetcher);
   },
 };
 

@@ -3,7 +3,7 @@ class Api::Control::VenueAnnouncementsController < Api::Control::ApplicationCont
   
   def index
     render(json: {
-      venue_announcements: VenueAnnouncement.active.to_a.map(&:as_json),
+      venue_announcements: VenueAnnouncement.order(order_index: :asc)to_a.map(&:as_json),
     })
   end
 

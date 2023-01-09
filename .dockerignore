@@ -1,0 +1,5 @@
+node_modules/
+.terraform/
+.bundle/
+/vendor/
+/log/

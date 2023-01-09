@@ -1,0 +1,42 @@
+name: ci
+on:
+  push:
+    branches:
+      - master
+      - test
+
+jobs:
+  ci:
+    name: ci
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: "${{ steps.login-ecr.outputs.registry }}/takeout-app:${{ github.sha }}"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: "us-west-2"
+          role-skip-session-tagging: true
+          role-to-assume: "arn:aws:iam::005216166247:role/GhaDockerPush"
+          mask-aws-account-id: 'false' # only string works
+      - id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: 'Build Docker image'
+        uses: 'docker/build-push-action@v3'
+        with:
+          context: '.'
+          load: true
+          tags: "takeout-app-test:latest,${{ steps.login-ecr.outputs.registry }}/takeout-app:${{ github.sha }},${{ steps.login-ecr.outputs.registry }}/takeout-app:latest"
+      - name: 'Push Docker image'
+        uses: 'docker/build-push-action@v3'
+        with:
+          context: '.'
+          push: true
+          tags: "${{ steps.login-ecr.outputs.registry }}/takeout-app:${{ github.sha }},${{ steps.login-ecr.outputs.registry }}/takeout-app:latest"

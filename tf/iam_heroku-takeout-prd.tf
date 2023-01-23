@@ -99,6 +99,8 @@ data "aws_iam_policy_document" "takeout-prd" {
     resources = [
       aws_sqs_queue.activejob-prd.arn,
       aws_sqs_queue.activejob-dlq-prd.arn,
+      aws_sqs_queue.activejob-prd-use1.arn,
+      aws_sqs_queue.activejob-dlq-prd-use1.arn,
     ]
   }
 

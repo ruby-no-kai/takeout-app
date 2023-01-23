@@ -4,10 +4,11 @@ on:
     branches:
       - master
       - test
+  pull_request: {}
 
 jobs:
-  ci:
-    name: ci
+  build:
+    name: build
     permissions:
       contents: read
       id-token: write
@@ -15,28 +16,69 @@ jobs:
     outputs:
       image-tag: "${{ steps.login-ecr.outputs.registry }}/takeout-app:${{ github.sha }}"
     steps:
+      - uses: docker/setup-buildx-action@v2
       - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1'
-          bundler-cache: true
+      #- uses: ruby/setup-ruby@v1
+      #  with:
+      #    ruby-version: '3.1'
+      #    bundler-cache: true
       - uses: aws-actions/configure-aws-credentials@v1
+        if: "${{ github.event_name == 'push' && success() }}"
         with:
           aws-region: "us-west-2"
           role-skip-session-tagging: true
           role-to-assume: "arn:aws:iam::005216166247:role/GhaDockerPush"
           mask-aws-account-id: 'false' # only string works
       - id: login-ecr
+        if: "${{ github.event_name == 'push' && success() }}"
         uses: aws-actions/amazon-ecr-login@v1
+      - run: "echo '${{ github.sha }}' > REVISION"
       - name: 'Build Docker image'
         uses: 'docker/build-push-action@v3'
         with:
           context: '.'
           load: true
           tags: "takeout-app-test:latest,${{ steps.login-ecr.outputs.registry }}/takeout-app:${{ github.sha }},${{ steps.login-ecr.outputs.registry }}/takeout-app:latest"
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: 'Push Docker image'
+        if: "${{ github.event_name == 'push' && success() }}"
         uses: 'docker/build-push-action@v3'
         with:
           context: '.'
           push: true
           tags: "${{ steps.login-ecr.outputs.registry }}/takeout-app:${{ github.sha }},${{ steps.login-ecr.outputs.registry }}/takeout-app:latest"
+
+  deploy-prod:
+    if: "${{ success() && github.event_name == 'push' }}"
+    name: deploy-prod
+    needs: ["build"]
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    concurrency:
+      group: production
+      cancel-in-progress: true
+    environment:
+      name: production
+      url: https://takeout.rubykaigi.org
+    env:
+      BUNDLE_GEMFILE: "${{ github.workspace }}/deploy/Gemfile"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: "us-west-2"
+          role-skip-session-tagging: true
+          role-to-assume: "arn:aws:iam::005216166247:role/GhaTakeoutDeploy"
+          mask-aws-account-id: 'false' # only string works
+      - name: 'Run pre-deploy task'
+        run: "bundle exec hako oneshot --tag '${{ github.sha }}' ./deploy/hako/takeout-batch.jsonnet bundle exec rake db:migrate assets:upload"
+      - name: "Deploy takeout-worker.jsonnet"
+        run: "bundle exec hako deploy --tag '${{ github.sha }}' ./deploy/hako/takeout-worker.jsonnet"
+      - name: "Deploy takeout-app.jsonnet"
+        run: "bundle exec hako deploy --tag '${{ github.sha }}' ./deploy/hako/takeout-app.jsonnet"

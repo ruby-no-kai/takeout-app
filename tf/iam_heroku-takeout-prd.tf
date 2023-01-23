@@ -21,7 +21,8 @@ data "aws_iam_policy_document" "takeout-prd" {
       "s3:PutObject",
     ]
     resources = [
-      "${aws_s3_bucket.rk-takeout-app.arn}/prd/*"
+      "${aws_s3_bucket.rk-takeout-app-apne1.arn}/prd/*",
+      "${aws_s3_bucket.rk-takeout-app.arn}/prd/*",
     ]
   }
 

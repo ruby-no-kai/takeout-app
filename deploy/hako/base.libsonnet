@@ -26,9 +26,9 @@ local secret = utils.makeSecretParameterStore('takeout-app');
       TAKEOUT_CACHE_BUSTER: 'xe',
       TAKEOUT_CHAT_CACHE_KEY: '3',
 
-      TAKEOUT_S3_BUCKET: 'rk-takeout-app',
+      TAKEOUT_S3_BUCKET: 'rk-takeout-app-usw2',
       TAKEOUT_S3_PREFIX: 'prd/',
-      TAKEOUT_S3_REGION: 'ap-northeast-1',
+      TAKEOUT_S3_REGION: 'us-west-2',
 
       ENABLE_SHORYUKEN: '1',
       TAKEOUT_SHORYUKEN_AWS_REGION: 'us-west-2',

@@ -40,7 +40,7 @@ resource "aws_cloudfront_distribution" "takeout-rk-o" {
 
   origin {
     origin_id   = "takeout-s3"
-    domain_name = aws_s3_bucket.rk-takeout-app.bucket_regional_domain_name
+    domain_name = aws_s3_bucket.rk-takeout-app-apne1.bucket_regional_domain_name
     origin_path = "/prd"
   }
 

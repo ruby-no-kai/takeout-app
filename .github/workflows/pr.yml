@@ -1,0 +1,26 @@
+name: pr
+on:
+  pull_request: {}
+
+jobs:
+  build:
+    name: build
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/setup-buildx-action@v2
+      - uses: actions/checkout@v3
+      #- uses: ruby/setup-ruby@v1
+      #  with:
+      #    ruby-version: '3.1'
+      #    bundler-cache: true
+      - run: "echo '${{ github.sha }}' > REVISION"
+      - name: 'Build Docker image'
+        uses: 'docker/build-push-action@v3'
+        with:
+          context: '.'
+          load: true
+          tags: "takeout-app-test:latest,takeout-app-test:${{ github.sha }}"
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

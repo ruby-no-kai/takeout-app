@@ -122,6 +122,13 @@ rake takeout:import_sponsorships
 rake takeout:sync_conference_data
 ```
 
+## Deploy
+
+- AWS us-west-2 ([access instruction](https://rubykaigi.esa.io/posts/813))
+- ECS with Hako, [./deploy/hako](./deploy/hako)
+
+Deployments are automated with GitHub Actions.
+
 ## License
 
 MIT License (c) Sorah Fukumori 2021

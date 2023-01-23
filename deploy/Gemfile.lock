@@ -1,0 +1,84 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    aws-eventstream (1.2.0)
+    aws-partitions (1.697.0)
+    aws-sdk-applicationautoscaling (1.65.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-autoscaling (1.85.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-cloudwatch (1.71.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-cloudwatchlogs (1.62.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-core (3.169.0)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.651.0)
+      aws-sigv4 (~> 1.5)
+      jmespath (~> 1, >= 1.6.1)
+    aws-sdk-ec2 (1.360.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-ecs (1.110.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-elasticloadbalancing (1.42.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-elasticloadbalancingv2 (1.83.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-kms (1.62.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.118.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.4)
+    aws-sdk-servicediscovery (1.49.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-sns (1.58.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-ssm (1.148.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.5.2)
+      aws-eventstream (~> 1, >= 1.0.2)
+    hako (2.17.0)
+      aws-sdk-applicationautoscaling
+      aws-sdk-autoscaling
+      aws-sdk-cloudwatch
+      aws-sdk-cloudwatchlogs
+      aws-sdk-ec2
+      aws-sdk-ecs (>= 1.54.0)
+      aws-sdk-elasticloadbalancing
+      aws-sdk-elasticloadbalancingv2 (>= 1.54.0)
+      aws-sdk-s3
+      aws-sdk-servicediscovery
+      aws-sdk-sns
+      aws-sdk-ssm
+      jsonnet
+    jmespath (1.6.2)
+    jsonnet (0.5.2)
+      mini_portile2 (>= 2.2.0)
+    mini_portile2 (2.8.1)
+    nokogiri (1.14.0)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
+    racc (1.6.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  hako
+  nokogiri
+
+BUNDLED WITH
+   2.3.16

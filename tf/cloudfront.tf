@@ -18,7 +18,7 @@ resource "aws_cloudfront_distribution" "takeout-rk-o" {
 
   origin {
     origin_id   = "takeout-app"
-    domain_name = "rk-takeout.herokuapp.com"
+    domain_name = "takeout-app-origin.rubykaigi.net"
     custom_header {
       name  = "X-Forwarded-Host"
       value = "takeout.rubykaigi.org"
@@ -34,13 +34,13 @@ resource "aws_cloudfront_distribution" "takeout-rk-o" {
 
     origin_shield {
       enabled              = true
-      origin_shield_region = "us-east-1"
+      origin_shield_region = "us-west-2"
     }
   }
 
   origin {
     origin_id   = "takeout-s3"
-    domain_name = aws_s3_bucket.rk-takeout-app-apne1.bucket_regional_domain_name
+    domain_name = aws_s3_bucket.rk-takeout-app.bucket_regional_domain_name
     origin_path = "/prd"
   }
 

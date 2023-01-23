@@ -25,6 +25,8 @@ gem 's3_assets_uploader'
 gem 'http-2'
 gem 'aws-sdk-transcribestreamingservice'
 
+gem 'revision_plate'
+
 gem "sentry-ruby"
 gem "sentry-rails"
 gem "barnes"

@@ -37,4 +37,5 @@ COPY --from=nodebuilder /app/public/packs /app/public/packs
 COPY . /app/
 
 ENV PORT 3000
+ENV LANG C.UTF-8
 CMD ["bundle", "exec", "puma", "-C", "/etc/puma.rb"]

@@ -25,6 +25,24 @@ resource "aws_iam_role_policy" "TakeoutApp" {
   policy = data.aws_iam_policy_document.takeout-prd.json
 }
 
+resource "aws_iam_role_policy" "TakeoutApp_ecsexec" {
+  role   = aws_iam_role.TakeoutApp.name
+  policy = data.aws_iam_policy_document.TakeoutApp_ecsexec.json
+}
+
+data "aws_iam_policy_document" "TakeoutApp_ecsexec" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ssmmessages:CreateControlChannel",
+      "ssmmessages:CreateDataChannel",
+      "ssmmessages:OpenControlChannel",
+      "ssmmessages:OpenDataChannel",
+    ]
+    resources = ["*"]
+  }
+}
+
 resource "aws_iam_instance_profile" "TakeoutApp" {
   name = aws_iam_role.TakeoutApp.name
   role = aws_iam_role.TakeoutApp.name

@@ -21,7 +21,7 @@ Rails.application.configure do
     config.x.kiosk.password = ENV.fetch('TAKEOUT_KIOSK_PASSWORD')
 
     config.x.sentry.dsn = ENV['SENTRY_DSN']
-    config.x.release_meta.commit = ENV['HEROKU_SLUG_COMMIT']
+    config.x.release_meta.commit = ENV['HEROKU_SLUG_COMMIT'] || ENV['RELEASE_COMMIT'] || Rails.root.join('REVISION').then { _1.exist? ? _1.read : nil } || 'COMMIT_UNKNOWN'
     config.x.release_meta.version = ENV['HEROKU_RELEASE_VERSION']
     config.x.release_meta.cache_buster = ENV['TAKEOUT_CACHE_BUSTER']
   end

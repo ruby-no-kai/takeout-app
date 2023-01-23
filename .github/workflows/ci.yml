@@ -4,7 +4,6 @@ on:
     branches:
       - master
       - test
-  pull_request: {}
 
 jobs:
   build:
@@ -23,14 +22,12 @@ jobs:
       #    ruby-version: '3.1'
       #    bundler-cache: true
       - uses: aws-actions/configure-aws-credentials@v1
-        if: "${{ github.event_name == 'push' && success() }}"
         with:
           aws-region: "us-west-2"
           role-skip-session-tagging: true
           role-to-assume: "arn:aws:iam::005216166247:role/GhaDockerPush"
           mask-aws-account-id: 'false' # only string works
       - id: login-ecr
-        if: "${{ github.event_name == 'push' && success() }}"
         uses: aws-actions/amazon-ecr-login@v1
       - run: "echo '${{ github.sha }}' > REVISION"
       - name: 'Build Docker image'
@@ -42,7 +39,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: 'Push Docker image'
-        if: "${{ github.event_name == 'push' && success() }}"
         uses: 'docker/build-push-action@v3'
         with:
           context: '.'

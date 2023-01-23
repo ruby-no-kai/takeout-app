@@ -86,8 +86,6 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/healthz' => RevisionPlate::App.new
-
   if Rails.env.development? || ENV['TAKEOUT_ENABLE_OUTPOST_LOCAL'] == '1'
     mount OutpostLocal, at: '/outpost'
   end

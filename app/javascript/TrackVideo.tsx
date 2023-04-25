@@ -90,7 +90,8 @@ export type StreamViewProps = {
 
 export type StreamPlaybackSession = {
   url: string;
-  player: videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
+  // videojs.Player no longer exported from videojs 8?
+  player: ReturnType<typeof videojs> & VideoJSIVSTech & VideoJSQualityPlugin;
   root: HTMLDivElement;
 };
 
@@ -132,7 +133,7 @@ const StreamView: React.FC<StreamViewProps> = ({ playbackUrl, shouldStartPlaybac
       () => {
         console.log("player is ready");
       },
-    ) as videojs.Player & VideoJSIVSTech & VideoJSQualityPlugin;
+    ) as ReturnType<typeof videojs> & VideoJSIVSTech & VideoJSQualityPlugin;
 
     player.enableIVSQualityPlugin();
     player.src(playbackUrl);

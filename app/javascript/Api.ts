@@ -75,7 +75,7 @@ function determineEarliestCandidateActivationAt(data: GetConferenceResponse) {
     .filter((v): v is number => !!v);
   if (timestamps.length < 1) return undefined;
   const at = Math.min(...timestamps);
-  if (at == Infinity || at == NaN) return undefined;
+  if (at == Infinity || isNaN(at)) return undefined;
   return at;
 }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import dayjs from "dayjs";
 
-import videojs from "video.js";
+import videojs from "video.js"; // videojs<8, https://repost.aws/questions/QUCKw0-mliSE6BD7uQIcBnEw/ivs-integration-with-video-js-8
 import { VideoJSEvents as VideoJSIVSEvents, VideoJSIVSTech, VideoJSQualityPlugin } from "amazon-ivs-player";
 import "./videojs";
 

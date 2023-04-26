@@ -96,7 +96,7 @@ export const AttendeeEdit: React.FC = () => {
               submitted.
             </Text>
             <Text>
-              Be remember to abide by{" "}
+              Please understand RubyKaigi may publish the chat log publicly. And be remember to abide by{" "}
               <Link href="https://rubykaigi.org/2021-takeout/policies" isExternal textDecoration="underline">
                 our policies
               </Link>
@@ -109,7 +109,7 @@ export const AttendeeEdit: React.FC = () => {
             <FormControl id="login_reference" isRequired>
               <FormLabel>Name</FormLabel>
               <FormHelperText my={1}>Feel free to use nicknames, usernames, or handles :)</FormHelperText>
-              <Input {...register("name")} maxW="460px" autoFocus />
+              <Input {...register("name")} maxW="460px" autoFocus bg="white" />
             </FormControl>
 
             <FormControl id="login_email">
@@ -126,6 +126,7 @@ export const AttendeeEdit: React.FC = () => {
                 type="email"
                 maxW="460px"
                 placeholder="(leave empty to remain unchanged)"
+                bg="white"
               />
             </FormControl>
 

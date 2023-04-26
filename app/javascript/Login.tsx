@@ -60,7 +60,7 @@ export const Login: React.FC = () => {
                   css={{ "& svg": { maxWidth: "100%", height: "auto" } }}
                 >
                   <Logo />
-                  <VisuallyHidden>RubyKaigi 2022 Streaming Login</VisuallyHidden>
+                  <VisuallyHidden>RubyKaigi 2023 Streaming Login</VisuallyHidden>
                 </Heading>
                 <Flex direction="row-reverse">
                   <Box mr="-2px">
@@ -71,7 +71,7 @@ export const Login: React.FC = () => {
               <Box textAlign="center" pt="30px">
                 <Text>
                   Don't have a ticket?{" "}
-                  <Link isExternal href="https://ti.to/rubykaigi/2022" textDecoration="underline">
+                  <Link isExternal href="https://ti.to/rubykaigi/2023" textDecoration="underline">
                     Register now.
                   </Link>
                 </Text>

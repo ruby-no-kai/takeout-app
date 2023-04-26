@@ -15,21 +15,21 @@ export const Navbar: React.FC = () => {
 
   return (
     <Flex as="nav" justify="space-between" alignItems="center" w="100%" h="56px" px="15px" bgColor={Colors.bg}>
-      <Heading as="h1" size="lg" fontSize="22px" css={{ "& svg": { height: "32px", width: "auto" } }}>
+      <Heading as="h1" size="lg" fontSize="22px" css={{ "& svg": { height: "22px", width: "auto" } }}>
         {conferenceData?.conference ? (
           <Link as={RouterLink} to={`/tracks/${conferenceData.conference.default_track}`} color={Colors.main}>
-            <VisuallyHidden>RubyKaigi 2022</VisuallyHidden>
+            <VisuallyHidden>RubyKaigi 2023</VisuallyHidden>
             <Logo />
           </Link>
         ) : (
           <Text as="span" color={Colors.main}>
-            <VisuallyHidden>RubyKaigi 2022</VisuallyHidden>
+            <VisuallyHidden>RubyKaigi 2023</VisuallyHidden>
             <Logo />
           </Text>
         )}
       </Heading>
       <HStack spacing="14px">
-        <Link href="https://rubykaigi.org/2022/schedule" isExternal>
+        <Link href="https://rubykaigi.org/2023/schedule" isExternal>
           <VisuallyHidden>Schedule</VisuallyHidden>
           <EventNoteIcon boxSize="20px" color={Colors.defaultAvatarBg} />
         </Link>

@@ -1,30 +1,32 @@
 import { extendTheme } from "@chakra-ui/react";
 
-const main = "#4e6994"; // 2022
-const accent = "#E14033";
+const main = "#333333"; // 2023 main,primary,default-text
+const accent = "#ba083d"; // 2023 accent red
+//
 export const Colors = {
-  base: "#EBE0CE",
-  baseLight: "#F3EDE2",
-  baseAccent: "#D7D165",
+  // for chat pinned bg
+  baseLight: "#ffffff", // 2023 main
+
   main: main,
-  mainLight: "#545F64",
+  mainLight: accent, // nazo
+
   accent: accent,
-  link: "#127CAE",
-  linkHover: "#0092D8",
+  link: "#3e6199",
+  linkHover: "#2364c9",
   lightGray: "#BFC6C9",
 
-  bg: "#FDF7EF", // 2022
+  bg: "#f8f8f8", // 2023
 
   secondary: "#7C757D",
   secondaryText: "#767077",
 
   dark: "#41414F", // 2022
 
-  textDefault: "#2C2C31", // 2022
+  textDefault: "#333333", // 2023
   textAccent: accent,
-  textMuted: "#727272",
+  textMuted: "#7d7167", // 2023
 
-  backgroundColor: "#f2efea", // 2022
+  backgroundColor: "#f8f8f8", // 2023 bg
 
   border: "#DFDFDF",
   chatBorder: "#CED4DA", // TODO:
@@ -55,7 +57,7 @@ export const theme = extendTheme({
         backgroundColor: Colors.backgroundColor,
       },
       "::placeholder": {
-        color: Colors.textMuted,
+        color: Colors.textDefault,
       },
     },
   },
@@ -85,7 +87,7 @@ export const theme = extendTheme({
             },
             tab: {
               backgroundColor: "#FFFFFF",
-              color: Colors.textMuted,
+              color: Colors.textDefault,
               fontWeight: 400,
               "& .rk-tracks-tabs-name": {
                 borderBottom: "1px solid",

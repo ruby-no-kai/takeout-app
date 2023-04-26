@@ -15,7 +15,7 @@ import { SpeakerAvatar } from "./SpeakerAvatar";
 export type Props = {
   card: TrackCard | null;
   topicNav: JSX.Element | undefined;
-}
+};
 
 export const TrackTopic: React.FC<Props> = ({ card, topicNav }) => {
   const topic = card?.topic!;
@@ -42,13 +42,7 @@ export const TrackTopic: React.FC<Props> = ({ card, topicNav }) => {
             </Heading>
             <Box mt="2px">
               {topic.labels.map((v, i) => (
-                <Tag
-                  key={i}
-                  variant="solid"
-                  size="sm"
-                  mr={1}
-                  css={{ backgroundColor: Colors.textMuted, color: "#ffffff" }}
-                >
+                <Tag key={i} variant="solid" size="sm" mr={1} css={{ backgroundColor: Colors.main, color: "#ffffff" }}>
                   {v}
                 </Tag>
               ))}

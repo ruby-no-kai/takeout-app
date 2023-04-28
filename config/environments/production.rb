@@ -12,6 +12,7 @@ Rails.application.configure do
     config.x.avatar_prefix = ENV.fetch('TAKEOUT_AVATAR_PREFIX', nil) # TODO:
 
     config.x.chime.user_role_arn = ENV.fetch('TAKEOUT_USER_ROLE_ARN')
+    config.x.chime.use_oidc = ENV['TAKEOUT_CHIME_USE_OIDC'] == '1'
 
     config.x.s3.public_bucket = ENV.fetch('TAKEOUT_S3_BUCKET')
     config.x.s3.public_prefix = ENV.fetch('TAKEOUT_S3_PREFIX')
@@ -19,6 +20,8 @@ Rails.application.configure do
 
     config.x.control.password = ENV.fetch('TAKEOUT_CONTROL_PASSWORD')
     config.x.kiosk.password = ENV.fetch('TAKEOUT_KIOSK_PASSWORD')
+
+    config.x.oidc.signing_key = ENV.fetch('OIDC_SIGNING_KEY').yield_self { |der| OpenSSL::PKey::RSA.new(der.unpack1('m*'), '') }
 
     config.x.sentry.dsn = ENV['SENTRY_DSN']
     config.x.release_meta.commit = ENV['HEROKU_SLUG_COMMIT'] || ENV['RELEASE_COMMIT'] || Rails.root.join('REVISION').then { _1.exist? ? _1.read : nil } || 'COMMIT_UNKNOWN'

@@ -16,6 +16,21 @@ data "aws_iam_policy_document" "TakeoutUser-trust" {
       ]
     }
   }
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity", "sts:TagSession"]
+    principals {
+      type = "Federated"
+      identifiers = [
+        "arn:aws:iam::${local.aws_account_id}:oidc-provider/takeout.rubykaigi.org",
+      ]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "takeout.rubykaigi.org:sub"
+      values   = ["takeout-app-user"]
+    }
+  }
 }
 
 resource "aws_iam_role_policy" "TakeoutUser" {

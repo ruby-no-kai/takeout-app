@@ -24,6 +24,8 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
+/tmp/oidc.key
+
 /public/packs
 node_modules/
 

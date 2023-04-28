@@ -39,6 +39,8 @@ Rails.application.routes.draw do
 
   resources :avatars, only: %i(show), param: :handle
 
+  get '.well-known/openid-configuration' => 'api/oidc#show_configuration'
+
   scope path: 'control', module: 'control' do
     get 'chime_users/:handle' => 'chime_users#lookup'
   end
@@ -83,6 +85,10 @@ Rails.application.routes.draw do
       resources :venue_announcements, only: %i(index destroy create update)
 
       resources :attendees, only: %i(index show update)
+    end
+
+    scope path: 'oidc' do
+      get :jwks, to: 'oidc#show_jwks'
     end
   end
 

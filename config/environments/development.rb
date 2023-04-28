@@ -7,6 +7,7 @@ Rails.application.configure do
   config.x.staff_only = ENV['TAKEOUT_STAFF_ONLY'] == '1'
   config.x.staff_only_stream = ENV['TAKEOUT_STAFF_ONLY_STREAM'] == '1'
   config.x.chime.user_role_arn = ENV['TAKEOUT_USER_ROLE_ARN']
+  config.x.chime.use_oidc = ENV['TAKEOUT_CHIME_USE_OIDC'] == '1'
   config.x.default_avatar_url = 'https://takeout.rubykaigi.org/assets/dummy-avatar.jpg'
   config.x.avatar_prefix = ENV['TAKEOUT_AVATAR_PREFIX']
   config.x.s3.public_bucket = ENV['TAKEOUT_S3_BUCKET'] || 'rk-takeout-app'
@@ -19,6 +20,9 @@ Rails.application.configure do
 
   config.x.control.password = ENV['TAKEOUT_CONTROL_PASSWORD']
   config.x.kiosk.password = ENV['TAKEOUT_KIOSK_PASSWORD']
+
+  config.x.oidc.signing_key = ENV['OIDC_SIGNING_KEY']&.yield_self { |der| OpenSSL::PKey::RSA.new(der.unpack1('m*'), '') } \
+    || (Rails.root.join('tmp', 'oidc.key').read rescue nil)&.yield_self { |pem| OpenSSL::PKey::RSA.new(pem, '') }
 
   config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :inline : :shoryuken
 

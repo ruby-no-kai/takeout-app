@@ -14,6 +14,9 @@ require "action_view/railtie"
 # require "action_cable/engine"
 # require "rails/test_unit/railtie"
 
+require 'openssl'
+require 'securerandom'
+
 require_relative '../lib/outpost_local'
 
 # Require the gems listed in Gemfile, including any gems

@@ -16,7 +16,7 @@ class Api::ChatSessionsController < Api::ApplicationController
     end
 
     use_oidc = !!Rails.configuration.x.chime.use_oidc # OIDC to avoid role chaining lifetime issue
-    chaining = self.class.sts.config.credentials.session_token.present? && !use_oidc
+    chaining = self.class.sts.config.credentials&.then { |c| c.is_a?(Aws::Credentials) ? c.session_token.present? : true } && !use_oidc
     lifetime = chaining ? 3600 : 3600*12
     grace = chaining ? 300 : (lifetime - (3600*3) + rand(3600))
 

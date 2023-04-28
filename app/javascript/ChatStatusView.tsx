@@ -14,7 +14,7 @@ export type Props = {
   status: ChatStatus | undefined;
   loading: boolean;
   error: Error | null | undefined;
-}
+};
 
 export const ChatStatusView: React.FC<Props> = ({ status, loading, error }) => {
   const shouldClose = status === "CONNECTED" && !loading && !error;

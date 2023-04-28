@@ -112,7 +112,7 @@ export const TrackChat: React.FC<Props> = ({ track, disableAdminControl, disable
       <ChatStatusView
         status={chatSessionStatus}
         loading={isLoadingHistory.status === "LOADING"}
-        error={chatSessionError || isLoadingHistory.error}
+        error={chat?.error || chatSessionError || isLoadingHistory.error}
       />
       <Box flexGrow={1} flexShrink={0} flexBasis={0} w="100%" overflowX="hidden" overflowY="hidden" bg={Colors.chatBg}>
         {trackChannel ? (

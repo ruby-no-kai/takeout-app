@@ -43,13 +43,15 @@ export const Colors = {
   defaultAvatarBg: "#868E96", // TODO:
 };
 
+export const Fonts = {
+  heading: "Montserrat",
+  body: "Roboto",
+};
+
 export const theme = extendTheme({
   useSystemColorMode: false,
 
-  fonts: {
-    heading: "Poppins",
-    body: "Roboto",
-  },
+  fonts: Fonts,
   styles: {
     global: {
       body: {

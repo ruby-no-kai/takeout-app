@@ -13,7 +13,7 @@ import { HStack, VStack, Heading, Flex, Box, Container, Image, Text } from "@cha
 import { Center } from "@chakra-ui/react";
 
 import { Api, ScreenControl, ScreenNextSchedule, UpcomingTopic, Speaker } from "./Api";
-import { Colors } from "./theme";
+import { Colors, Fonts } from "./theme";
 import { Logo } from "./Logo";
 
 import { ScreenHeroFiller } from "./ScreenHeroFiller";
@@ -49,7 +49,7 @@ export const ScreenAnnounceView: React.FC = () => {
       <Box css={{ "& svg": { height: "2.5vw", width: "auto" } }}>
         <Logo />
       </Box>
-      <Box w="100%" flexGrow={1} flexShrink={0} flexBasis={0} fontFamily={"Poppins"}>
+      <Box w="100%" flexGrow={1} flexShrink={0} flexBasis={0} fontFamily={Fonts.heading}>
         {card?.upcoming_topics ? (
           <AnnounceUpcomingTopics upcoming_topics={card.upcoming_topics} />
         ) : (

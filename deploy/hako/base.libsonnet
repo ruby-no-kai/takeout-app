@@ -46,6 +46,7 @@ local secret = utils.makeSecretParameterStore('takeout-app');
       secret('TAKEOUT_KIOSK_PASSWORD'),
       secret('TITO_WEBHOOK_SECRET'),
       secret('IVS_PRIVATE_KEY'),
+      secret('OIDC_SIGNING_KEY'),
     ],
     mount_points: [
     ],

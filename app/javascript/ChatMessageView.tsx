@@ -69,7 +69,7 @@ export const ChatMessageView: React.FC<Props> = (props) => {
 const ChatMessageAvatar: React.FC<{ author: ChatSender }> = ({ author }) => {
   if (author.isAdmin) {
     // TODO: webp
-    return <Avatar size="xs" bg="#ffffff" src="/assets/hamburger.jpg" name="" loading="lazy" />;
+    return <Avatar size="xs" bg="#ffffff" src="/assets/rubykaigi.jpg" name="" loading="lazy" />;
   } else {
     return (
       <Avatar

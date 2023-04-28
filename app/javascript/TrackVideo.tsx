@@ -201,7 +201,7 @@ const TrackOfflineView: React.FC = () => {
       <Center w="100%" h="100%">
         <VStack>
           <Box w="95px" h="95px" css={{ filter: "grayscale(1)" }}>
-            <Image src="/assets/ninja_blue.svg" w="100%" h="100%" alt="" />
+            <Image src="/assets/hero.svg" w="100%" h="100%" alt="" />
           </Box>
           <Heading as="div" color={Colors.textMuted}>
             Offline...

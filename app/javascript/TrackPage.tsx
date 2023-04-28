@@ -178,7 +178,7 @@ const TrackPageSkeleton: React.FC = () => {
 
 const TrackViewSkeleton: React.FC = () => {
   return (
-    <Container maxW={["auto", "auto", "auto", "1700px"]} px="15px" py="22px">
+    <Container maxW={["auto", "auto", "auto", "1700px"]} px={["0px", "0px", "15px", "15px"]} py="22px">
       <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]}>
         <Box w="100%">
           <AspectRatio ratio={16 / 9}>

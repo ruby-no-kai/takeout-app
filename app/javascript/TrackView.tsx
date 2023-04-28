@@ -43,7 +43,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
   // TODO: Chakra 側のブレークポイントの調整
   // TODO: hide chat button
   return (
-    <Container maxW={["auto", "auto", "auto", "1700px"]} px="15px" py="22px">
+    <Container maxW={["auto", "auto", "auto", "1700px"]} px={["0px", "0px", "15px", "15px"]} py="22px">
       <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]}>
         <Box w="100%">
           <React.Suspense
@@ -75,7 +75,7 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
         {streamOptions.chat && track.chat ? (
           <Box
             maxW={["auto", "auto", "auto", "400px"]}
-            h={["480px", "480px", "480px", "auto"]}
+            h={["650px", "650px", "650px", "auto"]}
             w="100%"
             ml={["0", "0", "0", "30px"]}
           >
@@ -86,7 +86,13 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
         ) : null}
       </Flex>
 
-      <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]} mt="12px">
+      <Flex
+        alignItems="top"
+        justifyContent="space-between"
+        direction={["column", "column", "column", "row"]}
+        mt="12px"
+        mx={["15px", "15px", "0px", "0px"]}
+      >
         <Box w="100%">
           <Sentry.ErrorBoundary fallback={<p>Error...</p>}>
             <TrackCardView

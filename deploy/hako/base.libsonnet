@@ -34,6 +34,7 @@ local secret = utils.makeSecretParameterStore('takeout-app');
       TAKEOUT_SHORYUKEN_QUEUE: 'takeout-app-activejob-prd',
 
       TAKEOUT_USER_ROLE_ARN: 'arn:aws:iam::005216166247:role/TakeoutUser',
+      TAKEOUT_CHIME_USE_OIDC: '1',
 
       TAKEOUT_STAFF_ONLY: '1',
       TAKEOUT_STAFF_ONLY_STREAM: '0',

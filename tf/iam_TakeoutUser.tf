@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "TakeoutUser-trust" {
     condition {
       test     = "StringEquals"
       variable = "takeout.rubykaigi.org:sub"
-      values   = ["takeout-app-user"]
+      values   = ["system:production:takeout-app-user"]
     }
   }
 }

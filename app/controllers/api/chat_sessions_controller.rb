@@ -1,6 +1,6 @@
 class Api::ChatSessionsController < Api::ApplicationController
   def self.sts
-    @sts ||= Aws::STS::Client.new(region: 'us-east-1', logger: Rails.logger)
+    @sts ||= Aws::STS::Client.new(region: 'us-east-1')
   end
 
   def show
@@ -15,27 +15,58 @@ class Api::ChatSessionsController < Api::ApplicationController
       end
     end
 
-    chaining = self.class.sts.config.credentials.session_token.present?
+    use_oidc = !!Rails.configuration.x.chime.use_oidc # OIDC to avoid role chaining lifetime issue
+    chaining = self.class.sts.config.credentials.session_token.present? && !use_oidc
     lifetime = chaining ? 3600 : 3600*12
     grace = chaining ? 300 : (lifetime - (3600*3) + rand(3600))
 
-    now = Time.now + 5 # assume STS call latency
+    now0 = Time.now
+    now = now0 + 5 # assume STS call latency
     exp = now + lifetime + grace
-    response.date = now
-    response.headers['expires'] = (exp-grace).httpdate
-    response.cache_control.merge!( public: false,  stale_if_error: grace )
 
     chime_user = is_kiosk ? Conference.chime_kiosk_user : current_attendee.chime_user
 
-    role_session = self.class.sts.assume_role(
+    role_params = {
       role_arn: Rails.application.config.x.chime.user_role_arn,
       role_session_name: chime_user.chime_id,
       duration_seconds: lifetime,
-      tags: [
-        { key: 'rk_takeout_user_id', value: chime_user.chime_id},
-      ],
-    )
+    }
+    role_session = if use_oidc
+      self.class.sts.assume_role_with_web_identity(
+        web_identity_token: JWT.encode(
+          {
+            iss: "https://takeout.rubykaigi.org",
+            aud: 'sts.amazonaws.com',
+            sub: "system:#{Rails.env.production? ? 'production' : 'development'}:takeout-app-user",
+            jti: SecureRandom.urlsafe_base64(20),
+            iat: now0.to_i,
+            nbf: now0.to_i,
+            exp: now0.to_i + 25,
+            'https://aws.amazon.com/tags' => {
+              principal_tags: {
+                rk_takeout_user_id: [chime_user.chime_id],
+              },
+              transitive_tag_keys: %w(rk_takeout_user_id),
+            },
+          },
+          OidcSigningKey.pkey,
+          'RS256',
+          kid: OidcSigningKey.kid,
+        ),
+        **role_params
+      )
+    else
+      self.class.sts.assume_role(
+        tags: [
+          { key: 'rk_takeout_user_id', value: chime_user.chime_id},
+        ],
+        **role_params
+      )
+    end
 
+    response.date = now
+    response.headers['expires'] = (exp-grace).httpdate
+    response.cache_control.merge!( public: false,  stale_if_error: grace )
     render(json: {
       expiry: exp.to_i,
       grace: grace.to_i,

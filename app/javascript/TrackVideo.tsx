@@ -225,14 +225,14 @@ const TrackDisabledView: React.FC<{ onIntent: () => void }> = ({ onIntent }) => 
       <Center w="100%" h="100%">
         <VStack>
           <Box w="95px" h="95px" css={{ filter: "grayscale(1)" }}>
-            <Image src="/assets/ninja_blue.svg" w="100%" h="100%" alt="" />
+            <Image src="/assets/hero.svg" w="100%" h="100%" alt="" />
           </Box>
           <Heading as="div" color={Colors.textMuted}>
-            Disabled in Kaigi venue
+            You're at the Kaigi venue
           </Heading>
           <Box>
             <Button variant="link" onClick={onClick}>
-              Play live stream (even in the in-person venue)
+              Play live stream
             </Button>
           </Box>
         </VStack>

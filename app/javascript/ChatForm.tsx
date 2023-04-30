@@ -122,6 +122,7 @@ export const ChatForm: React.FC<Props> = ({ track, channel }) => {
                   onSubmit();
                 }
               }}
+              fontSize={["16px", "16px", "auto", "auto"]}
               css={{ resize: "none" }}
             />
           </Box>

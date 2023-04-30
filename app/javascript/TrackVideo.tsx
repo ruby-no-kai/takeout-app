@@ -227,7 +227,7 @@ const TrackDisabledView: React.FC<{ onIntent: () => void }> = ({ onIntent }) => 
           <Box w="95px" h="95px" css={{ filter: "grayscale(1)" }}>
             <Image src="/assets/hero.svg" w="100%" h="100%" alt="" />
           </Box>
-          <Heading as="div" color={Colors.textMuted}>
+          <Heading as="div" color={Colors.textMuted} fontSize={["20px", "30px", "30px", "30px"]}>
             You're at the Kaigi venue
           </Heading>
           <Box>

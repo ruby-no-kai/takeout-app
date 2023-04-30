@@ -81,7 +81,11 @@ export const TrackChat: React.FC<Props> = ({ track, disableAdminControl, disable
   React.useEffect(() => {
     if (!chat.session) return;
     if (!chatSessionStatus || chatSessionStatus === "INIT") return;
-    if (!trackChannel) return;
+    if (!trackChannel) {
+      console.warn("No trackChannel from chatSession");
+      setIsLoadingHistory({ status: "LOADED" });
+      return;
+    }
 
     const onChatHistory = (messages: ChatMessage[]) => {
       console.log("onChatHistory", messages);

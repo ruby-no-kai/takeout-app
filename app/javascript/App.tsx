@@ -52,11 +52,13 @@ export const App: React.FC<Props> = (_props) => {
           <Route path="/screen" element={<IntermissionScreen />} />
           <Route path="/subscreen/:slug" element={<SubScreen />} />
 
-          <Route path="/*" element={<WithNavbar />}>
-            <Route path="attendee" element={<AttendeeEdit />} />
-            <Route path="tracks/:slug" element={<TrackPage />} />
+          <Route element={<WithNavbar />}>
+            <Route path="/attendee" element={<AttendeeEdit />} />
+            <Route path="/tracks/:slug" element={<TrackPage />} />
 
-            <Route path="control/*">
+            <Route path="/control">
+              <Route index element={<ControlRoot />} />
+
               <Route path="tracks/:slug" element={<ControlTrackPage />} />
 
               <Route path="attendees" element={<ControlAttendeesPage />} />

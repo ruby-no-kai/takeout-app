@@ -46,7 +46,7 @@ export const ScreenAnnounceView: React.FC = () => {
 
   return (
     <Flex w="45vw" h="100%" direction="column">
-      <Box css={{ "& svg": { height: "2.5vw", width: "auto" } }}>
+      <Box css={{ "& svg": { height: "1.8vw", width: "auto" } }}>
         <Logo />
       </Box>
       <Box w="100%" flexGrow={1} flexShrink={0} flexBasis={0} fontFamily={Fonts.heading}>
@@ -170,8 +170,8 @@ const AnnounceUpcomingTopics: React.FC<{ upcoming_topics: UpcomingTopic[] }> = (
 
   return (
     <Flex w="100%" h="100%" direction="column" justify="space-around" textAlign="center">
-      <VStack w="100%" spacing="2.6vw">
-        <Text fontWeight="500" fontSize="2.3vw" lineHeight="2.8vw">
+      <VStack w="100%" spacing="1vw">
+        <Text fontWeight="500" fontSize="2.0vw" lineHeight="2.2vw">
           Next session will start {relativeTime}:
         </Text>
 

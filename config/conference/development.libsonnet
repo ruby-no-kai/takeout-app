@@ -4,7 +4,7 @@ local ivs_url = 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/vide
 
 {
   default_track: 'a',
-  track_order: ['a', 'b'],
+  track_order: ['a', 'b', 'c'],
   tracks: {
     a: {
       name: '#rubykaigiA',
@@ -27,6 +27,20 @@ local ivs_url = 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/vide
     b: {
       name: '#rubykaigiB',
       slug: 'b',
+      ivs: {
+        main: {
+          arn: ivs_arn,
+          url: ivs_url,
+        },
+      },
+      chime: {
+        channel_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/channel/1dee0cf699e51df2910a69398ea41b262a52213a654781c8e386d257a7844f5b',
+        caption_channel_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/0e09042d-8e87-4b2f-a25b-d71a0e604443/channel/42f2ba43b257bfcfcc1c20e889b132e22e89531eec86844d1684eac774ce2e7b',
+      },
+    },
+    c: {
+      name: '#rubykaigiC',
+      slug: 'c',
       ivs: {
         main: {
           arn: ivs_arn,

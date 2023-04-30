@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   HStack,
   VStack,
@@ -87,6 +87,7 @@ export const Login: React.FC = () => {
 
 export const LoginForm: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { data: conferenceData } = Api.useConference();
   const [errorAlert, setErrorAlert] = React.useState<JSX.Element | null>(null);
   const [isRequesting, setIsRequesting] = React.useState<boolean>(false);
@@ -102,14 +103,19 @@ export const LoginForm: React.FC = () => {
       const resp = await Api.createSession(data.email, data.reference);
       setErrorAlert(null);
 
-      if (resp.attendee.is_ready) {
-        if (conferenceData) {
-          navigate(`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`);
-        } else {
-          location.href = "/";
-        }
+      const backTo = searchParams.get("back_to") || "/";
+      if (backTo.match(/^\/control/)) {
+        location.href = backTo;
       } else {
-        navigate("/attendee");
+        if (resp.attendee.is_ready) {
+          if (conferenceData) {
+            navigate(`/tracks/${encodeURIComponent(conferenceData.conference.default_track)}`);
+          } else {
+            location.href = "/";
+          }
+        } else {
+          navigate("/attendee");
+        }
       }
     } catch (e) {
       setErrorAlert(

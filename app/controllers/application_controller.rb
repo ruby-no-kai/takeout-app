@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   def require_attendee
     if current_attendee.nil? || current_attendee.voided?
-      return redirect_to "/session/new?void=#{current_attendee&.voided? ? 1 : 0}"
+      return redirect_to "/session/new?void=#{current_attendee&.voided? ? 1 : 0}&back_to=#{url_for(params.to_unsafe_h.merge(only_path: true))}"
     end
     return nil
   end
@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
       return x if x
     end
     unless session[:staff_control]
-      redirect_to "/control/session/new"
+      redirect_to "/control/session/new?back_to=#{url_for(params.to_unsafe_h.merge(only_path: true))}"
     end
   end
 end

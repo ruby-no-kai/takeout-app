@@ -46,7 +46,7 @@ class Api::Control::VenueAnnouncementsController < Api::Control::ApplicationCont
       only_intermission: attributes[:only_intermission],
       only_signage: attributes[:only_signage],
       only_subscreen: attributes[:only_subscreen],
-      order_index: attributes[:order_index]&.then { |v| v >= 0 ? v : VenueAnnouncement.order(order_index: :desc).first&.order_index&.succ } || 0,
+      order_index: attributes[:order_index]&.then(&:to_i)&.then { |v| v >= 0 ? v : VenueAnnouncement.order(order_index: :desc).first&.order_index&.succ } || 0,
     }
   end
 end

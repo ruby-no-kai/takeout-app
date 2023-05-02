@@ -12,6 +12,7 @@ import { Logo } from "./Logo";
 import { ScreenSponsorRotation } from "./ScreenSponsorRotation";
 import { ScreenHeroFiller } from "./ScreenHeroFiller";
 import { ScreenAnnounceView } from "./ScreenAnnounceView";
+import { SignageVenueAnnouncementView } from "./SignageVenueAnnouncementView";
 
 import { ChatProvider } from "./ChatProvider";
 import { useChat } from "./ChatProvider";
@@ -96,26 +97,16 @@ const ScreenSignageRotation: React.FC = () => {
   const ann = idx == 0 ? null : entries[idx - 1];
 
   console.log("ann", ann);
+  // XXX: dupe with ScreenAnnounceView Inner
   return (
     <>
       {ann ? (
         <Flex w="45vw" h="100%" direction="column">
-          <Box css={{ "& svg": { height: "2.5vw", width: "auto" } }}>
+          <Box css={{ "& svg": { height: "1.8vw", width: "auto" } }}>
             <Logo />
           </Box>
           <Box w="100%" flexGrow={1} flexShrink={0} flexBasis={0}>
-            <Flex
-              w="100%"
-              h="100%"
-              direction="column"
-              justify="space-around"
-              color={Colors.textDefault}
-              textAlign="center"
-            >
-              <Text fontWeight="500" fontSize="3vw" lineHeight="5vw">
-                {returnToBr(ann.content)}
-              </Text>
-            </Flex>
+            <SignageVenueAnnouncementView ann={ann} />
           </Box>
         </Flex>
       ) : (

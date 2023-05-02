@@ -4,7 +4,7 @@ import { HStack, VStack, Heading, Flex, Box, Container, Image, Text } from "@cha
 import { Center } from "@chakra-ui/react";
 
 import { Api, ConferenceSponsorship } from "./Api";
-import { Colors } from "./theme";
+import { Colors, Fonts } from "./theme";
 import { Logo } from "./Logo";
 
 export const ScreenSponsorRotation: React.FC = () => {
@@ -54,7 +54,7 @@ export const ScreenSponsorRotation: React.FC = () => {
     <Box w="45vw" h="100%" px="6vw" pt="4vw" bgColor="#ffffff">
       <Center>
         <VStack spacing="2.8vw">
-          <Text fontWeight="500" fontSize="2vw" lineHeight="4.6vw">
+          <Text fontWeight="500" fontSize="2vw" lineHeight="4.6vw" fontFamily={Fonts.heading}>
             Sponsored by
           </Text>
 

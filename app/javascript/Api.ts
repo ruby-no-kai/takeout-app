@@ -430,7 +430,7 @@ export type ConferenceSponsorship = {
 export type VenueAnnouncementHeader = { id: number };
 export type VenueAnnouncementContent = {
   content: string;
-  url: string;
+  url: string | null;
   enabled: boolean;
   only_intermission: boolean;
   only_signage: boolean;

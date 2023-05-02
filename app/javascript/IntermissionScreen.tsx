@@ -100,20 +100,10 @@ const ScreenSignageRotation: React.FC = () => {
   // XXX: dupe with ScreenAnnounceView Inner
   return (
     <>
-      {ann ? (
-        <Flex w="45vw" h="100%" direction="column">
-          <Box css={{ "& svg": { height: "1.8vw", width: "auto" } }}>
-            <Logo />
-          </Box>
-          <Box w="100%" flexGrow={1} flexShrink={0} flexBasis={0}>
-            <SignageVenueAnnouncementView ann={ann} />
-          </Box>
-        </Flex>
-      ) : (
-        <ScreenAnnounceView />
-      )}
+      <SignageVenueAnnouncementView ann={entries[0]} />
     </>
   );
+  //return <>{ann ? <SignageVenueAnnouncementView ann={ann} /> : <ScreenAnnounceView />}</>;
 };
 
 // XXX: returnToBr dupe

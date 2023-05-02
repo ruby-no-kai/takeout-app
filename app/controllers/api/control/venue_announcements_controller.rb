@@ -41,6 +41,7 @@ class Api::Control::VenueAnnouncementsController < Api::Control::ApplicationCont
     attributes = params[:venue_announcement]
     {
       content: attributes[:content],
+      url: attributes[:url].presence,
       enabled: attributes[:enabled],
       only_intermission: attributes[:only_intermission],
       only_signage: attributes[:only_signage],

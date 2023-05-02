@@ -28,6 +28,7 @@ import {
   FormLabel,
   FormControl,
   Checkbox,
+  Link,
 } from "@chakra-ui/react";
 
 import { errorToToast } from "./ErrorAlert";
@@ -79,6 +80,14 @@ export const ControlVenueAnnouncementView: React.FC<{ venueAnnouncement: VenueAn
         </Box>
       </Flex>
       <Text>{returnToBr(ann.content)}</Text>
+      {ann.url ? (
+        <Text>
+          <b>Link: </b>
+          <Link isExternal href={ann.url}>
+            {ann.url}
+          </Link>
+        </Text>
+      ) : null}
       <Text>
         {ann.enabled ? (
           <Tag size="md" variant="solid" colorScheme="teal">
@@ -163,6 +172,7 @@ const ControlVenueAnnouncementForm: React.FC<{ target?: VenueAnnouncement; discl
   const { register, handleSubmit, reset, watch, setValue } = useForm<VenueAnnouncementContent>({
     defaultValues: target ?? {
       content: "",
+      url: "",
       enabled: true,
       only_intermission: false,
       only_signage: false,
@@ -210,9 +220,12 @@ const ControlVenueAnnouncementForm: React.FC<{ target?: VenueAnnouncement; discl
                 <Textarea w="100%" minH="200px" fontSize="14px" {...register("content")} />
               </FormControl>
               <FormControl>
+                <FormLabel>URL to link</FormLabel>
+                <Input type="text" {...register("url")} />
+              </FormControl>
+              <FormControl>
                 <Checkbox {...register("enabled")}>Enable</Checkbox>
               </FormControl>
-
               <FormControl>
                 <Checkbox {...register("only_intermission")}>Intermission Only</Checkbox>
               </FormControl>

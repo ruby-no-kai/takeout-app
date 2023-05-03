@@ -85,6 +85,9 @@ export function consumeIvsMetadata(metadata: IvsMetadata) {
   if (metadata.outpost) {
     consumeOutpostNotification(metadata.outpost);
   }
+  if (metadata.t) {
+    consumeStreamLatencyMark(metadata.t);
+  }
 }
 
 export function consumeChatAdminControl(adminControl: ChatAdminControl) {
@@ -130,6 +133,24 @@ function consumeOutpostNotification(outpost: OutpostNotification) {
       },
     );
   }
+}
+
+function consumeStreamLatencyMark(t: number) {
+  const now = dayjs().valueOf();
+  mutate(
+    `/.virtual/latencymark`,
+    async (_known: StreamLatencyMarker) => {
+      const mark = {
+        online: true,
+        local: now,
+        remote: t,
+        delta: now - t,
+      };
+      console.log("consumeStreamLatencyMark", mark);
+      return mark;
+    },
+    { revalidate: false },
+  );
 }
 
 function activateCandidateTrackCard(data: GetConferenceResponse) {
@@ -208,6 +229,8 @@ export type TrackCardContent = {
 
   screen?: ScreenControl;
   upcoming_topics?: UpcomingTopic[];
+
+  lightning_timer?: LightningTimer;
 };
 
 export type Topic = {
@@ -242,6 +265,12 @@ export type UpcomingTopic = {
   at: number;
   topic?: Topic | null;
   speakers: Speaker[] | null;
+};
+
+export type LightningTimer = {
+  starts_at: number;
+  ends_at: number;
+  expires_at: number;
 };
 
 export type ChatSpotlight = {
@@ -387,6 +416,7 @@ export type ChatMessagePin = {
 };
 
 export type IvsMetadata = {
+  t?: number;
   outpost?: OutpostNotification;
 };
 type IvsMetadataItem = {
@@ -442,6 +472,8 @@ export type VenueAnnouncement = VenueAnnouncementHeader & VenueAnnouncementConte
 export type GetVenueAnnouncementsResponse = {
   venue_announcements: VenueAnnouncement[];
 };
+
+export type StreamLatencyMarker = { online: boolean; remote: number; local: number; delta: number };
 
 export const Api = {
   useSession() {
@@ -693,6 +725,21 @@ export const Api = {
       },
       {
         revalidateOnFocus: true,
+        revalidateOnReconnect: true,
+        revalidateIfStale: false,
+      },
+    );
+  },
+
+  useStreamLatencyMark() {
+    return useSWR<StreamLatencyMarker, ApiError>(
+      `/.virtual/latencymark`,
+      async (_url?: string) => {
+        console.log("useStreamLatencyMark: reset");
+        return { online: false, remote: 0, local: 0, delta: 0 };
+      },
+      {
+        revalidateOnFocus: false,
         revalidateOnReconnect: true,
         revalidateIfStale: false,
       },

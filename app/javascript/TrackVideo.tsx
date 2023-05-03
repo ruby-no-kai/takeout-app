@@ -66,12 +66,15 @@ export const TrackVideo: React.FC<Props> = ({
   if (streamInfo?.stream && streamTokenNotExpired) {
     if (!streamInfo) throw "wut";
     return (
-      <StreamView
-        key={`${streamInfo.stream.slug}/${streamInfo.stream.type}`}
-        playbackUrl={streamInfo.stream.url}
-        shouldStartPlayback={isPlaying}
-        onPlayOrStop={setIsPlaying}
-      />
+      <>
+        <StreamView
+          key={`${streamInfo.stream.slug}/${streamInfo.stream.type}`}
+          playbackUrl={streamInfo.stream.url}
+          shouldStartPlayback={isPlaying}
+          onPlayOrStop={setIsPlaying}
+        />
+        <StreamLatencyMarkerDummy />
+      </>
     );
   } else {
     return (
@@ -270,5 +273,11 @@ function determineStreamKind(
 
   return "interpretation";
 }
+
+// force initialize and use delay marker
+const StreamLatencyMarkerDummy: React.FC = () => {
+  const { data } = Api.useStreamLatencyMark();
+  return <Box display="none">{data?.delta}</Box>;
+};
 
 export default TrackVideo;

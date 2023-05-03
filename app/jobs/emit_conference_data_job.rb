@@ -2,6 +2,7 @@ require 'securerandom'
 
 class EmitConferenceDataJob < ApplicationJob
   def perform(t: Time.zone.now, route:)
+    @t = t
     # GetConferenceResponse
     body = {
       requested_at: t.to_i,
@@ -61,7 +62,7 @@ class EmitConferenceDataJob < ApplicationJob
       track_data.fetch(:ivs, {}).each_value.map { |ivs| [ivs.fetch(:arn), track_data.fetch(:slug)] }
     end.uniq(&:first)
 
-    payload = {outpost: {conference: outpost_key}}
+    payload = {outpost: {conference: outpost_key}, t: (@t.to_f*1000).to_i }
 
     ths = channel_arn_with_tracks.map do |arn_track|
       Thread.new(arn_track) do |(arn,track)|

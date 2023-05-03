@@ -98,12 +98,7 @@ const ScreenSignageRotation: React.FC = () => {
 
   console.log("ann", ann);
   // XXX: dupe with ScreenAnnounceView Inner
-  return (
-    <>
-      <SignageVenueAnnouncementView ann={entries[0]} />
-    </>
-  );
-  //return <>{ann ? <SignageVenueAnnouncementView ann={ann} /> : <ScreenAnnounceView />}</>;
+  return <>{ann ? <SignageVenueAnnouncementView ann={ann} /> : <ScreenAnnounceView />}</>;
 };
 
 // XXX: returnToBr dupe

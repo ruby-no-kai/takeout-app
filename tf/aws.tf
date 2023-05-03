@@ -3,12 +3,12 @@ locals {
 }
 
 provider "aws" {
-  alias               = "apne1"
   region              = "ap-northeast-1"
   allowed_account_ids = [local.aws_account_id]
   default_tags {
     tags = {
-      Project = "takeout-app"
+      Project   = "takeout-app"
+      Component = "takeout-app"
     }
   }
 }
@@ -19,7 +19,8 @@ provider "aws" {
   allowed_account_ids = [local.aws_account_id]
   default_tags {
     tags = {
-      Project = "takeout-app"
+      Project   = "takeout-app"
+      Component = "takeout-app"
     }
   }
 }
@@ -30,7 +31,8 @@ provider "aws" {
   allowed_account_ids = [local.aws_account_id]
   default_tags {
     tags = {
-      Project = "takeout-app"
+      Project   = "takeout-app"
+      Component = "takeout-app"
     }
   }
 }

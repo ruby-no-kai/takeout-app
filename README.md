@@ -75,7 +75,9 @@
 - [ ] __IMPORTANT__ なんか chat session expiry の判定あやしいかも
 - [ ] 幕間 hls pull のディレイへらす
 
-## Setup
+## Development
+
+## AWS Setup
 
 IVS and Chime SDK for Messaging are uncovered by Terraform :/
 

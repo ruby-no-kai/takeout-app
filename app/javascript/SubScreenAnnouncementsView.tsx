@@ -4,9 +4,10 @@ import loadable, { lazy } from "@loadable/component";
 import { Track } from "./Api";
 import { Api } from "./Api";
 
-import { Box, Skeleton } from "@chakra-ui/react";
+import { Box, Flex, Skeleton } from "@chakra-ui/react";
 
 import dayjs from "dayjs";
+import { QRCodeSVG } from "qrcode.react";
 
 const TICK_INTERVAL = 1;
 const ROTATE_INTERVAL = 12;
@@ -36,9 +37,18 @@ export const SubScreenAnnouncementsView: React.FC<{ track: Track }> = ({ track }
   console.log("ann", ann);
   return (
     <React.Suspense fallback={<Skeleton w="100%" h="100%" />}>
-      <Box fontSize="3.6vw" w="100%" h="100%">
-        {returnToBr(ann.content)}
-      </Box>
+      <Flex w="100%" h="100%" direction="row" justify="space-between">
+        <Box fontSize="3.6vw" w="100%" h="100%">
+          {returnToBr(ann.content)}
+        </Box>
+        {ann.url ? (
+          <>
+            <Box css={{ "& svg": { height: "100%", width: "auto" } }} bgColor="white">
+              <QRCodeSVG value={ann.url} level={"M"} includeMargin={true} size={300} />
+            </Box>
+          </>
+        ) : null}
+      </Flex>
     </React.Suspense>
   );
 };

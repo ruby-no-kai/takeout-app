@@ -2,8 +2,8 @@ require 'yaml'
 require 'open-uri'
 
 class SyncConferenceDataJob < ApplicationJob
-  DEFAULT_SPEAKERS_URL = 'https://rubykaigi.org/2022/data/speakers.yml'
-  DEFAULT_PRESENTATIONS_URL = 'https://rubykaigi.org/2022/data/presentations.yml'
+  DEFAULT_SPEAKERS_URL = 'https://rubykaigi.org/2023/data/speakers.yml'
+  DEFAULT_PRESENTATIONS_URL = 'https://rubykaigi.org/2023/data/presentations.yml'
 
   def perform(speakers_url_add: [], presentations_url_add: [])
     ApplicationRecord.transaction do
@@ -79,6 +79,9 @@ class SyncConferenceDataJob < ApplicationJob
             body: io,
           )
         end
+      rescue OpenURI::HTTPError
+        p $!
+
       end
     end
   end

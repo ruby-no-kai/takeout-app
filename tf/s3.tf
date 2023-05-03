@@ -47,8 +47,7 @@ resource "aws_s3_bucket_policy" "rk-takeout-app" {
 ##########
 
 resource "aws_s3_bucket" "rk-takeout-app-apne1" {
-  provider = aws.apne1
-  bucket   = "rk-takeout-app"
+  bucket = "rk-takeout-app"
 }
 
 data "aws_iam_policy_document" "s3-rk-takeout-app-apne1" {
@@ -87,7 +86,6 @@ data "aws_iam_policy_document" "s3-rk-takeout-app-apne1" {
 }
 
 resource "aws_s3_bucket_policy" "rk-takeout-app-apne1" {
-  provider = aws.apne1
-  bucket   = aws_s3_bucket.rk-takeout-app-apne1.id
-  policy   = data.aws_iam_policy_document.s3-rk-takeout-app-apne1.json
+  bucket = aws_s3_bucket.rk-takeout-app-apne1.id
+  policy = data.aws_iam_policy_document.s3-rk-takeout-app-apne1.json
 }

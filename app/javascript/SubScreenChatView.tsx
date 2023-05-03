@@ -14,7 +14,7 @@ export const SubScreenChatView: React.FC<{ track: Track }> = ({ track }) => {
       {/*
       <Box w={`${47.5 * 0.4}vw`} h={`${51 * 0.4}vw`} css={{ transform: `scale(${1 / 0.4})`, transformOrigin: "0 0" }}>
         */}
-      <Box w={`30%`} h={`30%`} css={{ transform: `scale(${1 / 0.3})`, transformOrigin: "0 0" }}>
+      <Box w={`35%`} h={`35%`} css={{ transform: `scale(${1 / 0.35})`, transformOrigin: "0 0" }}>
         <TrackChat track={track} hideForm={true} disableSponsorPromo={true} />
       </Box>
     </React.Suspense>

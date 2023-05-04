@@ -8,12 +8,14 @@ import { AspectRatio, Skeleton, HStack } from "@chakra-ui/react";
 import { Track, TrackStreamOptionsState } from "./Api";
 
 import TrackCardView from "./TrackCardView";
+import { useLightningTimerFromTrack } from "./LightningTimer";
 
 const TrackStreamOptionsSelector = loadable(() => import(/* webpackPrefetch: true */ "./TrackStreamOptionsSelector"));
 const TrackVideo = lazy(() => import(/* webpackPrefetch: true */ "./TrackVideo"));
 const TrackChat = lazy(() => import(/* webpackPrefetch: true */ "./TrackChat"));
 const TrackCaption = lazy(() => import("./TrackCaption"));
 const TrackViewerCount = loadable(() => import(/* webpackPrefetch: true */ "./TrackViewerCount"));
+const TrackLightningTimer = loadable(() => import("./TrackLightningTimer"));
 
 const AppVersionAlert = loadable(() => import("./AppVersionAlert"));
 
@@ -39,6 +41,8 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
       i.src = s.avatar_url;
     });
   }, [track.card_candidate]);
+
+  const lightningTimer = useLightningTimerFromTrack(track);
 
   // TODO: Chakra 側のブレークポイントの調整
   // TODO: hide chat button
@@ -72,18 +76,26 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
           </Box>
         </Box>
 
-        {streamOptions.chat && track.chat ? (
-          <Box
-            maxW={["auto", "auto", "auto", "400px"]}
-            h={["650px", "650px", "650px", "auto"]}
-            w="100%"
-            ml={["0", "0", "0", "30px"]}
-          >
+        <Flex
+          maxW={["auto", "auto", "auto", "400px"]}
+          h={["650px", "650px", "650px", "auto"]}
+          w="100%"
+          ml={["0", "0", "0", "30px"]}
+          direction="column"
+        >
+          {lightningTimer ? (
+            <Box h="120px">
+              <React.Suspense fallback={<Skeleton w="100%" h="100%" />}>
+                <TrackLightningTimer timer={lightningTimer} />
+              </React.Suspense>
+            </Box>
+          ) : null}
+          <Box flexBasis={0} flexGrow={1} flexShrink={0}>
             <React.Suspense fallback={<Skeleton w="100%" h="100%" />}>
-              <TrackChat track={track} />
+              {streamOptions.chat && track.chat ? <TrackChat track={track} /> : null}
             </React.Suspense>
           </Box>
-        ) : null}
+        </Flex>
       </Flex>
 
       <Flex

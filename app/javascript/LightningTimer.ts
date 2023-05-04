@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { Api, LightningTimer } from "./Api";
+import { Api, LightningTimer, Track } from "./Api";
 
 export type LightningTimerData = {
   tick: dayjs.Dayjs;
@@ -8,6 +8,10 @@ export type LightningTimerData = {
   m: string;
   s: string;
 };
+
+export function useLightningTimerFromTrack(track: Track, tickCorrection?: boolean) {
+  return useLightningTimer(track?.card?.lightning_timer, tickCorrection);
+}
 
 export function useLightningTimer(timer?: LightningTimer, tickCorrection?: boolean) {
   const correction = tickCorrection ?? true;

@@ -10,6 +10,7 @@ import { ControlApi, ControlTrackCard } from "./ControlApi";
 
 import { ChatProvider } from "./ChatProvider";
 import { useParams } from "react-router-dom";
+import ControlLightningTimer from "./ControlLightningTimer";
 
 const AppVersionAlert = loadable(() => import("./AppVersionAlert"));
 const ControlChatSpotlightView = loadable(() => import("./ControlStreamPresence"));
@@ -53,6 +54,7 @@ export const ControlTrackPage: React.FC = () => {
           <Box h="98%" w="100%">
             <ControlStreamPresence track={track} />
             <TrackCaption h="200px" track={track} onUnsubscribe={() => {}} />
+            <ControlLightningTimer track={track} />
             <AppVersionAlert />
             {track.viewerCount ? <TrackViewerCount count={track.viewerCount} /> : null}
           </Box>

@@ -413,8 +413,8 @@ function templateLightningTimer(trackSlug: TrackSlug, data: GetConferenceRespons
   const card: TrackCard = JSON.parse(JSON.stringify(data.conference.tracks[trackSlug]?.card || {}));
   const now = dayjs().unix();
   card.lightning_timer = {
-    starts_at: now + 1,
-    ends_at: now + 301,
+    starts_at: now + 5,
+    ends_at: now + 5 + 300,
     expires_at: now + 600,
   };
   return card;

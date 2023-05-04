@@ -15,8 +15,8 @@ import { useParams } from "react-router-dom";
 
 import { SubScreenChatView } from "./SubScreenChatView";
 import { SubScreenCaptionView } from "./SubScreenCaptionView";
-
 import { SubScreenAnnouncementsView } from "./SubScreenAnnouncementsView";
+import { SubScreenLightningTimerView } from "./SubScreenLightningTimerView";
 
 export const SubScreen: React.FC = () => {
   const { slug: trackSlug }: Readonly<Partial<{ slug: TrackSlug }>> = useParams();
@@ -33,6 +33,8 @@ export const SubScreen: React.FC = () => {
     </ChatProvider>
   );
 };
+
+type InfoMode = "announcement" | "lightning_timer" | "caption";
 
 export const SubScreenInner: React.FC<{ trackSlug: TrackSlug }> = ({ trackSlug }) => {
   const { data: conferenceData, error: conferenceError, mutate: mutateConferenceData } = Api.useConference();
@@ -67,14 +69,18 @@ export const SubScreenInner: React.FC<{ trackSlug: TrackSlug }> = ({ trackSlug }
   const track = conferenceData.conference.tracks[trackSlug ?? ""];
   if (!track) return <p>four-oh-four, track not exists</p>;
 
+  const infoMode = ((): InfoMode => {
+    if (track.card?.lightning_timer) return "lightning_timer";
+    if (track.card?.intermission) return "announcement";
+    return "caption";
+  })();
+
   return (
     <Flex h="100%" w="100%" justify="space-between" direction="column">
       <Box w="100%" h="30%" overflow="hidden">
-        {track.card?.intermission ? (
-          <SubScreenAnnouncementsView track={track} />
-        ) : (
-          <SubScreenCaptionView track={track} />
-        )}
+        {infoMode === "announcement" ? <SubScreenAnnouncementsView track={track} /> : null}
+        {infoMode === "lightning_timer" ? <SubScreenLightningTimerView track={track} /> : null}
+        {infoMode === "caption" ? <SubScreenCaptionView track={track} /> : null}
       </Box>
       <Box w="100%" flexGrow={2}>
         <SubScreenChatView track={track} />

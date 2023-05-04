@@ -23,7 +23,7 @@ import {
   UseDisclosureReturn,
 } from "@chakra-ui/react";
 
-import { Api, TrackCard, TrackCardContent, TrackSlug } from "./Api";
+import { Api, GetConferenceResponse, TrackCard, TrackCardContent, TrackSlug } from "./Api";
 import { ControlApi, ControlTrackCard, ConferencePresentationSlug, ControlGetConferenceResponse } from "./ControlApi";
 import { ErrorAlert, errorToToast } from "./ErrorAlert";
 
@@ -146,6 +146,18 @@ export const ControlTrackCardForm: React.FC<{
             }}
           >
             Intermission
+          </Button>
+          <Button
+            onClick={() => {
+              if (!conferenceData) return alert("no conference data!?");
+              setValue("timeMode", "relative");
+              setValue("relativeTimeInSeconds", 0);
+              setValue("json", JSON.stringify(templateLightningTimer(trackSlug, conferenceData)));
+              onOpen();
+            }}
+            isDisabled={!conferenceData}
+          >
+            Lightning Timer
           </Button>
         </>
       )}
@@ -395,6 +407,17 @@ function templateIntermission(): TrackCardContent {
     show_promo: true,
     intermission: true,
   };
+}
+
+function templateLightningTimer(trackSlug: TrackSlug, data: GetConferenceResponse) {
+  const card: TrackCard = JSON.parse(JSON.stringify(data.conference.tracks[trackSlug]?.card || {}));
+  const now = dayjs().unix();
+  card.lightning_timer = {
+    starts_at: now + 1,
+    ends_at: now + 301,
+    expires_at: now + 600,
+  };
+  return card;
 }
 
 export default ControlTrackCardForm;

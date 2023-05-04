@@ -68,6 +68,8 @@ class TrackCard < ApplicationRecord
 
     validate_screen if content['screen']
     validate_upcoming_topics if content['upcoming_topics']
+
+    validate_lightning_timer if content['lightning_timer']
   end
 
   private def validate_topic
@@ -154,6 +156,23 @@ class TrackCard < ApplicationRecord
         errors.add :content, '.upcoming_topics[].topic.labels should be a string[]'
         next
       end
+    end
+  end
+
+  private def validate_lightning_timer
+    unless content['lightning_timer'].kind_of?(Hash)
+      errors.add :content, '.lightning_timer should be a Hash or null'
+      return
+    end
+
+    unless content['lightning_timer']['starts_at'].is_a?(Integer)
+      errors.add :content, '.lightning_timer.starts_at should be a Integer'
+    end
+    unless content['lightning_timer']['ends_at'].is_a?(Integer)
+      errors.add :content, '.lightning_timer.ends_at should be a Integer'
+    end
+    unless content['lightning_timer']['expires_at'].is_a?(Integer)
+      errors.add :content, '.lightning_timer.expires_at should be a Integer'
     end
   end
 

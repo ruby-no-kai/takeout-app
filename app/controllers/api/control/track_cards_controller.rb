@@ -72,6 +72,7 @@ class Api::Control::TrackCardsController < Api::Control::ApplicationController
         upcoming_topics: attributes[:upcoming_topics],
         intermission: !!attributes[:intermission],
         show_promo: !!attributes[:show_promo],
+        lightning_timer: attributes[:lightning_timer],
       },
     }
   end

@@ -3,7 +3,7 @@ ruby '~> 3.1.2' if ENV['STACK'] || ENV['IS_HEROKU']
 
 gem 'rails', '~> 7.0.3'
 gem 'pg', '~> 1.4.3'
-gem 'puma', '~> 5.6'
+gem 'puma', '< 7'
 gem 'sass-rails', '>= 6'
 
 gem 'jsonnet'

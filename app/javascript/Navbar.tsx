@@ -31,8 +31,13 @@ export const Navbar: React.FC = () => {
         )}
       </Heading>
       <HStack spacing="14px">
-        {sessionData?.attendee?.is_staff || sessionData?.control ? (
+        {sessionData?.control ? (
           <Link as={RouterLink} to="/control">
+            <VisuallyHidden>Live Control Room</VisuallyHidden>
+            <VideoCameraFrontIcon boxSize="20px" color={Colors.defaultAvatarBg} />
+          </Link>
+        ) : sessionData?.attendee?.is_staff ? (
+          <Link href="/control">
             <VisuallyHidden>Live Control Room</VisuallyHidden>
             <VideoCameraFrontIcon boxSize="20px" color={Colors.defaultAvatarBg} />
           </Link>

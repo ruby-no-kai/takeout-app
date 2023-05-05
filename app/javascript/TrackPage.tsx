@@ -29,33 +29,7 @@ export const TrackPageInner: React.FC = () => {
   const { slug: trackSlug } = useParams();
   if (!trackSlug) throw new Error("?"); // XXX:
 
-  const { data: conferenceData, error: conferenceError, mutate: mutateConferenceData } = Api.useConference();
-
-  React.useEffect(() => {
-    if (!conferenceData) return;
-    if (conferenceData.requested_at === 0) return; // Partially mutated by consumeIvsMetadata
-
-    const now = dayjs();
-    const isStale = conferenceData.stale_after && conferenceData.stale_after - 2 <= now.unix();
-    console.log("conferenceData freshness", {
-      isStale,
-      now: now.toISOString(),
-      at: dayjs.unix(conferenceData.requested_at).toISOString(),
-      stale_after: dayjs.unix(conferenceData.stale_after).toISOString(),
-    });
-
-    if (isStale) {
-      console.log("conferenceData is stale; request revalidation");
-      mutateConferenceData();
-      const interval = setInterval(() => {
-        console.log("Revalidating stale conferenceData...");
-        mutateConferenceData();
-      }, 1000);
-      return () => clearInterval(interval);
-    } else {
-      console.log("conferenceData is fresh!");
-    }
-  }, [conferenceData?.requested_at, conferenceData?.stale_after]);
+  const { data: conferenceData, error: conferenceError } = Api.useConference();
 
   if (!conferenceData) {
     return (

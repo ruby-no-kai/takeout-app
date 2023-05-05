@@ -20,6 +20,8 @@ class EmitConferenceDataJob < ApplicationJob
       body: JSON.generate(body),
     )
 
+    PurgeCloudfrontCacheJob.perform_later(['/api/conference'])
+
     case route
     when :both
       send_ivs(outpost_key)

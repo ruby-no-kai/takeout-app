@@ -126,7 +126,7 @@ resource "aws_cloudfront_distribution" "takeout-rk-o" {
 
     min_ttl     = 0
     default_ttl = 0
-    max_ttl     = 60
+    max_ttl     = 3600
 
     compress               = true
     viewer_protocol_policy = "redirect-to-https"

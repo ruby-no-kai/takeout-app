@@ -23,14 +23,7 @@ import { GitHubIcon } from "./GitHubIcon";
 import { TwitterIcon } from "./TwitterIcon";
 
 export const ScreenAnnounceView: React.FC = () => {
-  const { data, mutate } = Api.useConference();
-
-  // XXX: i know i can use useSWR refreshInterval
-  //React.useEffect(() => {
-  //  const interval = setInterval(() => mutate(), 1000);
-  //  return () => clearInterval(interval);
-  //}, []);
-
+  const { data } = Api.useConference();
   const card = data?.conference?.tracks?._screen?.card;
 
   const fillerElem = (

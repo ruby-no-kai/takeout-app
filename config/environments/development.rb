@@ -14,15 +14,18 @@ Rails.application.configure do
   config.x.s3.public_prefix = ENV['TAKEOUT_S3_PREFIX'] || 'dev/'
   config.x.s3.public_region = ENV['TAKEOUT_S3_REGION'] || 'ap-northeast-1'
   config.x.sentry.dsn = ENV['SENTRY_DSN']
-  config.x.release_meta.commit = ''
-  config.x.release_meta.version = ''
-  config.x.release_meta.cache_buster = ENV['TAKEOUT_CACHE_BUSTER']
+
+  config.x.cdn.cloudfront_distribution_id = ENV['TAKEOUT_CLOUDFRONT_DISTRIBUTION_ID']
 
   config.x.control.password = ENV['TAKEOUT_CONTROL_PASSWORD']
   config.x.kiosk.password = ENV['TAKEOUT_KIOSK_PASSWORD']
 
   config.x.oidc.signing_key = ENV['OIDC_SIGNING_KEY']&.yield_self { |der| OpenSSL::PKey::RSA.new(der.unpack1('m*'), '') } \
     || (Rails.root.join('tmp', 'oidc.key').read rescue nil)&.yield_self { |pem| OpenSSL::PKey::RSA.new(pem, '') }
+
+  config.x.release_meta.commit = ''
+  config.x.release_meta.version = ''
+  config.x.release_meta.cache_buster = ENV['TAKEOUT_CACHE_BUSTER']
 
   config.active_job.queue_adapter = ENV.fetch('ENABLE_SHORYUKEN', '1') == '1' ? :inline : :shoryuken
 

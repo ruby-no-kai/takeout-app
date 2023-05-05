@@ -18,6 +18,8 @@ Rails.application.configure do
     config.x.s3.public_prefix = ENV.fetch('TAKEOUT_S3_PREFIX')
     config.x.s3.public_region = ENV.fetch('TAKEOUT_S3_REGION')
 
+    config.x.cdn.cloudfront_distribution_id = ENV['TAKEOUT_CLOUDFRONT_DISTRIBUTION_ID']
+
     config.x.control.password = ENV.fetch('TAKEOUT_CONTROL_PASSWORD')
     config.x.kiosk.password = ENV.fetch('TAKEOUT_KIOSK_PASSWORD')
 

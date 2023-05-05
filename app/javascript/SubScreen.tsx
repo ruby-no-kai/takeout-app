@@ -37,7 +37,7 @@ export const SubScreen: React.FC = () => {
 type InfoMode = "announcement" | "lightning_timer" | "caption";
 
 export const SubScreenInner: React.FC<{ trackSlug: TrackSlug }> = ({ trackSlug }) => {
-  const { data: conferenceData, error: conferenceError, mutate: mutateConferenceData } = Api.useConference();
+  const { data: conferenceData } = Api.useConference();
   const chat = useChat();
   const systemsChannel = chat.systems_channel_arn;
 

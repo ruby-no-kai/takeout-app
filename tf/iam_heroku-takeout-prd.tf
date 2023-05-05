@@ -105,6 +105,14 @@ data "aws_iam_policy_document" "takeout-prd" {
     ]
   }
 
+  statement {
+    effect = "Allow"
+    actions = [
+      "cloudfront:GetInvalidation",
+      "cloudfront:CreateInvalidation",
+    ]
+    resources = [aws_cloudfront_distribution.takeout-rk-o.arn]
+  }
 }
 
 resource "aws_iam_policy" "heroku-takeout-prd" {

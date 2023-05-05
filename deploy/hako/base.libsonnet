@@ -38,6 +38,8 @@ local secret = utils.makeSecretParameterStore('takeout-app');
 
       TAKEOUT_STAFF_ONLY: '1',
       TAKEOUT_STAFF_ONLY_STREAM: '0',
+
+      TAKEOUT_CLOUDFRONT_DISTRIBUTION_ID: 'E3G1QIEKS0IAW',
     },
     secrets: [
       secret('DATABASE_URL'),

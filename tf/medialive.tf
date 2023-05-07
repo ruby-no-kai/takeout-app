@@ -10,14 +10,14 @@ data "external" "medialive-secrets" {
   program = ["jsonnet", "${path.module}/medialive-cfn/secrets.jsonnet"]
 }
 
-resource "aws_security_group" "medialive-input" {
+resource "aws_security_group" "medialive" {
   vpc_id      = data.aws_vpc.main.id
-  name        = "takeout-medialive-input"
-  description = "takeout-medialive-input"
+  name        = "takeout-medialive"
+  description = "takeout-medialive"
 }
 
-resource "aws_security_group_rule" "medialive-input_egress" {
-  security_group_id = aws_security_group.medialive-input.id
+resource "aws_security_group_rule" "medialive_egress" {
+  security_group_id = aws_security_group.medialive.id
   type              = "egress"
   protocol          = -1
   from_port         = 0
@@ -26,8 +26,8 @@ resource "aws_security_group_rule" "medialive-input_egress" {
   ipv6_cidr_blocks  = ["::/0"]
 
 }
-resource "aws_security_group_rule" "medialive-input_ingress" {
-  security_group_id = aws_security_group.medialive-input.id
+resource "aws_security_group_rule" "medialive_ingress" {
+  security_group_id = aws_security_group.medialive.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 1
@@ -42,14 +42,14 @@ resource "aws_security_group_rule" "medialive-input_ingress" {
 }
 
 locals {
-  medialive_captioner_ip = "10.33.132.219"
+  medialive_captioner_ip = aws_instance.captioner.private_ip
   medialive_channel_parameters_common = {
     StreamKey           = data.external.medialive-secrets.result.stream_key
     Subnet1Id           = data.aws_subnet.main-public-c.id
     Subnet2Id           = data.aws_subnet.main-public-d.id
     RoleArn             = data.aws_iam_role.MediaLiveAccessRole.arn
     VpcSgDefaultId      = data.aws_security_group.default.id
-    VpcSgId             = aws_security_group.medialive-input.id
+    VpcSgId             = aws_security_group.medialive.id
     MedialiveSgPublicId = "74213"
   }
 }

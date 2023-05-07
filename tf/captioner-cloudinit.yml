@@ -1,0 +1,35 @@
+#cloud-config
+users:
+  - name: rk
+    primary_group: rk
+    uid: 3333
+    groups: adm,sudo,plugdev,netdev,lxd
+    ssh_import_id:
+      - gh:hanazuki
+      - gh:nna774
+      - gh:osyoyu
+      - gh:private-yusuke
+      - gh:sorah
+      - gh:takuan517
+      - gh:terfno
+      - gh:unasuke
+      - gh:utgwkk
+    sudo: ['ALL=(ALL) NOPASSWD: ALL']
+    shell: /bin/bash
+bootcmd:
+  - [ cloud-init-per, once, ssh-port, bash, '-c', 'echo Port 9922 >> /etc/ssh/sshd_config']
+
+packages:
+  - amazon-ecr-credential-helper
+  - docker.io
+  - ffmpeg
+  - tmux
+
+write_files:
+  - content: '{"credsStore": "ecs-login"}'
+    owner: rk:rk
+    path: /root/.docker/config.json
+    permissions: '0644'
+
+runcmd:
+  - [ "sudo", "-u", "rk", "install", "-D", "-m0644", "-ork", "-grk", "/root/.docker/config.json", "/home/rk/.docker/config.json" ]

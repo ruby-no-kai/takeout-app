@@ -53,6 +53,27 @@ data "aws_iam_policy_document" "TakeoutCaptioner" {
       "*",
     ]
   }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "sts:GetServiceBearerToken",
+    ]
+    resources = ["*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:BatchGetImage",
+      "ecr:DescribeImages",
+    ]
+    resources = [
+      aws_ecr_repository.app.arn,
+    ]
+  }
 }
 
 resource "aws_iam_instance_profile" "TakeoutCaptioner" {

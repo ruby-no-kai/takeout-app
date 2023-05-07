@@ -8,9 +8,10 @@ locals {
     "dev",
     "prd_a_main",
     "prd_b_main",
-    #"prd_c_main",
+    "prd_c_main",
     "prd_a_interpret",
     "prd_b_interpret",
+    "prd_c_interpret",
   ])
 }
 

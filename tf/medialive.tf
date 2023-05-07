@@ -77,17 +77,17 @@ resource "aws_cloudformation_stack" "prd-b-main" {
     IvsKey       = local.ivs_channel_urls["prd_b_main"].key
   })
 }
-#resource "aws_cloudformation_stack" "prd-c-main" {
-#  name          = "rk22-medialive-prd-c-main"
-#  template_body = data.external.medialive-channel-cfn.result.template
-#
-#  parameters = merge(local.medialive_channel_parameters_common, {
-#    ChannelName  = "rk22-prd-c-main"
-#    CaptionerUrl = "udp://${local.medialive_captioner_ip}:10003"
-#    IvsUrl       = local.ivs_channel_urls["prd_c_main"].url
-#    IvsKey       = local.ivs_channel_urls["prd_c_main"].key
-#  })
-#}
+resource "aws_cloudformation_stack" "prd-c-main" {
+  name          = "rk22-medialive-prd-c-main"
+  template_body = data.external.medialive-channel-cfn.result.template
+
+  parameters = merge(local.medialive_channel_parameters_common, {
+    ChannelName  = "rk22-prd-c-main"
+    CaptionerUrl = "udp://${local.medialive_captioner_ip}:10003"
+    IvsUrl       = local.ivs_channel_urls["prd_c_main"].url
+    IvsKey       = local.ivs_channel_urls["prd_c_main"].key
+  })
+}
 
 resource "aws_cloudformation_stack" "prd-a-interpret" {
   name          = "rk22-medialive-prd-a-interpret"
@@ -111,14 +111,14 @@ resource "aws_cloudformation_stack" "prd-a-interpret" {
 #    IvsKey       = local.ivs_channel_urls["prd_b_interpret"].key
 #  })
 #}
-#resource "aws_cloudformation_stack" "prd-c-interpret" {
-#  name          = "rk22-medialive-prd-c-interpret"
-#  template_body = data.external.medialive-channel-cfn.result.template
-#
-#  parameters = merge(local.medialive_channel_parameters_common, {
-#    ChannelName  = "rk22-prd-c-interpret"
-#    CaptionerUrl = "udp://${local.medialive_captioner_ip}:10013"
-#    IvsUrl       = local.ivs_channel_urls["prd_c_interpret"].url
-#    IvsKey       = local.ivs_channel_urls["prd_c_interpret"].key
-#  })
-#}
+resource "aws_cloudformation_stack" "prd-c-interpret" {
+  name          = "rk22-medialive-prd-c-interpret"
+  template_body = data.external.medialive-channel-cfn.result.template
+
+  parameters = merge(local.medialive_channel_parameters_common, {
+    ChannelName  = "rk22-prd-c-interpret"
+    CaptionerUrl = "udp://${local.medialive_captioner_ip}:10013"
+    IvsUrl       = local.ivs_channel_urls["prd_c_interpret"].url
+    IvsKey       = local.ivs_channel_urls["prd_c_interpret"].key
+  })
+}

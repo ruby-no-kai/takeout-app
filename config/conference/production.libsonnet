@@ -1,6 +1,6 @@
 {
   default_track: 'a',
-  track_order: ['a', 'b'],
+  track_order: ['a', 'b', 'c'],
   tracks: {
     a: {
       name: '#rubykaigiA',
@@ -29,9 +29,27 @@
           arn: 'arn:aws:ivs:us-west-2:005216166247:channel/lxVf1pHuVdbU',
           url: 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/video/v1/us-west-2.005216166247.channel.lxVf1pHuVdbU.m3u8',
         },
+        // interpretation: {
+        //   arn: 'arn:aws:ivs:us-west-2:005216166247:channel/l5wJftvz86Jd',
+        //   url: 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/video/v1/us-west-2.005216166247.channel.l5wJftvz86Jd.m3u8',
+        // },
+      },
+      chime: {
+        channel_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/5129f611-6144-47cc-95cf-3d36fea9621e/channel/ffbe7a8ece8433bf58ca43b6d52481bd73a8a1b77b728d8fa1e5c24c60a93360',
+        caption_channel_arn: 'arn:aws:chime:us-east-1:005216166247:app-instance/5129f611-6144-47cc-95cf-3d36fea9621e/channel/73f518d128d0604ed9efc8a90ec821d93b85bdfb23ee18f643540773ee98376d',
+      },
+    },
+    c: {
+      name: '#rubykaigiC',
+      slug: 'c',
+      ivs: {
+        main: {
+          arn: 'arn:aws:ivs:us-west-2:005216166247:channel/lxVf1pHuVdbU',
+          url: 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/video/v1/us-west-2.005216166247.channel.lxVf1pHuVdbU.m3u8',
+        },
         interpretation: {
-          arn: 'arn:aws:ivs:us-west-2:005216166247:channel/l5wJftvz86Jd',
-          url: 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/video/v1/us-west-2.005216166247.channel.l5wJftvz86Jd.m3u8',
+          arn: 'arn:aws:ivs:us-west-2:005216166247:channel/EiSGULXUFy45',
+          url: 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/video/v1/us-west-2.005216166247.channel.EiSGULXUFy45.m3u8',
         },
       },
       chime: {

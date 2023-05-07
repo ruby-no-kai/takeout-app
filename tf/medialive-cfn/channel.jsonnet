@@ -29,7 +29,11 @@
           SecurityGroupIds: [{ 'Fn::Sub': '${VpcSgDefaultId}' }, { 'Fn::Sub': '${VpcSgId}' }],
           SubnetIds: [{ 'Fn::Sub': '${Subnet1Id}' }, { 'Fn::Sub': '${Subnet2Id}' }],
         },
-        Tags: { Name: { 'Fn::Sub': '${ChannelName}-private' } },
+        Tags: {
+          Name: { 'Fn::Sub': '${ChannelName}-private' },
+          Project: 'takeout-app',
+          Component: 'medialive',
+        },
       },
     },
 
@@ -42,7 +46,11 @@
           { StreamName: name },
         ],
         InputSecurityGroups: [{ 'Fn::Sub': '${MedialiveSgPublicId}' }],
-        Tags: { Name: { 'Fn::Sub': '${ChannelName}-public' } },
+        Tags: {
+          Name: { 'Fn::Sub': '${ChannelName}-public' },
+          Project: 'takeout-app',
+          Component: 'medialive',
+        },
       },
     },
 
@@ -50,7 +58,11 @@
       Type: 'AWS::EC2::EIP',
       Properties: {
         Domain: 'vpc',
-        Tags: [{ Key: 'Name', Value: { 'Fn::Sub': 'medialive-${ChannelName}' } }],
+        Tags: [
+          { Key: 'Name', Value: { 'Fn::Sub': 'medialive-${ChannelName}' } },
+          { Key: 'Project', Value: 'takeout-app' },
+          { Key: 'Component', Value: 'medialive' },
+        ],
       },
     },
 
@@ -281,6 +293,11 @@
           SecurityGroupIds: [{ 'Fn::Sub': '${VpcSgId}' }],
           SubnetIds: [{ 'Fn::Sub': '${Subnet1Id}' }],
           PublicAddressAllocationIds: [{ 'Fn::GetAtt': ['ChannelEip', 'AllocationId'] }],
+        },
+        Tags: {
+          Name: { 'Fn::Sub': '${ChannelName}' },
+          Project: 'takeout-app',
+          Component: 'medialive',
         },
       },
     },

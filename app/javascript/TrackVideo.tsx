@@ -9,6 +9,7 @@ import { AspectRatio, Box, Center, VStack, Skeleton, Image, Heading, Button } fr
 
 import { Api, IvsMetadata, Track, TrackStreamOptions, consumeIvsMetadata } from "./Api";
 import { Colors } from "./theme";
+import {CACHE_BUSTER} from "./meta";
 
 export type Props = {
   track: Track;
@@ -204,7 +205,7 @@ const TrackOfflineView: React.FC = () => {
       <Center w="100%" h="100%">
         <VStack>
           <Box w="95px" h="95px" css={{ filter: "grayscale(1)" }}>
-            <Image src="/assets/hero.svg" w="100%" h="100%" alt="" />
+            <Image src={`/assets/hero.svg?p=${CACHE_BUSTER}`} w="100%" h="100%" alt="" />
           </Box>
           <Heading as="div" color={Colors.textMuted}>
             Offline...
@@ -228,7 +229,7 @@ const TrackDisabledView: React.FC<{ onIntent: () => void }> = ({ onIntent }) => 
       <Center w="100%" h="100%">
         <VStack>
           <Box w="95px" h="95px" css={{ filter: "grayscale(1)" }}>
-            <Image src="/assets/hero.svg" w="100%" h="100%" alt="" />
+            <Image src={`/assets/hero.svg?p=${CACHE_BUSTER}`} w="100%" h="100%" alt="" />
           </Box>
           <Heading as="div" color={Colors.textMuted} fontSize={["20px", "30px", "30px", "30px"]}>
             You're at the Kaigi venue

@@ -24,6 +24,7 @@ import { Colors } from "./theme";
 import { Logo } from "./Logo";
 import { StreamingLogo } from "./StreamingLogo";
 import { ErrorAlert } from "./ErrorAlert";
+import { CACHE_BUSTER } from "./meta";
 
 export const Login: React.FC = () => {
   return (
@@ -43,7 +44,7 @@ export const Login: React.FC = () => {
             alignItems="center"
             justifyContent="space-around"
           >
-            <Image src="/assets/hero.svg" w="100%" maxW="317px" minH="383px" />
+            <Image src={`/assets/hero.svg?p=${CACHE_BUSTER}`} w="100%" maxW="317px" minH="383px" />
             {/*<picture>
               <source type="image/webp" srcSet="/assets/hero_hamburger.webp" />
               <Image src="/assets/hero_hamburger.svg" w="100%" />

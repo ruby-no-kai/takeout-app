@@ -19,6 +19,7 @@ import { MicIcon } from "./MicIcon";
 import { CampaignIcon } from "./CampaignIcon";
 import { KaigiStaffIcon } from "./KaigiStaffIcon";
 import { CommitterIcon } from "./CommitterIcon";
+import { CACHE_BUSTER } from "./meta";
 
 export type Props = {
   track: Track;
@@ -69,7 +70,7 @@ export const ChatMessageView: React.FC<Props> = (props) => {
 const ChatMessageAvatar: React.FC<{ author: ChatSender }> = ({ author }) => {
   if (author.isAdmin) {
     // TODO: webp
-    return <Avatar size="xs" bg="#ffffff" src="/assets/rubykaigi.jpg" name="" loading="lazy" />;
+    return <Avatar size="xs" bg="#ffffff" src={`/assets/rubykaigi.jpg?p=${CACHE_BUSTER}`} name="" loading="lazy" />;
   } else {
     return (
       <Avatar

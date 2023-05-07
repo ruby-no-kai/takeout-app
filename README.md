@@ -97,11 +97,11 @@ and it'll output channel and user ARNs for conference jsonnet.
 
 ### IVS
 
-```
-aws ivs create-channel --region us-west-2 --latency-mode LOW --type STANDARD --authorized --recording-configuration-arn ... --name ...
-```
+See ./tf/ivs.tf
 
 ### MediaLive
+
+See ./tf/medialive.tf. Managed through CFn on Terraform.
 
 ### caption/serve.rb
 

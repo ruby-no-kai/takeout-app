@@ -112,7 +112,8 @@ See ./tf/medialive.tf. Managed through CFn on Terraform.
 ```
 ruby misc/generate_conference_sponsorships_data.rb /tmp/RubyKaigi\ 2022_\ Sponsor\ Live\ Promo\ Text\ \(Responses\)\ -\ Form\ Responses\ 1.csv /tmp/sponsors.yml > ~/Downloads/sponsors.json
 ruby misc/upload_conference_sponsorships_avatar.rb rk-takeout-app prd/avatars/ < ~/Downloads/sponsors.json
-aws s3 cp ~/Downloads/sponsors.json s3://rk-takeout-app/prd/tmp/sponsors.json
+
+aws s3 cp ~/Downloads/sponsors.json s3://rk-takeout-app-usw2/prd/tmp/sponsors.json
 rails runner 'p ConferenceSponsorship.delete_all'
 rake takeout:import_sponsorships
 ```
@@ -122,6 +123,22 @@ rake takeout:import_sponsorships
 
 ```
 rake takeout:sync_conference_data
+```
+
+### Tito Extra Data
+
+accept additional roles through metadata like:
+
+```jsonnet
+{
+  "takeout_app": {
+    "roles": [
+      "staff",
+      "speaker",
+      "ruby committer",
+    ]
+  }
+}
 ```
 
 ## Deploy

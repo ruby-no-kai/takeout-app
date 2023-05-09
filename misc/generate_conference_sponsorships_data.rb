@@ -56,7 +56,8 @@ eligible_sponsors.each do |sponsor|
 
   result.push(
     sponsor_app_id: id,
-    avatar_url: "https://rubykaigi.org/2022/images/sponsors/#{sponsor.fetch(:asset_file_id)}_#{sponsor.fetch(:base_plan)}@3x.png",
+    #avatar_url: "https://rubykaigi.org/2023/images/sponsors/#{sponsor.fetch(:asset_file_id)}_#{sponsor.fetch(:base_plan)}@3x.png",
+    avatar_url: "https://rubykaigi.org/2023/images/sponsors/#{sponsor.fetch(:asset_file_id)}@3x.png",
     large_display: %(ruby).include?(sponsor.fetch(:base_plan)),
     name: promo&.name || sponsor.fetch(:name),
     promo: promo&.text,

@@ -55,6 +55,18 @@ locals {
 }
 
 
+resource "aws_cloudformation_stack" "dev" {
+  name          = "rk23-medialive-dev"
+  template_body = data.external.medialive-channel-cfn.result.template
+
+  parameters = merge(local.medialive_channel_parameters_common, {
+    ChannelName  = "rk23-dev"
+    CaptionerUrl = "udp://${local.medialive_captioner_ip}:10000"
+    IvsUrl       = local.ivs_channel_urls["dev"].url
+    IvsKey       = local.ivs_channel_urls["dev"].key
+    StreamKey    = "dedicatedtomoonlight"
+  })
+}
 resource "aws_cloudformation_stack" "prd-a-main" {
   name          = "rk22-medialive-prd-a-main"
   template_body = data.external.medialive-channel-cfn.result.template

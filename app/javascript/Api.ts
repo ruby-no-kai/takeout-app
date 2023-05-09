@@ -140,11 +140,13 @@ function consumeStreamLatencyMark(t: number) {
   mutate(
     `/.virtual/latencymark`,
     async (_known: StreamLatencyMarker) => {
+      const KNOWN_LATENCY = 2500;
       const mark = {
         online: true,
         local: now,
         remote: t,
-        delta: now - t,
+        knownLatency: KNOWN_LATENCY,
+        delta: now - t + KNOWN_LATENCY,
       };
       console.log("consumeStreamLatencyMark", mark);
       return mark;
@@ -473,7 +475,13 @@ export type GetVenueAnnouncementsResponse = {
   venue_announcements: VenueAnnouncement[];
 };
 
-export type StreamLatencyMarker = { online: boolean; remote: number; local: number; delta: number };
+export type StreamLatencyMarker = {
+  online: boolean;
+  remote: number;
+  local: number;
+  delta: number;
+  knownLatency: number;
+};
 
 export const Api = {
   useSession() {

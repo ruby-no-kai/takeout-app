@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     /control/next_session
     /control/tracks/:slug
     /control/venue_announcements
+    /control/kiosks
   ).each do |_|
     get _ => 'frontend#show_require_control'
   end
@@ -85,7 +86,15 @@ Rails.application.routes.draw do
       resources :venue_announcements, only: %i(index destroy create update)
 
       resources :attendees, only: %i(index show update)
+
+      resources :kiosks, only: %i(index) do
+        member do
+          post :reload
+        end
+      end
     end
+
+    resources :kiosk_heartbeats, only: %i(create)
 
     scope path: 'oidc' do
       get :jwks, to: 'oidc#show_jwks'

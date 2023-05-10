@@ -36,7 +36,7 @@ local secret = utils.makeSecretParameterStore('takeout-app');
       TAKEOUT_USER_ROLE_ARN: 'arn:aws:iam::005216166247:role/TakeoutUser',
       TAKEOUT_CHIME_USE_OIDC: '1',
 
-      TAKEOUT_STAFF_ONLY: '1',
+      TAKEOUT_STAFF_ONLY: '0',
       TAKEOUT_STAFF_ONLY_STREAM: '0',
 
       TAKEOUT_CLOUDFRONT_DISTRIBUTION_ID: 'E3G1QIEKS0IAW',

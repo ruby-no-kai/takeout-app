@@ -9,7 +9,7 @@ import { AspectRatio, Box, Center, VStack, Skeleton, Image, Heading, Button } fr
 
 import { Api, IvsMetadata, Track, TrackStreamOptions, consumeIvsMetadata } from "./Api";
 import { Colors } from "./theme";
-import {CACHE_BUSTER} from "./meta";
+import { CACHE_BUSTER } from "./meta";
 
 export type Props = {
   track: Track;

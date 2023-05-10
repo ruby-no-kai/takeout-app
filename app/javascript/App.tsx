@@ -22,6 +22,7 @@ const ControlScreenPage = loadable(() => import("./ControlScreenPage"));
 const ControlNextSessionPage = loadable(() => import("./ControlNextSessionPage"));
 const ControlTrackPage = loadable(() => import("./ControlTrackPage"));
 const ControlVenueAnnouncementsPage = loadable(() => import("./ControlVenueAnnouncementsPage"));
+const ControlKiosksPage = loadable(() => import("./ControlKiosksPage"));
 
 const IntermissionScreen = loadable(() => import("./IntermissionScreen"));
 const SubScreen = loadable(() => import("./SubScreen"));
@@ -71,6 +72,8 @@ export const App: React.FC<Props> = (_props) => {
               <Route path="venue_announcements" element={<ControlVenueAnnouncementsPage />} />
 
               <Route path="next_session" element={<ControlNextSessionPage />} />
+
+              <Route path="kiosks" element={<ControlKiosksPage />} />
 
               <Route path="session/new" element={<ControlLogin />} />
             </Route>

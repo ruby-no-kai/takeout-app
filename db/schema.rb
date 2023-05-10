@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_01_004506) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_09_133629) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -103,6 +103,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_01_004506) do
     t.string "description", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "kiosk_heartbeats", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "version", null: false
+    t.datetime "last_heartbeat_at"
+    t.datetime "last_checkin_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_kiosk_heartbeats_on_name", unique: true
   end
 
   create_table "stream_presences", force: :cascade do |t|

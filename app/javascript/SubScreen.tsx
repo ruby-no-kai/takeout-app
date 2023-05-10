@@ -7,22 +7,20 @@ import Api, { consumeChatAdminControl, TrackSlug } from "./Api";
 import { Colors } from "./theme";
 import { Logo } from "./Logo";
 
-import { ChatProvider } from "./ChatProvider";
 import { useChat } from "./ChatProvider";
 import { ChatUpdate } from "./ChatSession";
-import { KioskLogin } from "./KioskLogin";
 import { useParams } from "react-router-dom";
 
 import { SubScreenChatView } from "./SubScreenChatView";
 import { SubScreenCaptionView } from "./SubScreenCaptionView";
 import { SubScreenAnnouncementsView } from "./SubScreenAnnouncementsView";
 import { SubScreenLightningTimerView } from "./SubScreenLightningTimerView";
+import { KioskProvider } from "./KioskProvider";
 
 export const SubScreen: React.FC = () => {
   const { slug: trackSlug }: Readonly<Partial<{ slug: TrackSlug }>> = useParams();
   return (
-    <ChatProvider isKiosk>
-      <KioskLogin />
+    <KioskProvider>
       <Box w="100vw" h="auto">
         <AspectRatio ratio={16 / 9}>
           <Box bgColor={Colors.bg} bgSize="contain" w="100%" h="100%" p="0.7vw">
@@ -30,7 +28,7 @@ export const SubScreen: React.FC = () => {
           </Box>
         </AspectRatio>
       </Box>
-    </ChatProvider>
+    </KioskProvider>
   );
 };
 

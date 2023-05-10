@@ -381,12 +381,21 @@ export type ChatAdminControl = {
   promo?: boolean;
 
   outpost?: OutpostNotification;
+
+  kiosk_control?: KioskControlMessage;
 };
 
 export type OutpostNotification = {
   conference?: string;
   venue_announcements?: string;
 };
+
+export type KioskControlMessage = {
+  reload?: KioskControlReload;
+  ping?: number;
+};
+
+export type KioskControlReload = { name?: string; all?: boolean };
 
 export type ChatCaption = {
   result_id: string;
@@ -756,6 +765,11 @@ export const Api = {
 
   useVenueAnnouncements() {
     return useSWR<GetVenueAnnouncementsResponse, ApiError>(`/api/venue_announcements`, swrFetcher);
+  },
+
+  async updateKioskHeartbeat(params: { last_heartbeat_at: number; version: string }) {
+    const resp = await request("/api/kiosk_heartbeats", "POST", null, params);
+    return resp.json();
   },
 };
 

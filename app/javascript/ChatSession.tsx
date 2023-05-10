@@ -48,7 +48,7 @@ export type ChatUpdate = {
   kind: ChatUpdateKind;
   message?: ChatMessage;
   member?: Identity;
-}
+};
 
 interface AdminMessage {
   message?: string;
@@ -388,6 +388,7 @@ function parseChimeName(chimeName: string): { name: string; version: string; fla
 }
 
 function parseAdminMessage(message: string): [string | null, ChatAdminControl | null] {
+  console.log("parseAdminMessage", message);
   try {
     const adminMessage: AdminMessage = JSON.parse(message);
     return [adminMessage.message ?? null, adminMessage.control ?? null];

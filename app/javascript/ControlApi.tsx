@@ -157,6 +157,22 @@ export type ControlUpdateVenueAnnouncementRequest = {
 
 export type ControlDeleteVenueAnnouncementRequest = {};
 
+export type ControlKioskHeartbeat = {
+  id: number;
+  name: string;
+  version: string;
+  last_heartbeat_at?: number;
+  last_checkin_at?: number;
+};
+
+export type ControlListKiosksResponse = {
+  kiosks: ControlKioskHeartbeat[];
+};
+
+export type ControlReloadKioskRequest = {
+  name: string;
+};
+
 export const ControlApi = {
   useConference() {
     return useSWR<ControlGetConferenceResponse, ApiError>("/api/control/conference", swrFetcher, {
@@ -317,6 +333,16 @@ export const ControlApi = {
     const resp = await request(url, "DELETE", null, req);
     mutate(`/api/control/venue_announcements`);
     return resp.json() as Promise<{ venue_announcement: VenueAnnouncement }>;
+  },
+
+  useKiosks() {
+    return useSWR<ControlListKiosksResponse, ApiError>(`/api/control/kiosks`, swrFetcher);
+  },
+
+  async reloadKiosk(id: number) {
+    const url = `/api/control/kiosks/${id}/reload`;
+    await request(url, "POST", null, {});
+    return {};
   },
 };
 export default ControlApi;

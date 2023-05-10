@@ -14,16 +14,14 @@ import { ScreenHeroFiller } from "./ScreenHeroFiller";
 import { ScreenAnnounceView } from "./ScreenAnnounceView";
 import { SignageVenueAnnouncementView } from "./SignageVenueAnnouncementView";
 
-import { ChatProvider } from "./ChatProvider";
 import { useChat } from "./ChatProvider";
 import { ChatUpdate } from "./ChatSession";
-import { KioskLogin } from "./KioskLogin";
 import { useSearchParams } from "react-router-dom";
+import { KioskProvider } from "./KioskProvider";
 
 export const IntermissionScreen: React.FC = () => {
   return (
-    <ChatProvider isKiosk>
-      <KioskLogin />
+    <KioskProvider>
       <Box w="100vw" h="auto">
         <AspectRatio ratio={16 / 9}>
           <Box bgColor={Colors.bg} bgSize="contain" w="100%" h="100%" p="2.5vw">
@@ -31,7 +29,7 @@ export const IntermissionScreen: React.FC = () => {
           </Box>
         </AspectRatio>
       </Box>
-    </ChatProvider>
+    </KioskProvider>
   );
 };
 

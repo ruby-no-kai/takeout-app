@@ -6,7 +6,7 @@ import { Navigate, useParams, useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import { HStack, Box, AspectRatio, Container, Skeleton, Flex } from "@chakra-ui/react";
+import { HStack, Box, AspectRatio, Container, Skeleton, Flex, Switch, FormControl, FormLabel } from "@chakra-ui/react";
 import { Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
 
 import { Api, Track } from "./Api";
@@ -27,6 +27,7 @@ export const TrackPageInner: React.FC = () => {
   const navigate = useNavigate();
   const streamOptionState = Api.useTrackStreamOptions();
   const { slug: trackSlug } = useParams();
+  const [chatOnly, setChatOnly] = React.useState(false);
   if (!trackSlug) throw new Error("?"); // XXX:
 
   const { data: conferenceData, error: conferenceError } = Api.useConference();
@@ -73,7 +74,18 @@ export const TrackPageInner: React.FC = () => {
           return (
             <TabPanel key={t.slug} p={0}>
               <React.Suspense fallback={<TrackViewSkeleton />}>
-                <TrackView track={t} streamOptionsState={streamOptionState} />
+                <TrackView track={t} streamOptionsState={streamOptionState} chatOnly={chatOnly} />
+                <FormControl display="flex" alignItems="center" h="30px">
+                  <FormLabel htmlFor={`chatonly_${trackIndex}`} aria-hidden="true" m={0} mr={1}>
+                    Show only chat
+                  </FormLabel>
+                  <Switch
+                    aria-label="Show Chat only"
+                    id={`chatonly_${trackIndex}`}
+                    isChecked={chatOnly}
+                    onChange={() => setChatOnly(!chatOnly)}
+                  />
+                </FormControl>
               </React.Suspense>
             </TabPanel>
           );

@@ -46,8 +46,8 @@
       slug: 'c',
       ivs: {
         main: {
-          arn: 'arn:aws:ivs:us-west-2:005216166247:channel/lxVf1pHuVdbU',
-          url: 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/video/v1/us-west-2.005216166247.channel.lxVf1pHuVdbU.m3u8',
+          arn: 'arn:aws:ivs:us-west-2:005216166247:channel/j0Pac78isdm0',
+          url: 'https://73c1ba2ff7fa.us-west-2.playback.live-video.net/api/video/v1/us-west-2.005216166247.channel.j0Pac78isdm0.m3u8',
         },
         interpretation: {
           arn: 'arn:aws:ivs:us-west-2:005216166247:channel/EiSGULXUFy45',

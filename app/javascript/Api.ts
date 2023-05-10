@@ -744,7 +744,7 @@ export const Api = {
       `/.virtual/latencymark`,
       async (_url?: string) => {
         console.log("useStreamLatencyMark: reset");
-        return { online: false, remote: 0, local: 0, delta: 0 };
+        return { online: false, remote: 0, local: 0, delta: 0, knownLatency: 0 };
       },
       {
         revalidateOnFocus: false,

@@ -23,7 +23,7 @@ local secret = utils.makeSecretParameterStore('takeout-app');
 
       //DATABASE_URL: 'postgres://takeout:@takeout-db.cluster-cow895j0hfw7.us-west-2.rds.amazonaws.com/takeout',
 
-      TAKEOUT_CACHE_BUSTER: 'radiance',
+      TAKEOUT_CACHE_BUSTER: 'radiance2',
 
       TAKEOUT_S3_BUCKET: 'rk-takeout-app-usw2',
       TAKEOUT_S3_PREFIX: 'prd/',

@@ -3,7 +3,7 @@ local utils = import './utils.libsonnet';
 
 base {
   scheduler+: utils.ecsSchedulerFargate {
-    desired_count: 2,
+    desired_count: 8,
     elb_v2: utils.albInternetFacing {
       container_name: 'app',
       container_port: 3000,

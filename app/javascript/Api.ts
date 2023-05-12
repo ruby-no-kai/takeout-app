@@ -459,12 +459,15 @@ export type GetConferenceSponsorshipsResponse = {
   conference_sponsorships: ConferenceSponsorship[];
 };
 
+export type ConferenceSponsorshipPlan = "ruby" | "platinum" | "gold" | "silver";
+
 export type ConferenceSponsorship = {
   id: number;
   sponsor_app_id: string;
   avatar_url: string;
   name: string;
   large_display: boolean;
+  plan: ConferenceSponsorshipPlan;
   promo: string | null;
 };
 
@@ -722,7 +725,7 @@ export const Api = {
 
   useConferenceSponsorships() {
     return useSWR<GetConferenceSponsorshipsResponse, ApiError>(
-      `/api/conference_sponsorships?p=${CACHE_BUSTER}`,
+      `/api/conference_sponsorships?v=2&p=${CACHE_BUSTER}`,
       swrFetcher,
     );
   },

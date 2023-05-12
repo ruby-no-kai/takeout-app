@@ -9,7 +9,8 @@ class ConferenceSponsorship < ApplicationRecord
       sponsor_app_id: sponsor_app_id,
       avatar_url: "/avatars/p_#{sponsor_app_id}",
       name: name,
-      large_display: large_display,
+      large_display: large_display, # TODO: remove
+      plan: plan.presence || (large_display ? 'ruby' : 'platinum'),
       promo: promo,
     }
   end

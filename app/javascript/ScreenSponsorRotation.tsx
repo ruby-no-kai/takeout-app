@@ -3,35 +3,65 @@ import React from "react";
 import { HStack, VStack, Heading, Flex, Box, Container, Image, Text } from "@chakra-ui/react";
 import { Center } from "@chakra-ui/react";
 
-import { Api, ConferenceSponsorship } from "./Api";
+import { Api, ConferenceSponsorship, ConferenceSponsorshipPlan } from "./Api";
 import { Colors, Fonts } from "./theme";
 import { Logo } from "./Logo";
+
+type RotationPage = {
+  plan: "ruby" | "platinum" | "gold" | "silver";
+  items: ConferenceSponsorship[];
+};
 
 export const ScreenSponsorRotation: React.FC = () => {
   const { data } = Api.useConferenceSponsorships();
 
-  const [page, setPage] = React.useState<ConferenceSponsorship[]>([]);
+  const [page, setPage] = React.useState<RotationPage | null>(null);
 
-  React.useEffect(() => {
-    if (!data) return;
+  const pages = React.useMemo(() => {
+    if (!data) return null;
+
     const sponsors = data.conference_sponsorships;
-
-    const pages: ConferenceSponsorship[][] = [];
-    const sharedDisplaySponsors: ConferenceSponsorship[] = [];
+    const sponsorsByPlan: Map<ConferenceSponsorshipPlan, ConferenceSponsorship[]> = new Map();
+    const getSponsorsByPlan = (plan: ConferenceSponsorshipPlan) => {
+      const cand = sponsorsByPlan.get(plan);
+      if (cand) return cand;
+      const l: ConferenceSponsorship[] = [];
+      sponsorsByPlan.set(plan, l);
+      return l;
+    };
 
     sponsors.forEach((s) => {
-      if (s.large_display) {
-        pages.push([s]);
-      } else {
-        sharedDisplaySponsors.push(s);
+      getSponsorsByPlan(s.plan).push(s);
+      let img = new window.Image();
+      img.src = s.avatar_url;
+    });
+
+    const newPages: RotationPage[] = [];
+
+    const plans: ConferenceSponsorshipPlan[] = ["gold"];
+    plans.forEach((plan) => {
+      const ss = getSponsorsByPlan(plan);
+      const size = {
+        ruby: 1,
+        platinum: 4,
+        gold: 9,
+        silver: null,
+      }[plan];
+      if (!size) return;
+      for (let i = 0; i < ss.length; i += size) {
+        newPages.push({
+          plan: plan,
+          items: ss.slice(i, i + size),
+        });
       }
     });
 
-    const PAGE_SIZE = 4;
-    for (let i = 0; i < sharedDisplaySponsors.length; i += PAGE_SIZE) {
-      pages.push(sharedDisplaySponsors.slice(i, i + PAGE_SIZE));
-    }
+    return newPages;
+  }, [data]);
 
+  React.useEffect(() => {
+    if (!pages) return;
+    if (!pages[0]) return;
     setPage(pages[0]);
 
     let pageNum = 0;
@@ -40,15 +70,11 @@ export const ScreenSponsorRotation: React.FC = () => {
       setPage(pages[pageNum]);
     }, 10 * 1000);
 
-    sponsors.forEach((s) => {
-      let img = new window.Image();
-      img.src = s.avatar_url;
-    });
-
     return () => clearInterval(interval);
-  }, [data]);
+  }, [pages]);
 
-  if (page.length == 0) return <></>;
+  if (!page) return <></>;
+  if (!page.items[0]) return <></>;
 
   return (
     <Box w="45vw" h="100%" px="6vw" pt="4vw" bgColor="#ffffff">
@@ -58,21 +84,21 @@ export const ScreenSponsorRotation: React.FC = () => {
             Sponsored by
           </Text>
 
-          <ScreenSponsorLogoSet sponsors={page} />
+          <ScreenSponsorLogoSet page={page} />
         </VStack>
       </Center>
     </Box>
   );
 };
 
-const ScreenSponsorLogoSet: React.FC<{ sponsors: ConferenceSponsorship[] }> = ({ sponsors }) => {
-  if (sponsors.length == 1) {
-    const sponsor = sponsors[0];
+const ScreenSponsorLogoSet: React.FC<{ page: RotationPage }> = ({ page }) => {
+  if (page.plan === "ruby" && page.items[0]) {
+    const sponsor = page.items[0];
     return <Image w="100%" h="100%" src={sponsor.avatar_url} />;
-  } else {
+  } else if (page.plan === "platinum") {
     return (
       <Flex w="100%" h="100%" flexDirection="row" flexWrap="wrap">
-        {sponsors.map((s) => {
+        {page.items.map((s) => {
           return (
             <Box key={`${s.id}`} w="50%" p="0.6vw">
               <Image w="100%" h="auto" src={s.avatar_url} />
@@ -81,5 +107,19 @@ const ScreenSponsorLogoSet: React.FC<{ sponsors: ConferenceSponsorship[] }> = ({
         })}
       </Flex>
     );
+  } else if (page.plan === "gold") {
+    return (
+      <Flex w="100%" h="100%" flexDirection="row" flexWrap="wrap">
+        {page.items.map((s) => {
+          return (
+            <Box key={`${s.id}`} w="33%" p="0.6vw">
+              <Image w="100%" h="auto" src={s.avatar_url} />
+            </Box>
+          );
+        })}
+      </Flex>
+    );
+  } else {
+    return <></>;
   }
 };

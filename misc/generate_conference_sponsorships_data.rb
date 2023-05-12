@@ -16,7 +16,7 @@ PromoText = Struct.new(:org_domain, :name, :text, :sponsor_app_id, keyword_init:
 promo_texts = {}
 CSV.open(csv_path, headers: true) do |csv|
   csv.each do |row|
-    org_domain =  row.fetch('Email Address').split(?@,2)[1].strip
+    org_domain = row.fetch('Email Address').split(?@,2)[1].strip
     promo_texts[row.fetch('sponsor_app_id') || org_domain] = PromoText.new(
       org_domain:,
       name: row.fetch('Sponsor Name').strip,
@@ -28,7 +28,7 @@ end
 
 
 sponsor_data = YAML.load(File.read(yml_path))
-plans = sponsor_data.each_value.select { |plan| %w(platinum ruby).include?(plan.fetch(:base_plan)) }
+plans = sponsor_data.each_value.select { |plan| %w(platinum ruby gold).include?(plan.fetch(:base_plan)) }
 
 eligible_sponsors = plans.flat_map{ |_| _.fetch(:plans).each_value.flat_map { |__| __.fetch(:sponsors) } }
 
@@ -59,6 +59,7 @@ eligible_sponsors.each do |sponsor|
     #avatar_url: "https://rubykaigi.org/2023/images/sponsors/#{sponsor.fetch(:asset_file_id)}_#{sponsor.fetch(:base_plan)}@3x.png",
     avatar_url: "https://rubykaigi.org/2023/images/sponsors/#{sponsor.fetch(:asset_file_id)}@3x.png",
     large_display: %(ruby).include?(sponsor.fetch(:base_plan)),
+    plan: sponsor.fetch(:base_plan),
     name: promo&.name || sponsor.fetch(:name),
     promo: promo&.text,
   )

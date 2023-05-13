@@ -42,6 +42,11 @@ export const ControlRoot: React.FC = () => {
             </Link>
           </li>
           <li>
+            <Link as={RouterLink} to="/control/next_session">
+              Next Session
+            </Link>
+          </li>
+          <li>
             <Link as={RouterLink} to="/control/venue_announcements">
               Venue announcements
             </Link>

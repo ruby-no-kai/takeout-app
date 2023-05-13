@@ -11,6 +11,7 @@ class Api::Control::NextSessionsController < Api::Control::ApplicationController
       colleration = ControlColleration.create!(description: params[:description] || 'ns: ?')
       presentations = []
       params[:next_sessions].each do |ns|
+        next if ns[:presentation].blank?
         presentation = ConferencePresentation.find_by!(slug: ns[:presentation])
         presentations.push(NextPresentation.new(track: ns[:track], presentation: presentation))
 

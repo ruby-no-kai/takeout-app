@@ -24,12 +24,15 @@ packages:
   - docker.io
   - ffmpeg
   - tmux
+  - acl
+  - awscli
 
 write_files:
   - content: '{"credsStore": "ecs-login"}'
     owner: rk:rk
-    path: /root/.docker/config.json
+    path: /root/dockerconfig.json
     permissions: '0644'
 
 runcmd:
-  - [ "sudo", "-u", "rk", "install", "-D", "-m0644", "-ork", "-grk", "/root/.docker/config.json", "/home/rk/.docker/config.json" ]
+  - [ "sudo", "-u", "rk", "install", "-D", "-m0644", "-ork", "-grk", "/root/dockerconfig.json", "/home/rk/.docker/config.json" ]
+  - [ "sudo", "gpasswd", "-a", "rk", "docker" ]

@@ -80,3 +80,9 @@ resource "aws_iam_instance_profile" "TakeoutCaptioner" {
   name = aws_iam_role.TakeoutCaptioner.name
   role = aws_iam_role.TakeoutCaptioner.name
 }
+
+resource "aws_iam_role_policy_attachment" "captioner-ssm" {
+  role       = aws_iam_role.TakeoutCaptioner.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+

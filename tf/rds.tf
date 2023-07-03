@@ -4,40 +4,42 @@ data "aws_rds_engine_version" "postgresql14" {
   version  = "14.5"
 }
 
-module "takeout-db" {
-  source  = "terraform-aws-modules/rds-aurora/aws"
-  version = "7.6.0"
-  providers = {
-    aws = aws.usw2
-  }
-
-  name   = "takeout-db"
-  engine = data.aws_rds_engine_version.postgresql14.engine
-
-  engine_mode       = "provisioned"
-  engine_version    = data.aws_rds_engine_version.postgresql14.version
-  storage_encrypted = true
-
-  vpc_id                 = data.aws_vpc.usw2.id
-  subnets                = data.aws_subnets.usw2-private.ids
-  vpc_security_group_ids = [aws_security_group.db.id]
-  create_security_group  = false
-
-  monitoring_interval = 60
-
-  apply_immediately   = true
-  skip_final_snapshot = false
-
-  serverlessv2_scaling_configuration = {
-    min_capacity = 1
-    max_capacity = 3
-  }
-
-  instance_class = "db.serverless"
-  instances = {
-    "001" = {}
-  }
-}
+#module "takeout-db" {
+#  source  = "terraform-aws-modules/rds-aurora/aws"
+#  version = "8.3.1"
+#  providers = {
+#    aws = aws.usw2
+#  }
+#
+#  name   = "takeout-db"
+#  engine = data.aws_rds_engine_version.postgresql14.engine
+#
+#  engine_mode       = "provisioned"
+#  engine_version    = data.aws_rds_engine_version.postgresql14.version
+#  storage_encrypted = true
+#
+#  vpc_id                 = data.aws_vpc.usw2.id
+#  create_db_subnet_group = true
+#  subnets                = data.aws_subnets.usw2-private.ids
+#  vpc_security_group_ids = [aws_security_group.db.id]
+#  create_security_group  = false
+#
+#  monitoring_interval = 60
+#
+#  apply_immediately         = true
+#  final_snapshot_identifier = "rubykaigi2023-takeout-app-final"
+#  skip_final_snapshot       = false
+#
+#  serverlessv2_scaling_configuration = {
+#    min_capacity = 1
+#    max_capacity = 3
+#  }
+#
+#  instance_class = "db.serverless"
+#  instances = {
+#    "001" = {}
+#  }
+#}
 
 resource "aws_security_group" "db" {
   provider    = aws.usw2

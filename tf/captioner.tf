@@ -1,7 +1,7 @@
-#resource "aws_security_group" "captioner" {
-#  name        = "takeout-captioner"
-#  description = "takeout-app/caption"
-#}
+resource "aws_security_group" "captioner" {
+  name        = "takeout-captioner"
+  description = "takeout-app/caption"
+}
 #
 #resource "aws_security_group_rule" "captioner_udpmedialive" {
 #  security_group_id = aws_security_group.captioner.id

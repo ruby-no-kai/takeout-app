@@ -22,9 +22,10 @@ const AppVersionAlert = loadable(() => import("./AppVersionAlert"));
 export type Props = {
   track: Track;
   streamOptionsState: TrackStreamOptionsState;
+  chatOnly: boolean;
 };
 
-export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
+export const TrackView: React.FC<Props> = ({ track, streamOptionsState, chatOnly }) => {
   const [streamOptions, setStreamOptions] = streamOptionsState;
   const trackOptionsSelector = (instance: string) => (
     <TrackStreamOptionsSelector track={track} streamOptionsState={streamOptionsState} instance={instance} />
@@ -49,38 +50,42 @@ export const TrackView: React.FC<Props> = ({ track, streamOptionsState }) => {
   return (
     <Container maxW={["auto", "auto", "auto", "1700px"]} px={["0px", "0px", "15px", "15px"]} py="22px">
       <Flex alignItems="top" justifyContent="space-between" direction={["column", "column", "column", "row"]}>
-        <Box w="100%">
-          <React.Suspense
-            fallback={
-              <AspectRatio ratio={16 / 9}>
-                <Skeleton w="100%" h="100%" />
-              </AspectRatio>
-            }
-          >
-            <TrackVideo track={track} streamOptions={streamOptionsState[0]} />
-          </React.Suspense>
-          {/* TODO: hide caption while offline */}
-          {streamOptions.caption ? (
-            <React.Suspense fallback={<Skeleton w="100%" h="80px" />}>
-              <TrackCaption
-                track={track}
-                onUnsubscribe={() => {
-                  setStreamOptions({ ...streamOptions, caption: false });
-                }}
-              />
+        {!chatOnly ? (
+          <Box w="100%">
+            <React.Suspense
+              fallback={
+                <AspectRatio ratio={16 / 9}>
+                  <Skeleton w="100%" h="100%" />
+                </AspectRatio>
+              }
+            >
+              <TrackVideo track={track} streamOptions={streamOptionsState[0]} />
+              <Box>{chatOnly}</Box>
             </React.Suspense>
-          ) : null}
+            {/* TODO: hide caption while offline */}
+            {streamOptions.caption ? (
+              <React.Suspense fallback={<Skeleton w="100%" h="80px" />}>
+                <TrackCaption
+                  track={track}
+                  onUnsubscribe={() => {
+                    setStreamOptions({ ...streamOptions, caption: false });
+                  }}
+                />
+              </React.Suspense>
+            ) : null}
 
-          <Box display={["flex", "flex", "none", "none"]} justifyContent="end" my={2}>
-            <Box w="150px">{trackOptionsSelector("1")}</Box>
+            <Box display={["flex", "flex", "none", "none"]} justifyContent="end" my={2}>
+              <Box w="150px">{trackOptionsSelector("1")}</Box>
+            </Box>
           </Box>
-        </Box>
+        ) : null}
 
         <Flex
-          maxW={["auto", "auto", "auto", "400px"]}
+          maxW={["auto", "auto", "auto", chatOnly ? "100%" : "400px"]}
           h={["650px", "650px", "650px", "auto"]}
+          minH={["650px"]}
           w="100%"
-          ml={["0", "0", "0", "30px"]}
+          ml={["0", "0", "0", chatOnly ? "0" : "30px"]}
           direction="column"
         >
           {lightningTimer ? (
